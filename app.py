@@ -11,7 +11,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
-# from config import all
+from config import all
 
 app = Flask(__name__, static_folder='static')
 
@@ -26,25 +26,25 @@ print(hero)
 ##INIT DYNAMO
 dynamodb = boto3.resource(
 	'dynamodb',
-	aws_access_key_id=keyid, 
-	aws_secret_access_key=secret,
-	region_name=region
+	aws_access_key_id=hero.ACCESS_KEY_ID, 
+	aws_secret_access_key=hero.ACCESS_SECRET_KEY,
+	region_name=hero.REGION_NAME
 )
 dynamoClient = boto3.client(
 	'dynamodb', 
-	aws_access_key_id=keyid, 
-	aws_secret_access_key=secret,
-	region_name=region
+	aws_access_key_id=hero.ACCESS_KEY_ID, 
+	aws_secret_access_key=hero.ACCESS_SECRET_KEY,
+	region_name=hero.REGION_NAME
 )
 
 ##INIT BUCKET
 s3 = boto3.resource(
     's3',
-    aws_access_key_id=keyid,
-    aws_secret_access_key=secret,
+    aws_access_key_id=hero.ACCESS_KEY_ID,
+    aws_secret_access_key=hero.ACCESS_SECRET_KEY,
     config=Config(signature_version='s3v4')
 )
-baseAWSURL = 'https://s3.'+region+'.amazonaws.com/port-bucket/'
+baseAWSURL = 'https://s3.'+hero.REGION_NAME+'.amazonaws.com/port-bucket/'
 
 
 ##AWS STATE
@@ -128,7 +128,7 @@ def register():
 		# 	KeyConditionExpression=Key('username').eq(username)
 		# )
 		if dynamoClient.describe_table(TableName='master')['Table']['ItemCount'] == 0: 
-			if username != master:
+			if username != hero.EXPECTED_MASTER:
 				# flash('That is not the expected master', 'success')
 				return redirect(url_for('register'))
 			else:		
@@ -140,7 +140,7 @@ def register():
 				)
 				# flash('You are now registered and can log in', 'success')
 				return redirect(url_for('login'))
-		elif TableData().master_data()[0]['username'] == master:
+		elif TableData().master_data()[0]['username'] == hero.EXPECTED_MASTER:
 			# flash('Expected master is already registered', 'success')
 			return redirect(url_for('register'))
 	else:
@@ -241,7 +241,7 @@ def post():
 				# print(BUFF)
 				MIME = file.content_type
 				# print(MIME)
-				s3.Bucket(bucket).put_object(
+				s3.Bucket(hero.BUCKET_NAME).put_object(
 					Key=''.join(State.FORM_TITLE)+'/'+MIME.replace('/','-'), 
 					Body=BUFF, 
 					ContentType=MIME, 
@@ -252,7 +252,7 @@ def post():
 			# print(BUFF)
 			MIME = State.reqs.content_type
 			# print(MIME)
-			s3.Bucket(bucket).put_object(
+			s3.Bucket(hero.BUCKET_NAME).put_object(
 				Key=''.join(State.FORM_TITLE)+'/'+MIME.replace('/','-'), 
 				Body=BUFF, 
 				ContentType=MIME, 
@@ -269,7 +269,7 @@ def post():
 def delete(ID):
 	if request.method == 'POST':
 		name = request.form['name']
-		bucket = s3.Bucket(bucket)
+		bucket = s3.Bucket(hero.BUCKET_NAME)
 		bucket.objects.filter(Prefix=name).delete()
 
 		# print(int(ID))
