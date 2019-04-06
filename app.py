@@ -19,32 +19,32 @@ app = Flask(__name__, static_folder='static')
 # app.logger.setLevel(logging.ERROR)
 
 ##AWS CONFIG
-hero = S3Connection(os.environ['ACCESS_KEY_ID'], os.environ['ACCESS_SECRET_KEY'], os.environ['REGION_NAME'], os.environ['BUCKET_NAME'], os.environ['EXPECTED_MASTER'])
-print(hero)
+# hero = S3Connection(os.environ['ACCESS_KEY_ID'], os.environ['ACCESS_SECRET_KEY'], os.environ['REGION_NAME'], os.environ['BUCKET_NAME'], os.environ['EXPECTED_MASTER'])
+# print(hero)
 # AWS_CONFIG = all.keys()
 
 ##INIT DYNAMO
 dynamodb = boto3.resource(
 	'dynamodb',
-	aws_access_key_id=hero.ACCESS_KEY_ID, 
-	aws_secret_access_key=hero.ACCESS_SECRET_KEY,
+	aws_access_key_id=os.environ['ACCESS_KEY_ID'], 
+	aws_secret_access_key=os.environ['ACCESS_SECRET_KEY'],
 	region_name=hero.REGION_NAME
 )
 dynamoClient = boto3.client(
 	'dynamodb', 
-	aws_access_key_id=hero.ACCESS_KEY_ID, 
-	aws_secret_access_key=hero.ACCESS_SECRET_KEY,
-	region_name=hero.REGION_NAME
+	aws_access_key_id=os.environ['ACCESS_KEY_ID'], 
+	aws_secret_access_key=os.environ['ACCESS_SECRET_KEY'],
+	region_name=os.environ['REGION_NAME']
 )
 
 ##INIT BUCKET
 s3 = boto3.resource(
     's3',
-    aws_access_key_id=hero.ACCESS_KEY_ID,
-    aws_secret_access_key=hero.ACCESS_SECRET_KEY,
+    aws_access_key_id=os.environ['ACCESS_KEY_ID'],
+    aws_secret_access_key=os.environ['ACCESS_SECRET_KEY'],
     config=Config(signature_version='s3v4')
 )
-baseAWSURL = 'https://s3.'+hero.REGION_NAME+'.amazonaws.com/port-bucket/'
+baseAWSURL = "https://s3."+os.environ['REGION_NAME']+".amazonaws.com/port-bucket/"
 
 
 ##AWS STATE
@@ -128,7 +128,7 @@ def register():
 		# 	KeyConditionExpression=Key('username').eq(username)
 		# )
 		if dynamoClient.describe_table(TableName='master')['Table']['ItemCount'] == 0: 
-			if username != hero.EXPECTED_MASTER:
+			if username != os.environ['EXPECTED_MASTER']:
 				# flash('That is not the expected master', 'success')
 				return redirect(url_for('register'))
 			else:		
@@ -140,7 +140,7 @@ def register():
 				)
 				# flash('You are now registered and can log in', 'success')
 				return redirect(url_for('login'))
-		elif TableData().master_data()[0]['username'] == hero.EXPECTED_MASTER:
+		elif TableData().master_data()[0]['username'] == os.environ['EXPECTED_MASTER']:
 			# flash('Expected master is already registered', 'success')
 			return redirect(url_for('register'))
 	else:
@@ -241,7 +241,7 @@ def post():
 				# print(BUFF)
 				MIME = file.content_type
 				# print(MIME)
-				s3.Bucket(hero.BUCKET_NAME).put_object(
+				s3.Bucket(os.environ['BUCKET_NAME']).put_object(
 					Key=''.join(State.FORM_TITLE)+'/'+MIME.replace('/','-'), 
 					Body=BUFF, 
 					ContentType=MIME, 
@@ -252,7 +252,7 @@ def post():
 			# print(BUFF)
 			MIME = State.reqs.content_type
 			# print(MIME)
-			s3.Bucket(hero.BUCKET_NAME).put_object(
+			s3.Bucket(os.environ['BUCKET_NAME']).put_object(
 				Key=''.join(State.FORM_TITLE)+'/'+MIME.replace('/','-'), 
 				Body=BUFF, 
 				ContentType=MIME, 
@@ -269,7 +269,7 @@ def post():
 def delete(ID):
 	if request.method == 'POST':
 		name = request.form['name']
-		bucket = s3.Bucket(hero.BUCKET_NAME)
+		bucket = s3.Bucket(os.environ['BUCKET_NAME'])
 		bucket.objects.filter(Prefix=name).delete()
 
 		# print(int(ID))
