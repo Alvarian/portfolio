@@ -11,7 +11,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
-from config import all
+# from config import all
 
 app = Flask(__name__, static_folder='static')
 
