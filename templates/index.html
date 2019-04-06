@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<h1 class="orb" style="text-align: center;">Gallery</h1>
+<div id="app" class="row">
+	<div class="synop">
+		<h2 class="orb">Synopsis</h2>
+		<div style="height: 70%;" class="amatic betweened" v-show="synop">
+			<div>
+				<h3 class="title"></h3>
+				<p class="article"></p>
+			</div>
+			<div class="type"></div>	
+			<div class="icons"></div>		
+		</div>
+
+	</div>
+
+	<div class="cards">
+		<div class="gallery">
+		{% for file in files %}
+			<div style="display: none;" class="open_{{ file.id }}" id="modal">
+				{% if file.game_file %}
+					{% if file.game_file == 'None' %}
+
+					{% else %}
+						<div class="modal-content">
+							<a href="#" class="close {{ file.id }}_close">X</a>
+							<div class="border">
+								<div style="width: 100%; height: 100%" class="{{ file.title }}_model"></div>
+							</div>
+						</div>
+
+						<script type="text/javascript" src="{{ file.game_file }}"></script>
+						<script>
+							// When the user clicks on the button, open the modal 
+							$(document).ready(() => {
+								$('head').append('<link rel="stylesheet" type="text/css" href="{{ file.style_file }}">');
+								$(document).ready(() => {
+									{{ file.title }}.start(document.querySelector(`.{{ file.title }}_model`));
+								});
+
+							});
+						
+						</script>
+					{% endif %}
+				{% endif %}
+				{% if file.deployed_url %}
+					{% if file.deployed_url == 'None' %}
+
+					{% else %}
+						<div class="modal-content">
+							<a href="#" class="close {{ file.id }}_close">X</a>
+							<div class="border">
+								<iframe frameborder="0" src="{{ file.deployed_url }}" height="100%" width="100%"></iframe>
+							</div>
+						</div>
+					{% endif %}
+				{% endif %}
+			</div>
+
+			<div style="background-image: url('{{ file.icon_file }}');" class="card card_{{ file.id }}"></div>
+
+			<script>
+				
+				$(".card_{{ file.id }}").on('click', () => {
+					$(".open_{{ file.id }}").css('display','block');
+				});
+				$(".card_{{ file.id }}").on('mouseover', () => {
+					$(".article").text('{{ file.description }}');
+					$(".title").text('{{ file.title }}');
+					$(".type").text('{{ file.app_type }}');
+
+					$('.icons').empty();
+					$(".icons").append(`<a target="_blank" href={{ file.git_url }}><i class="fab fa-4x fa-github"></i></a>`)
+				});
+					// When the user clicks on <span> (x), close the modal
+				document.getElementsByClassName("{{ file.id }}_close")[0].onclick = () => {
+					$(".open_{{ file.id }}").css('display','none');
+				}
+			</script>
+		{% endfor %}		
+		
+		</div>
+	</div>
+</div>
+{% endblock %}

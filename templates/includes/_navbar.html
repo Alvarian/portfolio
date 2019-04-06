@@ -1,0 +1,14 @@
+<nav class="row spaced amatic">
+	<div class="menu lrg">
+		<div class="row spaced">
+			<div><a href="/" class="icon med">/</a></div>
+			<div><a href="/gallery">/gallery</a></div>
+			<div><a href="/contact">/contact</a></div>
+		{% if session.logged_in %}
+			<div><a href="/portal">/portal</a></div>
+
+			<div><a href="/logout">/logout</a></div>
+		{% endif %}
+		</div>
+	</div>
+</nav>

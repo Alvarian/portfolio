@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% include 'includes/_messages.html' %}
+{% block body %}
+	<div class="row">
+		<div class="panel" style="width: 200px;">
+			<h1>Portal</h1>
+			<form class="form" enctype="multipart/form-data" action="/portal" method="POST">
+				<input type="text" name="title" placeholder="Title">
+
+				<textarea placeholder="Description" name="description" id="" rows="10"></textarea>
+				
+				<label for="git">GITHUB URL</label>
+				<input name="git" placeholder="git hub url" type="text">
+				<label for="icon">IMG</label>
+				<input class="row" name="icon" type="file">
+				<div class="upbutt fileupload">UPLOAD FILES</div>
+				<div class="upbutt urlupload">UPLOAD URL</div>
+
+				<div class="fill">	
+					<div class="forupload">
+						
+						<label for="game">JS</label>
+						<input class="row" name="game" type="file">
+						
+						<label for="style">CSS</label>
+						<input class="row" name="style" type="file">
+						
+					</div>
+					<div class="fordeployed">
+						<label for="deployed">WEBSITE URL</label>
+						<input class="row" name="web" type="text">						
+					</div>
+				</div>
+				<input type="submit" value="Post">
+			</form>		
+		</div>
+
+		<script>
+			$('.fileupload').on('file click', () => {
+				console.log('click');
+				$('.fordeployed').css('visibility','hidden');
+				$('.forupload').css('visibility','visible');
+
+				$('.fileupload').css('visibility', 'hidden');
+				$('.urlupload').css('visibility', 'visible');
+
+			});			
+			$('.urlupload').on('url click', () => {
+				console.log('click');
+				$('.forupload').css('visibility','hidden');
+				$('.fordeployed').css('visibility','visible');
+
+				$('.fileupload').css('visibility', 'visible');
+				$('.urlupload').css('visibility', 'hidden');
+
+			});
+		</script>
+
+		<div class="lrg cards article">
+			
+			<h1>Cards</h1>
+			<div class="gallery">
+			{% for file in files %}
+				<form class="card" action="/portal/{{ file.id }}/" method="POST">
+					<h3>{{ file.title }}</h3>
+					<img style="width: 150px;" src="{{ file.icon_file }}">
+					 <p>{{ file.description }}</p>
+					<input type="hidden" name="name" value="{{ file.title }}">
+					<input type="submit" name="submit" value="Delete">
+				</form>	
+			{% endfor %}
+			</div>
+
+		</div>
+	</div>
+{% endblock %}
+

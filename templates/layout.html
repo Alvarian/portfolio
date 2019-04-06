@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Spaced_Out</title>
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='modalbox.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='flexbox.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+	<link href="https://fonts.googleapis.com/css?family=Amatic+SC|Libre+Barcode+39+Text|Orbitron|Press+Start+2P|Ruge+Boogie" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+	<script
+	  src="https://code.jquery.com/jquery-3.3.1.min.js"
+	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	  crossorigin="anonymous"></script>
+
+	<style>
+ 	  .loopUnderstood, .loopUsed, .loopLoading {
+        display: flex;
+        display: -webkit-flex;
+        -webkit-flex-wrap: wrap;  
+        flex-wrap: wrap;
+        flex: 1;
+        max-width: 300px;
+        min-width: 300px;
+      }  
+	  .badges {
+        margin: 5px;
+      }
+      .float {
+        display: -webkit-flex;
+        -webkit-flex-wrap: wrap;
+        display: flex;   
+        flex-wrap: wrap;
+      }
+      .bord {
+        display: flex;
+        flex-direction: column;
+      }
+	</style>  
+</head>
+<body>
+	{% include 'includes/_navbar.html' %}
+
+	{% block body %}
+	{% endblock %}	
+</body>
+</html>

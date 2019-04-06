@@ -1,0 +1,68 @@
+.card {
+	border-style: double;
+	border-width: 5px;
+	background-color: white;
+	padding: 10px;
+	border-radius: 10px;
+	margin: 10px; 
+	width: 130px; 
+	height: 130px; 
+	background-size: 80% 80%; 
+	background-repeat: no-repeat; 
+	background-position: center;
+}
+.card:hover {
+	background-color: pink;
+}
+.cards {
+	margin-left: 25px;
+	overflow: auto;
+}
+.fordeployed, .forupload {
+	visibility: hidden;
+	position: absolute;
+}
+.fill {
+	position: relative;
+	height: 130px;
+}
+.upbutt {
+	border: solid 1px black;
+	background-color: lightgrey;
+}
+.upbutt:hover {
+	background-color: grey;
+}
+.orb {
+	font-family: 'Orbitron', sans-serif;	
+	background-color: white;
+	width: 100%;
+}
+.synop {
+	width: 200px;
+	text-align: center;
+	height: 100%;
+	background-color: white;
+}
+#app {
+	height: 100%;
+}
+.amatic {
+	font-family: 'Press Start 2P', cursive;
+
+	width: 100%;
+}
+body, html {
+	background-color: lightgrey;
+	margin: 0;
+	height: 91%;
+}
+nav {
+	background-color: white
+	/*width: 100%;*/
+}
+/*font-family: 'Libre Barcode 39 Text', cursive;
+font-family: 'Amatic SC', cursive;
+font-family: 'Orbitron', sans-serif;
+font-family: 'Ruge Boogie', cursive;
+font-family: 'Press Start 2P', cursive;*/
