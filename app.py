@@ -17,29 +17,31 @@ app = Flask(__name__, static_folder='static')
 # app.logger.setLevel(logging.ERROR)
 
 ##AWS CONFIG
-AWS_CONFIG = all.keys()
+print(os.environ.get('REGION_NAME', None))
+print(os.environ.get('ACCESS_KEY_ID', None))
+# AWS_CONFIG = all.keys()
 ##INIT DYNAMO
 dynamodb = boto3.resource(
 	'dynamodb', 
-	aws_access_key_id=AWS_CONFIG.ACCESS_KEY_ID, 
-	aws_secret_access_key=AWS_CONFIG.ACCESS_SECRET_KEY,
-	region_name=AWS_CONFIG.REGION_NAME
+	aws_access_key_id=os.environ.get('ACCESS_KEY_ID', None), 
+	aws_secret_access_key=os.environ.get('ACCESS_SECRET_KEY', None),
+	region_name=os.environ.get('REGION_NAME', None)
 )
 dynamoClient = boto3.client(
 	'dynamodb', 
-	aws_access_key_id=AWS_CONFIG.ACCESS_KEY_ID, 
-	aws_secret_access_key=AWS_CONFIG.ACCESS_SECRET_KEY,
-	region_name=AWS_CONFIG.REGION_NAME
+	aws_access_key_id=os.environ.get('ACCESS_KEY_ID', None), 
+	aws_secret_access_key=os.environ.get('ACCESS_SECRET_KEY', None),
+	region_name=os.environ.get('REGION_NAME', None)
 )
 
 ##INIT BUCKET
 s3 = boto3.resource(
     's3',
-    aws_access_key_id=AWS_CONFIG.ACCESS_KEY_ID,
-    aws_secret_access_key=AWS_CONFIG.ACCESS_SECRET_KEY,
+    aws_access_key_id=os.environ.get('ACCESS_KEY_ID', None),
+    aws_secret_access_key=os.environ.get('ACCESS_SECRET_KEY', None),
     config=Config(signature_version='s3v4')
 )
-baseAWSURL = 'https://s3.'+AWS_CONFIG.REGION_NAME+'.amazonaws.com/port-bucket/'
+baseAWSURL = "https://s3."+os.environ.get('REGION_NAME', None)+".amazonaws.com/port-bucket/"
 
 
 ##AWS STATE
@@ -61,8 +63,8 @@ class TableData:
 		index = response['Table']['ItemCount']
 		return index
 
-print('length',len(TableData().content_data()))
-print('id',TableData().content_data()[0]['id'])
+# print('length',len(TableData().content_data()))
+# print('id',TableData().content_data()[0]['id'])
 
 
 @app.context_processor
@@ -123,7 +125,7 @@ def register():
 		# 	KeyConditionExpression=Key('username').eq(username)
 		# )
 		if dynamoClient.describe_table(TableName='master')['Table']['ItemCount'] == 0: 
-			if username != AWS_CONFIG.EXPECTED_MASTER:
+			if username != os.environ.get('EXPECTED_MASTER', None):
 				# flash('That is not the expected master', 'success')
 				return redirect(url_for('register'))
 			else:		
@@ -135,7 +137,7 @@ def register():
 				)
 				# flash('You are now registered and can log in', 'success')
 				return redirect(url_for('login'))
-		elif TableData().master_data()[0]['username'] == AWS_CONFIG.EXPECTED_MASTER:
+		elif TableData().master_data()[0]['username'] == os.environ.get('EXPECTED_MASTER', None):
 			# flash('Expected master is already registered', 'success')
 			return redirect(url_for('register'))
 	else:
@@ -236,7 +238,7 @@ def post():
 				# print(BUFF)
 				MIME = file.content_type
 				# print(MIME)
-				s3.Bucket(AWS_CONFIG.BUCKET_NAME).put_object(
+				s3.Bucket(os.environ.get('BUCKET_NAME', None)).put_object(
 					Key=''.join(State.FORM_TITLE)+'/'+MIME.replace('/','-'), 
 					Body=BUFF, 
 					ContentType=MIME, 
@@ -247,7 +249,7 @@ def post():
 			# print(BUFF)
 			MIME = State.reqs.content_type
 			# print(MIME)
-			s3.Bucket(AWS_CONFIG.BUCKET_NAME).put_object(
+			s3.Bucket(os.environ.get('BUCKET_NAME', None)).put_object(
 				Key=''.join(State.FORM_TITLE)+'/'+MIME.replace('/','-'), 
 				Body=BUFF, 
 				ContentType=MIME, 
@@ -264,7 +266,7 @@ def post():
 def delete(ID):
 	if request.method == 'POST':
 		name = request.form['name']
-		bucket = s3.Bucket(AWS_CONFIG.BUCKET_NAME)
+		bucket = s3.Bucket(os.environ.get('BUCKET_NAME', None))
 		bucket.objects.filter(Prefix=name).delete()
 
 		# print(int(ID))
