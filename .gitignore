@@ -1,7 +1,7 @@
 # Specifics
 all.py 
-Procfile 
-requirements.txt
+# Procfile 
+# requirements.txt
 .vscode/
 
 # Byte-compiled / optimized / DLL files
