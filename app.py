@@ -28,7 +28,7 @@ dynamodb = boto3.resource(
 	'dynamodb',
 	aws_access_key_id=os.environ['ACCESS_KEY_ID'], 
 	aws_secret_access_key=os.environ['ACCESS_SECRET_KEY'],
-	region_name=hero.REGION_NAME
+	region_name=os.environ['REGION_NAME']
 )
 dynamoClient = boto3.client(
 	'dynamodb', 
