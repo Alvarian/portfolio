@@ -5,6 +5,7 @@ import sys
 import logging
 import boto3
 import boto
+from os import environ
 from botocore.client import Config
 from boto.s3.connection import S3Connection
 from boto3.dynamodb.conditions import Key, Attr
@@ -19,35 +20,53 @@ app = Flask(__name__, static_folder='static')
 # app.logger.setLevel(logging.ERROR)
 
 ##AWS CONFIG
-# hero = S3Connection(os.environ['ACCESS_KEY_ID'], os.environ['ACCESS_SECRET_KEY'], os.environ['REGION_NAME'], os.environ['BUCKET_NAME'], os.environ['EXPECTED_MASTER'])
-# print(hero)
+class Envstate:
+	KEY_ID = None,
+	SECRET_KEY = None,
+	REGION = None,
+	BUCKET = None,
+	MASTER = None
+
+if 'ACCESS_KEY_ID' in os.environ:
+	Envstate.KEY_ID = os.environ['ACCESS_KEY_ID']
+	Envstate.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
+	Envstate.REGION = os.environ['REGION_NAME']
+	Envstate.BUCKET = os.environ['BUCKET_NAME']
+	Envstate.MASTER = os.environ['EXPECTED_MASTER']
+else:
+	from config import all
+	Envstate.KEY_ID = all.keys().ACCESS_KEY_ID
+	Envstate.SECRET_KEY = all.keys().ACCESS_SECRET_KEY
+	Envstate.REGION = all.keys().REGION_NAME
+	Envstate.BUCKET = all.keys().BUCKET_NAME
+	Envstate.MASTER = all.keys().EXPECTED_MASTER
 # AWS_CONFIG = all.keys()
 
 ##INIT DYNAMO
 dynamodb = boto3.resource(
 	'dynamodb',
-	aws_access_key_id=os.environ['ACCESS_KEY_ID'], 
-	aws_secret_access_key=os.environ['ACCESS_SECRET_KEY'],
-	region_name=os.environ['REGION_NAME']
+	aws_access_key_id=Envstate.KEY_ID, 
+	aws_secret_access_key=Envstate.SECRET_KEY,
+	region_name=Envstate.REGION
 )
 dynamoClient = boto3.client(
 	'dynamodb', 
-	aws_access_key_id=os.environ['ACCESS_KEY_ID'], 
-	aws_secret_access_key=os.environ['ACCESS_SECRET_KEY'],
-	region_name=os.environ['REGION_NAME']
+	aws_access_key_id=Envstate.KEY_ID, 
+	aws_secret_access_key=Envstate.SECRET_KEY,
+	region_name=Envstate.REGION
 )
 
 ##INIT BUCKET
 s3 = boto3.resource(
     's3',
-    aws_access_key_id=os.environ['ACCESS_KEY_ID'],
-    aws_secret_access_key=os.environ['ACCESS_SECRET_KEY'],
+    aws_access_key_id=Envstate.KEY_ID,
+    aws_secret_access_key=Envstate.SECRET_KEY,
     config=Config(signature_version='s3v4')
 )
-baseAWSURL = "https://s3."+os.environ['REGION_NAME']+".amazonaws.com/port-bucket/"
+baseAWSURL = "https://s3."+Envstate.REGION+".amazonaws.com/port-bucket/"
 
 
-##AWS STATE
+##AWS CONTENT STATE
 class TableData:
 	def __init__(self):
 		self.masterTable = dynamodb.Table('master')
