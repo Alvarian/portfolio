@@ -3,5 +3,10 @@
 {% block body %}
 
 	<h1>Contact</h1>
+	<form action="/contact" method="POST">
+		<input name="email" type="email" placeholder="Input your email">
+		<textarea name="message" id="" cols="30" rows="10" placeholder="Whats Up?"></textarea>
+		<input type="submit" value="Submit">
+	</form>
 
 {% endblock %}	

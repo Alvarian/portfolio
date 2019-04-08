@@ -152,8 +152,8 @@ def about():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
 	# if request.method == 'POST':
-	msg = Message('Hi', sender=Envstate.MAIL_USERNAME, recipients=['threecoast88@gmail.com'])
-	msg.body = 'Hi ivan from ivan'
+	msg = Message('Hi from '+ request.form.email, sender=Envstate.MAIL_USERNAME, recipients=['threecoast88@gmail.com'])
+	msg.body = request.form.message
 	mail.send(msg)
 	return render_template('contact.html')
 	# return render_template('index.html', files = Games)
