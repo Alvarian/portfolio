@@ -152,9 +152,16 @@ def about():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
 	if request.method == 'POST':
-		msg = Message('A hello from '+ request.form['email'], sender=Envstate.MAIL_USERNAME, recipients=[Envstate.MAIL_USERNAME])
-		msg.body = request.form['message']
-		mail.send(msg)
+		if not request.form['name']:
+			return redirect(url_for('contact'))
+		elif not request.form['email']:
+			return redirect(url_for('contact'))
+		elif not request.form['message']:
+			return redirect(url_for('contact'))
+		else:
+			msg = Message('A hello from '+ request.form['name'], sender=Envstate.MAIL_USERNAME, recipients=[Envstate.MAIL_USERNAME])
+			msg.html = '<p>'+request.form['message']+'</p>'+'<p>email: '+request.form['email']+'</p>'
+			mail.send(msg)
 
 	return render_template('contact.html')
 	# return render_template('index.html', files = Games)
@@ -183,7 +190,7 @@ def register():
 		# 	KeyConditionExpression=Key('username').eq(username)
 		# )
 		if dynamoClient.describe_table(TableName='master')['Table']['ItemCount'] == 0: 
-			if username != os.environ['EXPECTED_MASTER']:
+			if username != Envstate.MASTER:
 				# flash('That is not the expected master', 'success')
 				return redirect(url_for('register'))
 			else:		
@@ -195,7 +202,7 @@ def register():
 				)
 				# flash('You are now registered and can log in', 'success')
 				return redirect(url_for('login'))
-		elif TableData().master_data()[0]['username'] == os.environ['EXPECTED_MASTER']:
+		elif TableData().master_data()[0]['username'] == Envstate.MASTER:
 			# flash('Expected master is already registered', 'success')
 			return redirect(url_for('register'))
 	else:
@@ -296,7 +303,7 @@ def post():
 				# print(BUFF)
 				MIME = file.content_type
 				# print(MIME)
-				s3.Bucket(os.environ['BUCKET_NAME']).put_object(
+				s3.Bucket(Envstate.BUCKET).put_object(
 					Key=''.join(State.FORM_TITLE)+'/'+MIME.replace('/','-'), 
 					Body=BUFF, 
 					ContentType=MIME, 
@@ -307,7 +314,7 @@ def post():
 			# print(BUFF)
 			MIME = State.reqs.content_type
 			# print(MIME)
-			s3.Bucket(os.environ['BUCKET_NAME']).put_object(
+			s3.Bucket(Envstate.BUCKET).put_object(
 				Key=''.join(State.FORM_TITLE)+'/'+MIME.replace('/','-'), 
 				Body=BUFF, 
 				ContentType=MIME, 
@@ -324,7 +331,7 @@ def post():
 def delete(ID):
 	if request.method == 'POST':
 		name = request.form['name']
-		bucket = s3.Bucket(os.environ['BUCKET_NAME'])
+		bucket = s3.Bucket(Envstate.BUCKET)
 		bucket.objects.filter(Prefix=name).delete()
 
 		# print(int(ID))
