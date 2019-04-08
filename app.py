@@ -12,9 +12,10 @@ from boto3.dynamodb.conditions import Key, Attr
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
-# from config import all
+from flask_mail import Mail, Message
 
 app = Flask(__name__, static_folder='static')
+
 
 # app.logger.addHandler(logging.StreamHandler(sys.stdout))
 # app.logger.setLevel(logging.ERROR)
@@ -25,7 +26,13 @@ class Envstate:
 	SECRET_KEY = None,
 	REGION = None,
 	BUCKET = None,
-	MASTER = None
+	MASTER = None,
+	MAIL_SERVER = None,
+	MAIL_POST = None,
+	MAIL_USERNAME = None,
+	MAIL_PASSWORD = None,
+	MAIL_USE_TLS = None,
+	MAIL_USE_SSL = None
 
 if 'ACCESS_KEY_ID' in os.environ:
 	Envstate.KEY_ID = os.environ['ACCESS_KEY_ID']
@@ -33,6 +40,12 @@ if 'ACCESS_KEY_ID' in os.environ:
 	Envstate.REGION = os.environ['REGION_NAME']
 	Envstate.BUCKET = os.environ['BUCKET_NAME']
 	Envstate.MASTER = os.environ['EXPECTED_MASTER']
+	Envstate.MAIL_SERVER = os.environ['MAIL_SERVER']
+	Envstate.MAIL_POST = os.environ['MAIL_POST']
+	Envstate.MAIL_USERNAME = os.environ['MAIL_USERNAME']
+	Envstate.MAIL_PASSWORD = os.environ['MAIL_PASSWORD']
+	Envstate.MAIL_USE_TLS = os.environ['MAIL_USE_TLS']
+	Envstate.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
 else:
 	from config import all
 	Envstate.KEY_ID = all.keys().ACCESS_KEY_ID
@@ -40,6 +53,12 @@ else:
 	Envstate.REGION = all.keys().REGION_NAME
 	Envstate.BUCKET = all.keys().BUCKET_NAME
 	Envstate.MASTER = all.keys().EXPECTED_MASTER
+	Envstate.MAIL_SERVER = all.keys().MAIL_SERVER
+	Envstate.MAIL_POST = all.keys().MAIL_POST
+	Envstate.MAIL_USERNAME = all.keys().MAIL_USERNAME
+	Envstate.MAIL_PASSWORD = all.keys().MAIL_PASSWORD
+	Envstate.MAIL_USE_TLS = all.keys().MAIL_USE_TLS
+	Envstate.MAIL_USE_SSL = all.keys().MAIL_USE_SSL
 # AWS_CONFIG = all.keys()
 
 ##INIT DYNAMO
@@ -56,6 +75,7 @@ dynamoClient = boto3.client(
 	region_name=Envstate.REGION
 )
 
+
 ##INIT BUCKET
 s3 = boto3.resource(
     's3',
@@ -64,6 +84,14 @@ s3 = boto3.resource(
     config=Config(signature_version='s3v4')
 )
 baseAWSURL = "https://s3."+Envstate.REGION+".amazonaws.com/port-bucket/"
+
+
+##MAIL CONFIG
+app.config['MAIL_SERVER']
+app.config['MAIL_POST']
+app.config['MAIL_USERNAME']
+
+mail = Mail(app)
 
 
 ##AWS CONTENT STATE
@@ -118,9 +146,9 @@ def about():
 	return render_template('about.html')
 	# return render_template('index.html', files = Games)
 
-@app.route('/resume', methods=['GET', 'POST'])
-def resume():
-	return render_template('resume.html')
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+	return render_template('contact.html')
 	# return render_template('index.html', files = Games)
 
 @app.route('/gallery', methods=['GET', 'POST'])
