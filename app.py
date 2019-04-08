@@ -28,7 +28,7 @@ class Envstate:
 	BUCKET = None,
 	MASTER = None,
 	MAIL_SERVER = None,
-	MAIL_POST = None,
+	MAIL_PORT = None,
 	MAIL_USERNAME = None,
 	MAIL_PASSWORD = None,
 	MAIL_USE_TLS = None,
@@ -41,7 +41,7 @@ if 'ACCESS_KEY_ID' in os.environ:
 	Envstate.BUCKET = os.environ['BUCKET_NAME']
 	Envstate.MASTER = os.environ['EXPECTED_MASTER']
 	Envstate.MAIL_SERVER = os.environ['MAIL_SERVER']
-	Envstate.MAIL_POST = os.environ['MAIL_POST']
+	Envstate.MAIL_PORT = os.environ['MAIL_PORT']
 	Envstate.MAIL_USERNAME = os.environ['MAIL_USERNAME']
 	Envstate.MAIL_PASSWORD = os.environ['MAIL_PASSWORD']
 	Envstate.MAIL_USE_TLS = os.environ['MAIL_USE_TLS']
@@ -54,7 +54,7 @@ else:
 	Envstate.BUCKET = all.keys().BUCKET_NAME
 	Envstate.MASTER = all.keys().EXPECTED_MASTER
 	Envstate.MAIL_SERVER = all.keys().MAIL_SERVER
-	Envstate.MAIL_POST = all.keys().MAIL_POST
+	Envstate.MAIL_PORT = all.keys().MAIL_PORT
 	Envstate.MAIL_USERNAME = all.keys().MAIL_USERNAME
 	Envstate.MAIL_PASSWORD = all.keys().MAIL_PASSWORD
 	Envstate.MAIL_USE_TLS = all.keys().MAIL_USE_TLS
@@ -87,9 +87,12 @@ baseAWSURL = "https://s3."+Envstate.REGION+".amazonaws.com/port-bucket/"
 
 
 ##MAIL CONFIG
-app.config['MAIL_SERVER']
-app.config['MAIL_POST']
-app.config['MAIL_USERNAME']
+app.config['MAIL_SERVER']= Envstate.MAIL_SERVER
+app.config['MAIL_PORT'] = Envstate.MAIL_PORT
+app.config['MAIL_USERNAME'] = Envstate.MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = Envstate.MAIL_PASSWORD
+app.config['MAIL_USE_TLS'] = Envstate.MAIL_USE_TLS
+app.config['MAIL_USE_SSL'] = Envstate.MAIL_USE_SSL
 
 mail = Mail(app)
 
@@ -148,6 +151,10 @@ def about():
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
+	# if request.method == 'POST':
+	msg = Message('Hi', sender=Envstate.MAIL_USERNAME, recipients=['threecoast88@gmail.com'])
+	msg.body = 'Hi ivan from ivan'
+	mail.send(msg)
 	return render_template('contact.html')
 	# return render_template('index.html', files = Games)
 
