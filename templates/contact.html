@@ -4,7 +4,9 @@
 
 	<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
 		<h1 class="orb">Contact</h1>
-		<form style="display: flex; flex-direction: column;" action="/contact" method="POST">
+		{% include 'includes/_messages.html' %}
+		
+		<form style="display: flex; flex-direction: column; width: 40%;" action="/contact" method="POST">
 			<input name="name" type="text" placeholder="Your name">
 			<input name="email" type="email" placeholder="Your email">
 			<textarea name="message" id="" cols="30" rows="10" placeholder="Whats Up?"></textarea>

@@ -139,7 +139,7 @@ def is_logged_in(f):
 		if 'logged_in' in session:
 			return f(*args, **kwargs)
 		else:
-			# flash('Unauthorized, Please login', 'danger')
+			flash('Unauthorized, Please login', 'danger')
 			return redirect(url_for('login'))
 	return wrap
 
@@ -147,31 +147,37 @@ def is_logged_in(f):
 @app.route('/', methods=['GET', 'POST'])
 def about():
 	return render_template('about.html')
-	# return render_template('index.html', files = Games)
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
+	errors = []
 	if request.method == 'POST':
 		if not request.form['name']:
-			return redirect(url_for('contact'))
-		elif not request.form['email']:
-			return redirect(url_for('contact'))
-		elif not request.form['message']:
-			return redirect(url_for('contact'))
+			errors.append('Please provide your name')
+		if not request.form['email']:
+			errors.append('Please provide your email')
+		if not request.form['message']:
+			errors.append('No hello? :(')
+		if len(errors) == 1:
+			print(errors)
+			flash(errors[0], 'success')
+		elif len(errors) > 1:
+			print(errors)
+			flash('Please fill in all fields', 'success')
 		else:
 			msg = Message('A hello from '+ request.form['name'], sender=Envstate.MAIL_USERNAME, recipients=[Envstate.MAIL_USERNAME])
 			msg.html = '<p>'+request.form['message']+'</p>'+'<p>email: '+request.form['email']+'</p>'
 			mail.send(msg)
 
+		return redirect(url_for('contact'))
+
 	return render_template('contact.html')
-	# return render_template('index.html', files = Games)
 
 @app.route('/gallery', methods=['GET', 'POST'])
 def gallery():
 	print(TableData().content_data())
 	return render_template('index.html', files = TableData().content_data())
-	# return render_template('index.html', files = Games)
-		
+
 class RegisterForm(Form):
 	username = StringField('Username', [validators.Length(min=4, max=25)])
 	password = PasswordField('Password', [
@@ -191,7 +197,7 @@ def register():
 		# )
 		if dynamoClient.describe_table(TableName='master')['Table']['ItemCount'] == 0: 
 			if username != Envstate.MASTER:
-				# flash('That is not the expected master', 'success')
+				flash('That is not the expected master', 'success')
 				return redirect(url_for('register'))
 			else:		
 				TableData().masterTable.put_item(
@@ -200,10 +206,10 @@ def register():
 						'password': password
 					}
 				)
-				# flash('You are now registered and can log in', 'success')
+				flash('You are now registered and can log in', 'success')
 				return redirect(url_for('login'))
 		elif TableData().master_data()[0]['username'] == Envstate.MASTER:
-			# flash('Expected master is already registered', 'success')
+			flash('Expected master is already registered', 'success')
 			return redirect(url_for('register'))
 	else:
 		return render_template('register.html', form=form)
@@ -218,18 +224,18 @@ def login():
 		userquery = TableData().master_data()[0]['username'] 
 
 		if username != userquery:
-			# flash('Invalid username', 'success')
+			flash('Invalid username', 'success')
 			return redirect(url_for('login'))	
 		else: 
 			if sha256_crypt.verify(password_condidate, result):
 				app.logger.info('PASSWORD MATCHED')
 				session['logged_in'] = True
 				session['username'] = username
-				# flash('You are now logged in', 'success')
+				flash('You are now logged in', 'success')
 				return redirect(url_for('post'))
 			else:
 				app.logger.info('PASSWORD NOT MATCHED')
-				# flash('Invalid login', 'success')
+				flash('Invalid login', 'success')
 				return redirect(url_for('login'))
 
 	return render_template('login.html')
@@ -237,7 +243,7 @@ def login():
 @app.route('/logout')
 def logout():
 	session.clear()
-	# flash('You are now logged out', 'success')
+	flash('You are now logged out', 'success')
 	return redirect(url_for('login'))
 
 @app.route('/portal', methods=['GET', 'POST'])
