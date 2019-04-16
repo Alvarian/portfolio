@@ -15,7 +15,7 @@ from functools import wraps
 from flask_mail import Mail, Message
 
 app = Flask(__name__, static_folder='static')
-
+app.secret_key='secret123'
 
 # app.logger.addHandler(logging.StreamHandler(sys.stdout))
 # app.logger.setLevel(logging.ERROR)
@@ -351,6 +351,4 @@ def delete(ID):
 
 
 if __name__ == '__main__':
-	app.secret_key='secret123'
-
 	app.run(debug=True)
