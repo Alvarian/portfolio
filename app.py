@@ -148,6 +148,10 @@ def is_logged_in(f):
 def about():
 	return render_template('about.html')
 
+@app.route('/hobbies', methods=['GET', 'POST'])
+def hobbies():
+	return render_template('hobbies.html')
+
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
 	errors = []
@@ -173,7 +177,7 @@ def contact():
 
 	return render_template('contact.html')
 
-@app.route('/gallery', methods=['GET', 'POST'])
+@app.route('/projects', methods=['GET', 'POST'])
 def gallery():
 	print(TableData().content_data())
 	return render_template('index.html', files = TableData().content_data())
