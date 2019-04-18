@@ -48,10 +48,17 @@
 #app {
 	height: 100%;
 }
-.amatic {
+.pressStart {
 	font-family: 'Press Start 2P', cursive;
 
 	width: 100%;
+}
+.barcode {
+	/*font-family: 'Ruge Boogie', cursive;*/
+	font-family: 'Libre Barcode 39 Text', cursive;
+}
+.amatic {
+	font-family: 'Amatic SC', cursive;
 }
 body, html {
 	background-color: lightgrey;
@@ -62,6 +69,7 @@ nav {
 	background-color: white
 	/*width: 100%;*/
 }
+
 /*font-family: 'Libre Barcode 39 Text', cursive;
 font-family: 'Amatic SC', cursive;
 font-family: 'Orbitron', sans-serif;

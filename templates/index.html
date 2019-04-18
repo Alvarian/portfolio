@@ -1,14 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<nav class="row spaced amatic">
+<nav class="row spaced pressStart">
 	<div class="menu lrg">
 		<div style="display: flex; justify-content: space-between;">
 			<div>Ivan Alvarez</div>
 			<div style="display: flex; justify-content: space-between; width: 55%">
-				<div><a href="/" class="icon med">/</a></div>
+				<div><a href="/" class="icon med">/about</a></div>
 				<div><a href="/hobbies">/hobbies</a></div>
-				<div><a href="/projects">/projects</a></div>
 				<div><a href="/contact">/contact</a></div>
 			{% if session.logged_in %}
 				<div><a href="/portal">/portal</a></div>
