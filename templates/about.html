@@ -1,6 +1,26 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+	<nav class="row spaced amatic">
+		<div class="menu lrg">
+			<div style="display: flex; justify-content: space-between;">
+				<div>Ivan Alvarez</div>
+				<div style="display: flex; justify-content: space-between; width: 55%">
+					<div><a href="/" class="icon med">/</a></div>
+					<div><a href="/hobbies">/hobbies</a></div>
+					<div><a href="/projects">/projects</a></div>
+					<div><a href="/contact">/contact</a></div>
+				{% if session.logged_in %}
+					<div><a href="/portal">/portal</a></div>
+
+					<div><a href="/logout">/logout</a></div>
+				{% endif %}
+				</div>
+			</div>
+		</div>
+	</nav>
+
+  <h1 style="text-align: center;">About</h1>
 
   <div style="min-width: 400px; margin: 0 50px">
 	<div style="margin-top: 100px;">
