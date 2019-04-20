@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-	<div class="amatic">
+	<div class="amatic" id="top">
 		<nav class="row spaced" style="background-color: black; color: white; font-size: 26pt;">
 			<div class="menu lrg">
 				<div style="display: flex; justify-content: space-between;">
@@ -25,31 +25,64 @@
 	  </div>
 
 	  <div style="justify-content: center; display: flex; flex-direction: column; align-items: center; width: 100%;">
-		<div style="padding: 100px 0px; width: 100%;">
+		<div style="width: 100%;">
 		  <div class="float" style="display: flex; justify-content: space-around; width: 100%;">
 			<div style="display: flex; margin: 0px 100px">
-				<div class="icon" style="background-image: url(https://static01.nyt.com/images/2011/11/13/magazine/13duck/13duck-jumbo.jpg); background-size: 100% 100%; height: 200px; width: 200px; min-width: 200px; margin: 0 25px 0 0;"></div>
-
-				<div style="min-width: 150px; font-size: 16pt">
+				<div style="display: flex; height: 100%; justify-content: center; align-items: center;">
+					<div class="icon"></div>
+				</div>
+				<div style="min-width: 150px; font-size: 16pt; margin-top: 20px">
 				  <span style="font-size: 50pt; float: left; margin-right: 20px;">Hi</span>
 				  Im a fullstack webdev
 				  <p>I favor using nodejs and AWS</p>
 				  <p>I prefer tea instead of coffee</p>
 				  <p>No dev exp aside from autonomous deployments</p>
-				  <p>presented in <a href="/gallery">Gallery</a></p>
-				  <p>and <a href="https://github.com/Alvarian/INTRO" target="_blank">Github</a></p>
+				  <p>presented in <a style="font-size: 10pt;" class="pressStart" href="/gallery">Gallery</a></p>
+				  <p>and <a class="orbi" href="https://github.com/Alvarian/INTRO" target="_blank">Github</a></p>
 				</div>
 			</div>
-			<div class="down" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
-			  <p><a href="">View my resume</a></p>
-			  <p><a href="/contact">Contact me</a></p>
+			<div class="down" style="display: flex; align-items: center; justify-content: center; flex-direction: column; background-color: white; flex: 1">
+			  <p><span id="btn" style="font-size: 16pt; cursor: pointer; border: solid 1px black;">View my resume</span></p>
+			  <p><a style="font-size: 16pt; cursor: pointer; border: solid 1px black;" href="/contact">Contact me</a></p>
 			</div>
+			<div id="modal" style="display: none;">
+				<div class="modal-content" style="display: flex; justify-content: center;">
+					<span class="clsbtn orbi" style="cursor: pointer;">X</span>
+					<img style="min-width: 200px" src="https://i.pinimg.com/originals/bc/c2/3c/bcc23c62544224bc5133a8f0b728fc99.jpg" alt="">
+				</div>
+			</div>
+			<script>
+				// Get the modal
+				var modal = document.getElementById('modal');
 
+				// Get the button that opens the modal
+				var btn = document.getElementById("btn");
+
+				// Get the <span> element that closes the modal
+				var span = document.getElementsByClassName("clsbtn")[0];
+
+				// When the user clicks on the button, open the modal 
+				btn.onclick = function() {
+				  modal.style.display = "block";
+				}
+
+				// When the user clicks on <span> (x), close the modal
+				span.onclick = function() {
+				  modal.style.display = "none";
+				}
+
+				// When the user clicks anywhere outside of the modal, close it
+				window.onclick = function(event) {
+				  if (event.target == modal) {
+				    modal.style.display = "none";
+				  }
+				}
+			</script>
 		  </div>
 		</div>
 
 		<div class="purp" style="display: flex; justify-content: center; align-items: center;">
-	  		<h1 style="text-align: center; margin: 0; font-size: 34pt;">Incorporated...</h1>
+	  		<h1 style="text-align: center; margin: 0; font-size: 34pt; color: wheat">Incorporated...</h1>
 		</div>
 
 		<div class="float" style="display: flex; justify-content: space-around; margin-top: 70px; padding: 0px 50px;">
@@ -69,6 +102,10 @@
 
 	  </div>
 	</div>
+
+	<h1 class="footsies">
+		<a href="#top">^</a>
+	</h1>
 
   <script>
 	console.log('app start');

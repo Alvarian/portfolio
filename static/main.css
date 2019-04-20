@@ -16,6 +16,24 @@
 	width: 100%;
 }
 
+.resume {
+	background-image: url('https://i.pinimg.com/originals/bc/c2/3c/bcc23c62544224bc5133a8f0b728fc99.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+	width: 80%;
+	height: 100%;
+}
+
+.icon {
+	background-image: url('./images/WARFACE.jpg');
+	background-size: cover; 
+	background-position: 10px 0px; 
+	background-repeat: no-repeat; 
+	height: 200px; 
+	width: 200px; 
+	min-width: 200px;
+	margin-right: 25px;
+}
 .card {
 	border-style: double;
 	border-width: 5px;
@@ -92,6 +110,7 @@
 .codepro {
 	font-family: 'Source Code Pro', monospace;	
 }
+
 body, html {
 	background-color: lightgrey;
 	margin: 0;
