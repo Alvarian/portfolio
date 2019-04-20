@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-	<nav class="row spaced barcode" style="background-color: black; color: white; position: absolute;">
+	<nav class="row spaced barcode" style="background-color: black; color: white; position: absolute; min-width: 400px">
 		<div class="menu lrg">
 			<div style="display: flex; justify-content: space-between; font-size: 30pt; flex-wrap: wrap;">
 				<div style="margin-right: 100px">Ivan Alvarez</div>
@@ -23,7 +23,7 @@
 		<h1 class="orbi">Contact</h1>
 		{% include 'includes/_messages.html' %}
 		
-		<form style="display: flex; flex-direction: column; width: 40%;" action="/contact" method="POST">
+		<form style="display: flex; flex-direction: column; width: 40%; min-width: 300px;" action="/contact" method="POST">
 			<input class="orbi" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.6);" name="name" type="text" placeholder="Your name">
 			<input class="orbi" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.6);" name="email" type="email" placeholder="Your email">
 			<textarea class="orbi" style=" color: white; background-color: rgba(0,0,0,0.6);" name="message" id="" cols="30" rows="10" placeholder="Whats Up?"></textarea>
