@@ -3,11 +3,11 @@
 {% block body %}
 	<nav class="row spaced barcode" style="background-color: black; color: white;">
 		<div class="menu lrg">
-			<div style="display: flex; justify-content: space-between; font-size: 30pt;">
-				<div>Ivan Alvarez</div>
-				<div style="display: flex; justify-content: space-between; width: 55%;">
+			<div style="display: flex; justify-content: space-between; font-size: 30pt; flex-wrap: wrap;">
+				<div style="margin-right: 100px">Ivan Alvarez</div>
+				<div class="naver">
 					<div><a href="/" class="icon med">_about</a></div>
-					<div><a href="/hobbies">_hobbies</a></div>
+					<!-- <div><a href="/hobbies">_hobbies</a></div> -->
 					<div><a href="/projects">_projects</a></div>
 				{% if session.logged_in %}
 					<div><a href="/portal">_portal</a></div>
@@ -20,14 +20,14 @@
 	</nav>
 
 	<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: url('{{ url_for('static', filename='images/img_highest.jpg') }}'); height: 100%; background-repeat: no-repeat; background-size: cover;">
-		<h1 class="amatic">Contact</h1>
+		<h1 class="orbi">Contact</h1>
 		{% include 'includes/_messages.html' %}
 		
 		<form style="display: flex; flex-direction: column; width: 40%;" action="/contact" method="POST">
-			<input class="amatic" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.6);" name="name" type="text" placeholder="Your name">
-			<input class="amatic" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.6);" name="email" type="email" placeholder="Your email">
-			<textarea class="amatic" style=" color: white; background-color: rgba(0,0,0,0.6);" name="message" id="" cols="30" rows="10" placeholder="Whats Up?"></textarea>
-			<input class="amatic" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.5);" type="submit" value="Submit">
+			<input class="orbi" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.6);" name="name" type="text" placeholder="Your name">
+			<input class="orbi" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.6);" name="email" type="email" placeholder="Your email">
+			<textarea class="orbi" style=" color: white; background-color: rgba(0,0,0,0.6);" name="message" id="" cols="30" rows="10" placeholder="Whats Up?"></textarea>
+			<input class="orbi" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.5);" type="submit" value="Submit">
 		</form>
 	</div>
 
