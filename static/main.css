@@ -1,13 +1,33 @@
-.school, .purp {
+.school, .purp, .theLib {
 	position: relative;
 	background-position: center;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 }
+
 .school {
 	background-image: url('./images/img_class.jpg');
 	min-height: 100vh;
+}
+
+.theLib {
+	background-image: url('./images/library.jpg');
+	filter: blur(3px);
+	min-height: 400px;
+	width: 100%;
+}
+
+.circle {
+	z-index: 10;
+	border-radius: 50%;
+	background-color: white;
+	height: 120px;
+	width: 120px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 36pt;
 }
 
 .purp {
