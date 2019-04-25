@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-	<div class="amatic" id="top">
+	<div class="amatic" id="scrolltop">
 		<nav class="row spaced" style="background-color: black; color: white; font-size: 36pt;">
 			<div class="menu lrg">
 				<div style="display: flex; justify-content: space-between;">
@@ -112,12 +112,28 @@
 			<div style="display: flex; justify-content: space-around; align-items: center; min-height: 400px; width: 70%; flex-wrap: wrap; z-index: 1">
 				<a href="" class="circle"><i class="fab fa-github"></i></a>
 				<a href="" class="circle"><i class="fab fa-linkedin-in"></i></a>
-				<a href="" class="circle"><i class="fas fa-arrow-up"></i></a>
+				<a class="circle scrollUp"><i class="fas fa-arrow-up"></i></a>
 			</div>
 		</div>
 	</div>
 
+	<script>
+		// SCROLL UP
+
+		document.querySelector('.scrollUp').addEventListener('click', () => {
+		    let scrollStep = -window.scrollY / (1000 / 15),
+	        	scrollInterval = setInterval(function(){
+			        if ( window.scrollY != 0 ) {
+			            window.scrollBy( 0, scrollStep );
+			        }
+			        else clearInterval(scrollInterval); 
+	    		}, 15);
+	    })
+	</script>
+
   <script>
+	// BADGE DEMO
+
 	console.log('app start');
 	let used = document.querySelector('.loopUsed');
 	let understood = document.querySelector('.loopUnderstood');
