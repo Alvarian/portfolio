@@ -52,6 +52,7 @@
 
 .bleach {
 	cursor: pointer;
+	color: white;
 }
 .bleach:link {
 	text-decoration: none;
@@ -102,7 +103,7 @@
 }
 
 .clsbtn {
-	
+	width: 20px
 }
 
 .icon {
