@@ -19,6 +19,37 @@
 	width: 100%;
 }
 
+.downRes {
+	width: 100%; 
+	display: flex; 
+	justify-content: center; 
+	position: relative;
+}
+.tooltiptext {
+	opacity: 0;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	font-size: 14pt;
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	/*top: -5px;*/
+	left: 55%;
+}
+@keyframes tipFade {
+	from { opacity: 0 }
+	to { opacity: 1 }
+}
+.downRes:hover .tooltiptext {
+	animation-name: tipFade;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}
+
 .bleach {
 	cursor: pointer;
 }
