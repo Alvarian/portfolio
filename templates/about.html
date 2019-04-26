@@ -8,12 +8,12 @@
 					<div>Ivan Alvarez</div>
 					<div class="naver">
 						<!-- <div><a href="/hobbies">/hobbies</a></div> -->
-						<div><a href="/projects">/projects</a></div>
-						<div><a href="/contact">/contact</a></div>
+						<div><a class="bleach" href="/projects">/projects</a></div>
+						<div><a class="bleach" href="/contact">/contact</a></div>
 					{% if session.logged_in %}
-						<div><a href="/portal">/portal</a></div>
+						<div><a class="bleach" href="/portal">/portal</a></div>
 
-						<div><a href="/logout">/logout</a></div>
+						<div><a class="bleach" href="/logout">/logout</a></div>
 					{% endif %}
 					</div>
 				</div>
@@ -110,9 +110,9 @@
 		<div style="position: absolute;" class="theLib"></div>
 		<div style="display: flex; justify-content: center; align-items: center; width: 100%;">
 			<div style="display: flex; justify-content: space-around; align-items: center; min-height: 400px; width: 70%; flex-wrap: wrap; z-index: 1">
-				<a href="" class="circle"><i class="fab fa-github"></i></a>
-				<a href="" class="circle"><i class="fab fa-linkedin-in"></i></a>
-				<a class="circle scrollUp"><i class="fas fa-arrow-up"></i></a>
+				<a href="" class="circle anchor"><i class="fab fa-github"></i></a>
+				<a href="" class="circle anchor"><i class="fab fa-linkedin-in"></i></a>
+				<a class="circle anchor scrollUp"><i class="fas fa-arrow-up"></i></a>
 			</div>
 		</div>
 	</div>

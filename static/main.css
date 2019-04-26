@@ -19,10 +19,35 @@
 	width: 100%;
 }
 
+.bleach {
+	cursor: pointer;
+}
+.bleach:link {
+	text-decoration: none;
+}
+.bleach:visited {
+	color: white;
+	text-decoration: none;
+}
+
+.anchor {
+	cursor: pointer;
+}
+.anchor:link {
+	text-decoration: none;
+}
+.anchor:visited {
+	text-decoration: none;
+}
+.anchor:hover {
+	filter: invert(1);
+}
+
 .circle {
 	z-index: 10;
 	border-radius: 50%;
 	background-color: white;
+	color: black;
 	height: 120px;
 	width: 120px;
 	display: flex;

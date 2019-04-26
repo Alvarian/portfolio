@@ -6,13 +6,13 @@
 			<div style="display: flex; justify-content: space-between; font-size: 30pt; flex-wrap: wrap;">
 				<div style="margin-right: 100px">Ivan Alvarez</div>
 				<div class="naver">
-					<div><a href="/" class="med">_about</a></div>
+					<div><a href="/" class="med bleach">_about</a></div>
 					<!-- <div><a href="/hobbies">_hobbies</a></div> -->
-					<div><a href="/projects">_projects</a></div>
+					<div><a class="bleach" href="/projects">_projects</a></div>
 				{% if session.logged_in %}
-					<div><a href="/portal">_portal</a></div>
+					<div><a class="bleach" href="/portal">_portal</a></div>
 
-					<div><a href="/logout">_logout</a></div>
+					<div><a class="bleach" href="/logout">_logout</a></div>
 				{% endif %}
 				</div>
 			</div>
