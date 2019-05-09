@@ -38,9 +38,10 @@
 		<div class="gallery">
 		{% for file in files %}
 			<div style="display: none;" class="open_{{ file.id }}" id="modal">
+
+				<!-- FOR GAMES -->
 				{% if file.game_file %}
 					{% if file.game_file == 'None' %}
-
 					{% else %}
 						<div class="modal-content">
 							<a href="#" class="close {{ file.id }}_close">X</a>
@@ -57,15 +58,14 @@
 								$(document).ready(() => {
 									{{ file.title }}.start(document.querySelector(`.{{ file.title }}_model`));
 								});
-
-							});
-						
+							});		
 						</script>
 					{% endif %}
 				{% endif %}
+
+				<!-- FOR DEPLOYED -->
 				{% if file.deployed_url %}
 					{% if file.deployed_url == 'None' %}
-
 					{% else %}
 						<div class="modal-content">
 							<a href="#" class="close {{ file.id }}_close">X</a>
@@ -77,10 +77,17 @@
 				{% endif %}
 			</div>
 
-			<div style="background-image: url('{{ file.icon_file }}');" class="card card_{{ file.id }}"></div>
+			<div class="dropCard">
+				<div style="position: relative;">
+					<div style="background-image: url('{{ file.icon_file }}');" class="card card_{{ file.id }}"></div>
+					<!-- <div style="position: absolute; background-color: grey; opacity: .5; height: 100px; width: 100%;"></div> -->
+				</div>
+				<div style="height: 100px;"></div>
+				<!-- GITHUB -->
+				<a class="gitBTN" target="_blank" href={{ file.git_url }}><i class="fab fa-4x fa-github"></i></a>
+			</div>
 
 			<script>
-				
 				$(".card_{{ file.id }}").on('click', () => {
 					$(".open_{{ file.id }}").css('display','block');
 				});
@@ -88,9 +95,6 @@
 					$(".article").text('{{ file.description }}');
 					$(".title").text('{{ file.title }}');
 					$(".type").text('{{ file.app_type }}');
-
-					$('.icons').empty();
-					$(".icons").append(`<a target="_blank" href={{ file.git_url }}><i class="fab fa-4x fa-github"></i></a>`)
 				});
 					// When the user clicks on <span> (x), close the modal
 				document.getElementsByClassName("{{ file.id }}_close")[0].onclick = () => {
@@ -98,7 +102,6 @@
 				}
 			</script>
 		{% endfor %}		
-		
 		</div>
 	</div>
 </div>
