@@ -81,7 +81,7 @@
 	position: relative; 
 	justify-content: center; 
 	/*margin-bottom: 100px;*/
-	z-index: 2;
+	z-index: 1;
 }
 .dropCard:focus .gitBTN,
 .dropCard:focus-within .gitBTN,
