@@ -173,7 +173,8 @@ def contact():
 			msg.html = '<p>'+request.form['message']+'</p>'+'<p>email: '+request.form['email']+'</p>'
 			mail.send(msg)
 
-		return redirect(url_for('contact'))
+			flash('Submitted! Thank you for reaching out, will get back to you shortly', 'success')
+			return redirect(url_for('contact'))
 
 	return render_template('contact.html')
 
