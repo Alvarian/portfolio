@@ -94,7 +94,6 @@ app.config['MAIL_PASSWORD'] = Envstate.MAIL_PASSWORD
 app.config['MAIL_USE_TLS'] = Envstate.MAIL_USE_TLS
 app.config['MAIL_USE_SSL'] = Envstate.MAIL_USE_SSL
 
-mail = Mail(app)
 
 
 ##AWS CONTENT STATE
@@ -169,6 +168,7 @@ def contact():
 			print(errors)
 			flash('Please fill in all fields', 'success')
 		else:
+			mail = Mail(app)
 			msg = Message('A hello from '+ request.form['name'], sender=Envstate.MAIL_USERNAME, recipients=[Envstate.MAIL_USERNAME])
 			msg.html = '<p>'+request.form['message']+'</p>'+'<p>email: '+request.form['email']+'</p>'
 			mail.send(msg)
