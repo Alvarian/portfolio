@@ -94,15 +94,31 @@
 		<div class="float" style="display: flex; justify-content: space-around; margin: 70px 30px;">
 		  <div class="bord">
 			<h2>Commonly Used</h2>
-			<div class="loopUsed"></div>
+			<div class="loopUsed">
+				<i class="badges devicon-javascript-plain colored"></i>
+				<i class="badges devicon-jquery-plain-wordmark colored"></i>
+				<i class="badges devicon-nodejs-plain colored"></i>
+				<i class="badges devicon-css3-plain colored"></i>
+				<i class="badges devicon-html5-plain colored"></i>
+				<i class="badges devicon-python-plain colored"></i>
+				<i class="badges devicon-amazonwebservices-plain-wordmark colored"></i>
+			</div>
 		  </div>
 		  <div class="bord">
 			<h2>Tried and Understood</h2>
-			<div class="loopUnderstood"></div>
+			<div class="loopUnderstood">
+				<i class="badges devicon-redis-plain colored"></i>
+				<i class="badges devicon-postgresql-plain colored"></i>
+				<i class="badges devicon-mongodb-plain-wordmark colored"></i>
+				<i class="badges devicon-mysql-plain-wordmark colored"></i>
+			</div>
 		  </div>
 		  <div class="bord">
 			<h2>Learning...</h2>
-			<div class="loopLoading"></div>
+			<div class="loopLoading">
+				<i class="badges devicon-cplusplus-plain colored"></i>
+				<i class="badges devicon-react-original-wordmark colored"></i>
+			</div>
 		  </div>
 		</div>
 
@@ -133,28 +149,5 @@
 	    		}, 15);
 	    })
 	</script>
-
-  <script>
-	// BADGE DEMO
-
-	console.log('app start');
-	let used = document.querySelector('.loopUsed');
-	let understood = document.querySelector('.loopUnderstood');
-	let loading = document.querySelector('.loopLoading');
-
-	let loop = (u,arr) => {
-	  for(let i = 0; i < arr.length; i++){
-		let el = document.createElement('div');
-		el.setAttribute('class', 'badges');
-		el.style.backgroundColor = arr[i];
-		el.style.height = '75px';
-		el.style.width = '75px';
-		u.append(el);
-	  }
-	}
-	loop(used, ['red', 'blue', 'yellow']);
-	loop(understood, ['purple', 'orange', 'green', 'blue', 'yellow', 'pink', 'grey', 'brown']);
-	loop(loading, ['pink', 'grey', 'brown']);
-  </script>
 
 {% endblock %}

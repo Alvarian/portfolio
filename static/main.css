@@ -61,7 +61,10 @@
 	color: white;
 	text-decoration: none;
 }
-
+.badges {
+	font-size: 5em;
+	height: 80px;
+}
 .anchor {
 	cursor: pointer;
 }
