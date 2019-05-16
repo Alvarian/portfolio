@@ -87,12 +87,20 @@ baseAWSURL = "https://s3."+Envstate.REGION+".amazonaws.com/port-bucket/"
 
 
 ##MAIL CONFIG
-app.config['MAIL_SERVER']= Envstate.MAIL_SERVER
-app.config['MAIL_PORT'] = Envstate.MAIL_PORT
-app.config['MAIL_USERNAME'] = Envstate.MAIL_USERNAME
-app.config['MAIL_PASSWORD'] = Envstate.MAIL_PASSWORD
-app.config['MAIL_USE_TLS'] = Envstate.MAIL_USE_TLS
-app.config['MAIL_USE_SSL'] = Envstate.MAIL_USE_SSL
+# app.config['MAIL_SERVER']= Envstate.MAIL_SERVER
+# app.config['MAIL_PORT'] = Envstate.MAIL_PORT
+# app.config['MAIL_USERNAME'] = Envstate.MAIL_USERNAME
+# app.config['MAIL_PASSWORD'] = Envstate.MAIL_PASSWORD
+# app.config['MAIL_USE_TLS'] = Envstate.MAIL_USE_TLS
+# app.config['MAIL_USE_SSL'] = Envstate.MAIL_USE_SSL
+
+app.config.update(
+	MAIL_SERVER = Envstate.MAIL_SERVER, 
+	MAIL_PORT = Envstate.MAIL_PORT,
+	MAIL_USE_SSL = Envstate.MAIL_USE_SSL,
+	MAIL_USERNAME = Envstate.MAIL_USERNAME,
+	MAIL_PASSWORD = Envstate.MAIL_PASSWORD
+)
 
 mail = Mail(app)
 
