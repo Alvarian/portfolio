@@ -16,7 +16,6 @@ from flask_mail import Mail, Message
 
 app = Flask(__name__, static_folder='static')
 app.secret_key='secret123'
-mail = Mail(app)
 
 # app.logger.addHandler(logging.StreamHandler(sys.stdout))
 # app.logger.setLevel(logging.ERROR)
@@ -61,6 +60,8 @@ else:
 	Envstate.MAIL_USE_TLS = all.keys().MAIL_USE_TLS
 	Envstate.MAIL_USE_SSL = all.keys().MAIL_USE_SSL
 # AWS_CONFIG = all.keys()
+
+mail = Mail(app)
 
 ##INIT DYNAMO
 dynamodb = boto3.resource(
