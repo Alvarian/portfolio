@@ -61,8 +61,6 @@ else:
 	Envstate.MAIL_USE_SSL = all.keys().MAIL_USE_SSL
 # AWS_CONFIG = all.keys()
 
-mail = Mail(app)
-
 ##INIT DYNAMO
 dynamodb = boto3.resource(
 	'dynamodb',
@@ -96,6 +94,7 @@ app.config['MAIL_PASSWORD'] = Envstate.MAIL_PASSWORD
 app.config['MAIL_USE_TLS'] = Envstate.MAIL_USE_TLS
 app.config['MAIL_USE_SSL'] = Envstate.MAIL_USE_SSL
 
+mail = Mail(app)
 
 
 ##AWS CONTENT STATE
