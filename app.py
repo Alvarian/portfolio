@@ -16,6 +16,7 @@ from flask_mail import Mail, Message
 
 app = Flask(__name__, static_folder='static')
 app.secret_key='secret123'
+mail = Mail(app)
 
 # app.logger.addHandler(logging.StreamHandler(sys.stdout))
 # app.logger.setLevel(logging.ERROR)
@@ -168,7 +169,6 @@ def contact():
 			print(errors)
 			flash('Please fill in all fields', 'success')
 		else:
-			mail = Mail(app)
 			msg = Message('A hello from '+ request.form['name'], sender=Envstate.MAIL_USERNAME, recipients=[Envstate.MAIL_USERNAME])
 			msg.html = '<p>'+request.form['message']+'</p>'+'<p>email: '+request.form['email']+'</p>'
 			mail.send(msg)
