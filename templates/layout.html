@@ -17,46 +17,18 @@
 	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 	  crossorigin="anonymous"></script>
 
-	<style>
- 	  .loopUnderstood, .loopUsed, .loopLoading {
-        display: flex;
-        display: -webkit-flex;
-        -webkit-flex-wrap: wrap;  
-        flex-wrap: wrap;
-        flex: 1;
-        max-width: 300px;
-        min-width: 300px;
-      }  
-    .naver {
-      display: flex; 
-      justify-content: space-around; 
-      flex-wrap: wrap;
-      width: 35%;
-    }
-	  .badges {
-        margin: 5px;
-      }
-      .float {
-        display: -webkit-flex;
-        -webkit-flex-wrap: wrap;
-        display: flex;   
-        flex-wrap: wrap;
-      }
-      .bord {
-        display: flex;
-        flex-direction: column;
-      }
-    html {
-      height: 100%;
-
-    }
-    body {
-      overflow: auto;
-    }
-	</style>  
 </head>
 <body>
 	{% block body %}
 	{% endblock %}	
+
+  <script type="text/javascript">
+    $('input').keypress(function(e){
+      if(e.which == 13){
+        e.preventDefault();
+        $('form').submit();
+      }
+    })
+  </script>
 </body>
 </html>

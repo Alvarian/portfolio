@@ -1,3 +1,40 @@
+.loopUnderstood, .loopUsed, .loopLoading {
+	display: flex;
+	display: -webkit-flex;
+	-webkit-flex-wrap: wrap;  
+	flex-wrap: wrap;
+	flex: 1;
+	max-width: 300px;
+	min-width: 300px;
+}  
+.naver {
+	display: flex; 
+	justify-content: space-around; 
+	flex-wrap: wrap;
+	width: 35%;
+}
+.bord > h2 {
+	text-align: center;
+}
+.badges {
+	margin: 5px;
+}
+.float {
+	display: -webkit-flex;
+	-webkit-flex-wrap: wrap;
+	display: flex;   
+	flex-wrap: wrap;
+}
+.bord {
+	display: flex;
+	flex-direction: column;
+}
+html {
+	height: 100%;
+}
+body {
+	overflow: auto;
+}
 .school, .purp, .theLib {
 	position: relative;
 	background-position: center;
@@ -6,7 +43,15 @@
 	background-attachment: fixed;
 }
 
-
+.resume {
+	min-width: 200px; 
+	width: 90%; 
+	min-height: 520px; 
+	background-image: url('./images/jpgresume.jpg'); 
+	background-position: center; 
+	background-size: cover;
+	background-position: center;
+}
 .school {
 	background-image: url('./images/img_class.jpg');
 	min-height: 100vh;
@@ -64,6 +109,7 @@
 .badges {
 	font-size: 5em;
 	height: 80px;
+	margin: 10px;
 }
 .anchor {
 	cursor: pointer;
@@ -136,13 +182,13 @@
 	width: 100%;
 }
 
-.resume {
+/*.resume {
 	background-image: url('https://i.pinimg.com/originals/bc/c2/3c/bcc23c62544224bc5133a8f0b728fc99.jpg');
 	background-size: cover;
 	background-repeat: no-repeat;
 	width: 80%;
 	height: 100%;
-}
+}*/
 
 .clsbtn {
 	width: 20px
