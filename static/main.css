@@ -355,7 +355,8 @@ body {
 
 body, html {
 	margin: 0;
-	height: 91%;
+	height: 100%;
+	width: 100%;
 }
 nav {
 	background-color: white
