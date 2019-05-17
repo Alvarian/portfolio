@@ -287,16 +287,70 @@ body {
 	width: 40%; 
 	min-width: 300px;
 }
-
-/*@media only screen and (max-width: 600px) {
-  .contactForm {
-    width: 70%;
-    height: 40%;
+.footerBtns {
+	display: flex; 
+	justify-content: space-around; 
+	align-items: center; 
+	min-height: 400px; 
+	width: 70%; 
+	flex-wrap: wrap; 
+	z-index: 1;
+}
+#scrolltop {
+	background-color: lightgrey;
+}
+.des {
+	display: flex; 
+	margin: 0px 100px
+}
+.welcome {
+	text-align: center; margin: 0; font-size: 38pt;
+}
+@media only screen and (max-width: 600px) {
+  .circle {
+    margin: 0px 30px;
+	height: 90px;
+	width: 90px;
   }
-}*/
+  .des {
+  	background-color: wheat;
+  	margin: 0;
+  	width: 100%;
+  }
+  .float {
+  	opacity: 0.97
+  }
+  .welcome {
+  	color: wheat;
+  }
+  #scrolltop {
+  	/*background-image: url('./images/img_class.jpg');*/
+	background-image: url('./images/img_clock1.jpg');
+  	background-size: cover;
+  	background-position: center;
+  	background-repeat: no-repeat;
+  	background-attachment: fixed;
+	min-height: 100vh;	
+  }
+  .theLib {
+  	background: none;
+  	/*background-color: rgba(245, 222, 179, 0);*/
+  	background-color: black;
+  	/*filter: none;*/
+  }
+  .bord {
+  	background-color: rgba(245, 222, 179, 0.9);
+  	margin: 5px 0px;
+  	border-radius: 10px;
+  	/*width: 100%;*/
+  }
+  .purp, .school {
+  	background-color: none;
+  	background: none;
+  }
+}
 
 body, html {
-	background-color: lightgrey;
 	margin: 0;
 	height: 91%;
 }
