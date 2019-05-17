@@ -281,6 +281,20 @@ body {
 	font-family: 'Source Code Pro', monospace;	
 }
 
+.contactForm {
+	display: flex; 
+	flex-direction: column; 
+	width: 40%; 
+	min-width: 300px;
+}
+
+/*@media only screen and (max-width: 600px) {
+  .contactForm {
+    width: 70%;
+    height: 40%;
+  }
+}*/
+
 body, html {
 	background-color: lightgrey;
 	margin: 0;
@@ -300,3 +314,4 @@ font-family: 'Press Start 2P', cursive;*/
 font-family: 'Gloria Hallelujah', cursive;
 font-family: 'Play', sans-serif;
 font-family: 'Source Code Pro', monospace;*/
+

@@ -24,7 +24,7 @@
 		<div class="orbi">
 			{% include 'includes/_messages.html' %}
 		</div>
-		<form style="display: flex; flex-direction: column; width: 40%; min-width: 300px;" action="/contact" method="POST">
+		<form class="contactForm" action="/contact" method="POST">
 			<input class="orbi" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.6);" name="name" type="text" placeholder="Your name">
 			<input class="orbi" style="font-size: 22pt;  color: white; background-color: rgba(0,0,0,0.6);" name="email" type="email" placeholder="Your email">
 			<textarea class="orbi" style=" color: white; background-color: rgba(0,0,0,0.6);" name="message" id="" cols="30" rows="10" placeholder="Whats Up?"></textarea>
