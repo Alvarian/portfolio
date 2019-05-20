@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-	<nav class="row spaced barcode" style="background-color: black; color: white; position: absolute; width: 100vw">
+	<nav class="row spaced barcode" style="background-color: black; color: white; width: 100%">
 		<div class="menu lrg">
 			<div style="display: flex; justify-content: space-between; font-size: 30pt; flex-wrap: wrap;">
 				<div style="margin-right: 100px">Ivan Alvarez</div>
@@ -19,7 +19,7 @@
 		</div>
 	</nav>
 
-	<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: url('{{ url_for('static', filename='images/img_highest.jpg') }}'); height: 100%; background-repeat: no-repeat; background-size: cover;">
+	<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: url('{{ url_for('static', filename='images/img_highest.jpg') }}'); min-height: 100vh; min-width: 300px; background-repeat: no-repeat; background-size: cover; background-attachment: fixed;">
 		<h1 class="orbi">Contact</h1>
 		<div class="orbi">
 			{% include 'includes/_messages.html' %}
