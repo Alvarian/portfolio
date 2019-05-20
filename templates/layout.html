@@ -32,8 +32,23 @@
 			}
 		})
 
-		let w = window.innerWidth;
-		console.log(w);
+		$(window).ready(() => {
+			let w = window.innerWidth;
+			console.log('guuh');
+			if(w <= 600){
+				$('.naver').empty();
+				console.log('empty');
+			}
+		});
+
+		$(window).resize(() => {
+			let w = window.innerWidth;
+			console.log('guuh');
+			if(w <= 600){
+				$('.naver').empty();
+				console.log(w);
+			}
+		});
 	</script>
 </body>
 </html>
