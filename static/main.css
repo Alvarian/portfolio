@@ -7,12 +7,50 @@
 	max-width: 300px;
 	min-width: 300px;
 }  
+
 .naver {
 	display: flex; 
 	justify-content: space-around; 
 	flex-wrap: wrap;
 	width: 35%;
 }
+.dropBtn {
+	border: solid 3px white;
+	height: 70px; 
+	width: 70px; 
+	border-radius: 10px;
+	display: flex;
+	justify-content: space-around;
+	flex-direction: column;
+	align-items: center;
+}
+.dropBtn > div {
+	border: solid 3px white;
+	border-radius: 10px;
+	width: 70%;
+}
+.dropBtn > p {
+	font-size: 30pt;
+}
+.drop {
+	/*position: relative;*/
+	display: inline-block;
+}
+.dropMenu {
+	position: absolute;
+	display: none;
+	z-index: 1;
+	min-width: 100%;
+	right: 20px;
+	background-color: black;
+	color: white;
+}
+
+.dropMenu a {
+	border: solid 1px white;
+	display: block;
+}
+
 .bord > h2 {
 	text-align: center;
 }
