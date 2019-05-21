@@ -402,11 +402,11 @@ body {
   	background-size: cover;
   	background-position: center;
   	background-repeat: no-repeat;
-  	background-attachment: fixed;
+  	background-attachment: initial;
 	min-height: 100vh;	
 	width: 100%;
   }
-  #scrolltop:before {
+/*  #scrolltop:before {
 	content: "";
 	display: block;
 	background-attachment: fixed;
@@ -420,7 +420,7 @@ body {
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
-  }
+  }*/
   .theLib {
   	background: none;
   	/*background-color: rgba(245, 222, 179, 0);*/
