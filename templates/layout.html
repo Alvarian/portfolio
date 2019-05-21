@@ -25,22 +25,34 @@
 	{% endblock %}	
 
 	<script type="text/javascript">
-			$('input').keypress(function(e){
-				if(e.which == 13){
-					e.preventDefault();
-					$('form').submit();
-				}
-			});
-
-			let loop2 = (arr, func) => {
-				for(let i of arr){
-					func(i)
-				}
+		$('input').keypress(function(e){
+			if(e.which == 13){
+				e.preventDefault();
+				$('form').submit();
 			}
+		});
 
+		let loop2 = (arr, func) => {
+			for(let i of arr){
+				func(i)
+			}
+		}
+
+		let w = window.innerWidth;
+		let iters = ["/","/projects","/contact"];
+		if(w <= 600){
+			$('.naver').empty().append($('<div></div>'));
+			$('.naver > div').append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).addClass("drop");
+			loop2(iters, (i) => {
+				$('.dropBtn').append($('<div></div>').addClass('lines'));			
+				$('.dropMenu').append($(`<a href="${i}">${i}</a>`));
+			});
+		}
+
+		$(window).resize(() => {
 			let w = window.innerWidth;
-			let iters = ["/","/projects","/contact"];
 			if(w <= 600){
+				console.log('guuh');
 				$('.naver').empty().append($('<div></div>'));
 				$('.naver > div').append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).addClass("drop");
 				loop2(iters, (i) => {
@@ -48,30 +60,6 @@
 					$('.dropMenu').append($(`<a href="${i}">${i}</a>`));
 				});
 			}
-
-			$(window).resize(() => {
-				let w = window.innerWidth;
-				if(w <= 600){
-					console.log('guuh');
-					$('.naver').empty().append($('<div></div>'));
-					$('.naver > div').append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).addClass("drop");
-					loop2(iters, (i) => {
-						$('.dropBtn').append($('<div></div>').addClass('lines'));			
-						$('.dropMenu').append($(`<a href="${i}">${i}</a>`));
-					});
-				}
-				let toogle = true;
-				$('.drop').click(() => {
-					if(toogle == true){
-						$('.dropMenu').css('display','block');
-						toogle = false;
-					} else {
-						$('.dropMenu').css('display','none');
-						toogle = true;
-					}
-				});
-			});
-
 			let toogle = true;
 			$('.drop').click(() => {
 				if(toogle == true){
@@ -82,7 +70,18 @@
 					toogle = true;
 				}
 			});
+		});
 
+		let toogle = true;
+		$('.drop').click(() => {
+			if(toogle == true){
+				$('.dropMenu').css('display','block');
+				toogle = false;
+			} else {
+				$('.dropMenu').css('display','none');
+				toogle = true;
+			}
+		});
 	</script>
 </body>
 </html>

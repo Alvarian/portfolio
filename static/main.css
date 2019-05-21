@@ -16,8 +16,8 @@
 }
 .dropBtn {
 	border: solid 3px white;
-	height: 70px; 
-	width: 70px; 
+	height: 50px; 
+	width: 50px; 
 	border-radius: 10px;
 	display: flex;
 	justify-content: space-around;
@@ -35,20 +35,33 @@
 .drop {
 	/*position: relative;*/
 	display: inline-block;
+	/*margin: 10px 0;*/
+}
+.contactMenu {
+	display: flex; 
+	justify-content: space-between; 
+	font-size: 30pt; 
+	flex-wrap: wrap;
+}
+.menuLayer {
+	display: flex; 
+	justify-content: space-between;
 }
 .dropMenu {
 	position: absolute;
 	display: none;
 	z-index: 1;
-	min-width: 100%;
+	width: 100%;
 	right: 20px;
 	background-color: black;
 	color: white;
+	left: 0.3px;
 }
 
 .dropMenu a {
 	border: solid 1px white;
 	display: block;
+	text-align: center;
 }
 
 .bord > h2 {
@@ -344,12 +357,28 @@ body {
 .welcome {
 	text-align: center; margin: 0; font-size: 38pt;
 }
+.navName {
+	margin-right: 100px;
+}
 @media only screen and (max-width: 600px) {
+  .menuLayer {
+	display: flex; 
+	justify-content: space-around;
+	align-items: center;
+  }
+  .contactMenu {
+  	justify-content: space-around;
+	align-items: center;
+  	display: flex;
+  }
+  .navName {
+  	margin-right: 0;
+  }
   body { 
 	max-width: 600px;
   }
   .naver {
-
+	width: 0;
   }
   .circle {
     margin: 0px 30px;
@@ -398,7 +427,7 @@ body, html {
 	margin: 0;
 	height: 100%;
 	/*width: 100%;*/
-	min-width: 400px;
+	min-width: 380px;
 	/*background-color: black;*/
 }
 nav {
