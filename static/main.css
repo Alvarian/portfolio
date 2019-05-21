@@ -398,7 +398,7 @@ body:before {
   width: 100%;
   height: 100%;
   z-index: -10;
-  background: url(photos/2452.jpg) no-repeat center center;
+  background: url('./images/img_clock1.jpg') no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -423,8 +423,7 @@ body:before {
   .welcome {
   	color: wheat;
   }
-  #scrolltop {
-  	/*background-image: url('./images/img_class.jpg');*/
+/*  #scrolltop {
 	background-image: url('./images/img_clock1.jpg');
   	background-size: cover;
   	background-position: center;
@@ -432,11 +431,11 @@ body:before {
   	background-attachment: fixed;
 	min-height: 100vh;	
 	width: 100%;
-  }
+  }*/
 /*  #scrolltop:before {
 	content: "";
 	display: block;
-	background-attachment: fixed;
+	position: fixed;
 	left: 0;
 	top: 0;
 	width: 100%;
