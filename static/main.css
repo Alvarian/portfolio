@@ -406,6 +406,21 @@ body {
 	min-height: 100vh;	
 	width: 100%;
   }
+  #scrolltop:before {
+	content: "";
+	display: block;
+	background-attachment: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -10;
+	background: url('./images/img_clock1.jpg') no-repeat center center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+  }
   .theLib {
   	background: none;
   	/*background-color: rgba(245, 222, 179, 0);*/
@@ -426,7 +441,6 @@ body {
 
 body, html {
 	margin: 0;
-	height: 100%;
 	width: 100%;
 	min-width: 360px;
 	overflow-x: hidden;
