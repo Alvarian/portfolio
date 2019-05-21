@@ -404,6 +404,7 @@ body {
   	background-repeat: no-repeat;
   	background-attachment: fixed;
 	min-height: 100vh;	
+	width: 100%;
   }
   .theLib {
   	background: none;
@@ -426,8 +427,9 @@ body {
 body, html {
 	margin: 0;
 	height: 100%;
-	/*width: 100%;*/
-	min-width: 380px;
+	width: 100%;
+	min-width: 360px;
+	overflow-x: hidden;
 	/*background-color: black;*/
 }
 nav {
