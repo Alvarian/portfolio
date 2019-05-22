@@ -38,50 +38,69 @@
 			}
 		}
 
-		let w = window.innerWidth;
-		let iters = ["/","/projects","/contact"];
-		if(w <= 600){
-			$('.naver').empty().append($('<div></div>'));
-			$('.naver > div').append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).addClass("drop");
-			loop2(iters, (i) => {
-				$('.dropBtn').append($('<div></div>').addClass('lines'));			
-				$('.dropMenu').append($(`<a href="${i}">${i}</a>`));
-			});
-		}
-
-		$(window).resize(() => {
-			let w = window.innerWidth;
-			if(w <= 600){
-				console.log('guuh');
-				$('.naver').empty().append($('<div></div>'));
-				$('.naver > div').append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).addClass("drop");
-				loop2(iters, (i) => {
-					$('.dropBtn').append($('<div></div>').addClass('lines'));			
-					$('.dropMenu').append($(`<a href="${i}">${i}</a>`));
-				});
-			}
-			let toogle = true;
+		// MENU TOGGLE
+		function tog(){
+			let closed = true;
 			$('.drop').click(() => {
-				if(toogle == true){
+				if(closed == true){
 					$('.dropMenu').css('display','block');
-					toogle = false;
+					closed = false;
 				} else {
 					$('.dropMenu').css('display','none');
-					toogle = true;
+					closed = true;
 				}
 			});
+
+			$(window).click((e) => {
+				console.log(e.target.className);
+				let clas = e.target.className;
+				if(clas == 'drop' || clas == 'dropBtn' || clas == 'lines'){} else {
+					$('.dropMenu').css('display','none');
+					closed = true;
+				}
+			})
+		}
+
+		// MENU VERSION ON LOAD
+		let iters = ["/","/projects","/contact"];
+		$(window).ready(() => {
+			tog();
+			let w = window.innerWidth;
+			if(w <= 600){
+				$('.naver').css('display', 'none');
+				$('.drop').append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).css('display','block');
+				loop2(iters, (i) => {
+					$('.dropBtn').append($('<div></div>').addClass('lines'));			
+					if(i == '/'){
+						$('.dropMenu').append($(`<a href="${i}">${i}home</a>`).addClass('bleach'));
+					} else {
+						$('.dropMenu').append($(`<a href="${i}">${i}</a>`).addClass('bleach'));
+					}
+				});
+			} 
 		});
 
-		let toogle = true;
-		$('.drop').click(() => {
-			if(toogle == true){
-				$('.dropMenu').css('display','block');
-				toogle = false;
+		// MENU VERSION ON RESIZE
+		$(window).resize(() => {
+			tog();
+			let w = window.innerWidth;
+			if(w <= 600){
+				$('.naver').css('display', 'none');
+				$('.drop').empty().append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).css('display','block');
+				loop2(iters, (i) => {
+					$('.dropBtn').append($('<div></div>').addClass('lines'));			
+					if(i == '/'){
+						$('.dropMenu').append($(`<a href="${i}">${i}home</a>`).addClass('bleach'));
+					} else {
+						$('.dropMenu').append($(`<a href="${i}">${i}</a>`).addClass('bleach'));
+					}
+				});
 			} else {
-				$('.dropMenu').css('display','none');
-				toogle = true;
+				$('.naver').css('display', 'block');
+				$('.drop').css('display', 'none');
 			}
 		});
+
 	</script>
 </body>
 </html>
