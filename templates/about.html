@@ -8,14 +8,15 @@
 					<div>Ivan Alvarez</div>
 					<div class="naver">
 						<!-- <div><a href="/hobbies">/hobbies</a></div> -->
-						<div><a class="bleach" href="/projects">/projects</a></div>
-						<div><a class="bleach" href="/contact">/contact</a></div>
+						<a class="bleach" href="/projects">/projects</a>
+						<a class="bleach" href="/contact">/contact</a>
 					{% if session.logged_in %}
 						<div><a class="bleach" href="/portal">/portal</a></div>
 
 						<div><a class="bleach" href="/logout">/logout</a></div>
 					{% endif %}
 					</div>
+					<div class="drop" style="display: none;"></div>
 				</div>
 			</div>
 		</nav>
