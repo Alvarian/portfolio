@@ -287,7 +287,7 @@ body {
 	text-align: center;
 }
 .synop {
-	width: 200px;
+	/*width: 200px;*/
 	text-align: center;
 	height: 100%;
 	background-color: white;
@@ -353,6 +353,9 @@ body, html {
 	min-width: 360px;
 	overflow-x: hidden;
 	/*background-color: black;*/
+}
+::-webkit-scrollbar { 
+    display: none; 
 }
 nav {
 	background-color: white

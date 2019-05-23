@@ -1,107 +1,110 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<nav style="padding: 10px 0; font-size: 12pt;" class="row spaced pressStart">
+<nav style="padding: 10px 0; font-size: 12pt; background-color: black; color: white;" class="row spaced pressStart">
 	<div class="menu lrg">
-		<div style="display: flex; justify-content: space-between;">
+		<div class="menuLayer">
 			<div>Ivan Alvarez</div>
 			<div class="naver">
-				<div><a href="/" class="med">/about</a></div>
-				<!-- <div><a href="/hobbies">/hobbies</a></div> -->
-				<div><a href="/contact">/contact</a></div>
+				<div><a class="bleach med" href="/">/about</a></div>
+				<!-- <div><a class="bleach" href="/hobbies">/hobbies</a></div> -->
+				<div><a class="bleach" href="/contact">/contact</a></div>
 			{% if session.logged_in %}
-				<div><a href="/portal">/portal</a></div>
+				<div><a class="bleach" href="/portal">/portal</a></div>
 
-				<div><a href="/logout">/logout</a></div>
+				<div><a class="bleach" href="/logout">/logout</a></div>
 			{% endif %}
 			</div>
+			<div class="drop"></div>
 		</div>
 	</div>
 </nav>
 
-<h1 class="orb codepro" style="text-align: center;">Project Gallery</h1>
-<div id="app" class="row">
-	<div style="padding: 0px 10px;" class="synop">
-		<h2 class="orb codepro">Synopsis</h2>
-		<div style="height: 70%;" class="pressStart betweened">
-			<div>
-				<h3 class="title">Hover Over an App! >></h3>
-				<p class="article">Hover over an app! >></p>
+<div id="app">
+	<h1 class="orb codepro" style="text-align: center;">Project Gallery</h1>
+	<div class="row">
+		
+		<div style="padding: 0px 10px; width: 190px;" class="synop">
+			<h2 class="orb codepro">Synopsis</h2>
+			<div style="height: 70%; font-size: 7pt;; margin: 0;" class="pressStart betweened">
+				<div style="width: 100%">
+					<h3 class="title" style="text-decoration: underline; width: 100%;">Hover Over an App! >></h3>
+					<p class="article">Hover over an app! >></p>
+				</div>
+				<div class="type">Hover over an app! >></div>	
+				<div class="icons"></div>		
 			</div>
-			<div class="type">Hover over an app! >></div>	
-			<div class="icons"></div>		
 		</div>
 
-	</div>
+		<div class="cards">
+			<div class="gallery" style="overflow-y: scroll; height: 70vh;">
+			{% for file in files %}
+				<div style="display: none;" class="open_{{ file.id }}" id="modal">
 
-	<div class="cards">
-		<div class="gallery">
-		{% for file in files %}
-			<div style="display: none;" class="open_{{ file.id }}" id="modal">
-
-				<!-- FOR GAMES -->
-				{% if file.game_file %}
-					{% if file.game_file == 'None' %}
-					{% else %}
-						<div class="modal-content">
-							<a href="#" class="close {{ file.id }}_close">X</a>
-							<div class="border">
-								<div style="width: 100%; height: 100%" class="{{ file.title }}_model"></div>
+					<!-- FOR GAMES -->
+					{% if file.game_file %}
+						{% if file.game_file == 'None' %}
+						{% else %}
+							<div class="modal-content">
+								<a href="#" class="close {{ file.id }}_close">X</a>
+								<div class="border">
+									<div style="width: 100%; height: 100%" class="{{ file.title }}_model"></div>
+								</div>
 							</div>
-						</div>
 
-						<script type="text/javascript" src="{{ file.game_file }}"></script>
-						<script>
-							// When the user clicks on the button, open the modal 
-							$(document).ready(() => {
-								$('head').append('<link rel="stylesheet" type="text/css" href="{{ file.style_file }}">');
+							<script type="text/javascript" src="{{ file.game_file }}"></script>
+							<script>
+								// When the user clicks on the button, open the modal 
 								$(document).ready(() => {
-									{{ file.title }}.start(document.querySelector(`.{{ file.title }}_model`));
-								});
-							});		
-						</script>
+									$('head').append('<link rel="stylesheet" type="text/css" href="{{ file.style_file }}">');
+									$(document).ready(() => {
+										{{ file.title }}.start(document.querySelector(`.{{ file.title }}_model`));
+									});
+								});		
+							</script>
+						{% endif %}
 					{% endif %}
-				{% endif %}
 
-				<!-- FOR DEPLOYED -->
-				{% if file.deployed_url %}
-					{% if file.deployed_url == 'None' %}
-					{% else %}
-						<div class="modal-content">
-							<a href="#" class="close {{ file.id }}_close">X</a>
-							<div class="border">
-								<iframe frameborder="0" src="{{ file.deployed_url }}" height="100%" width="100%"></iframe>
+					<!-- FOR DEPLOYED -->
+					{% if file.deployed_url %}
+						{% if file.deployed_url == 'None' %}
+						{% else %}
+							<div class="modal-content">
+								<a href="#" class="close {{ file.id }}_close">X</a>
+								<div class="border">
+									<iframe frameborder="0" src="{{ file.deployed_url }}" height="100%" width="100%"></iframe>
+								</div>
 							</div>
-						</div>
+						{% endif %}
 					{% endif %}
-				{% endif %}
-			</div>
-
-			<div class="dropCard">
-				<div style="position: relative;">
-					<div style="background-image: url('{{ file.icon_file }}');" class="card card_{{ file.id }}"></div>
-					<!-- <div style="position: absolute; background-color: grey; opacity: .5; height: 100px; width: 100%;"></div> -->
 				</div>
-				<div style="height: 100px;"></div>
-				<!-- GITHUB -->
-				<a class="gitBTN" target="_blank" href={{ file.git_url }}><i class="fab fa-4x fa-github"></i></a>
-			</div>
 
-			<script>
-				$(".card_{{ file.id }}").on('click', () => {
-					$(".open_{{ file.id }}").css('display','block');
-				});
-				$(".card_{{ file.id }}").on('mouseover', () => {
-					$(".article").text('{{ file.description }}');
-					$(".title").text('{{ file.title }}');
-					$(".type").text('{{ file.app_type }}');
-				});
-					// When the user clicks on <span> (x), close the modal
-				document.getElementsByClassName("{{ file.id }}_close")[0].onclick = () => {
-					$(".open_{{ file.id }}").css('display','none');
-				}
-			</script>
-		{% endfor %}		
+				<div class="dropCard">
+					<div style="position: relative;">
+						<div style="background-image: url('{{ file.icon_file }}');" class="card card_{{ file.id }}"></div>
+						<!-- <div style="position: absolute; background-color: grey; opacity: .5; height: 100px; width: 100%;"></div> -->
+					</div>
+					<div style="height: 100px;"></div>
+					<!-- GITHUB -->
+					<a class="gitBTN" target="_blank" href={{ file.git_url }}><i class="fab fa-4x fa-github"></i></a>
+				</div>
+
+				<script>
+					$(".card_{{ file.id }}").on('click', () => {
+						$(".open_{{ file.id }}").css('display','block');
+					});
+					$(".card_{{ file.id }}").on('mouseover', () => {
+						$(".article").text('{{ file.description }}');
+						$(".title").text('{{ file.title }}');
+						$(".type").text('{{ file.app_type }}');
+					});
+						// When the user clicks on <span> (x), close the modal
+					document.getElementsByClassName("{{ file.id }}_close")[0].onclick = () => {
+						$(".open_{{ file.id }}").css('display','none');
+					}
+				</script>
+			{% endfor %}		
+			</div>
 		</div>
 	</div>
 </div>

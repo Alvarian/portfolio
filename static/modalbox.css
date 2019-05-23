@@ -33,7 +33,7 @@
 /* Modal Content/Box */
 .modal-content {
   background-color: #fefefe;
-  min-width: 450px;
+  min-width: 300px;
   margin: 2% auto; 
   padding: 20px;
   position: relative;
