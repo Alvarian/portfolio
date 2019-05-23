@@ -84,7 +84,9 @@
 		$(window).resize(() => {
 			tog();
 			let w = window.innerWidth;
+			console.log('out',w);
 			if(w <= 600){
+				console.log('in',w);
 				$('.naver').css('display', 'none');
 				$('.drop').empty().append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).css('display','block');
 				loop2(iters, (i) => {
