@@ -21,6 +21,10 @@
 .spaced {
 	justify-content: space-around;
 }
+.arounded {
+  display: flex;
+  justify-content: space-around;
+}
 .betweened {
 	display: flex;
 	flex-direction: column;
