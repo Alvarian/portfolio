@@ -21,6 +21,10 @@
 .spaced {
 	justify-content: space-around;
 }
+.centered {
+  display: flex;
+  justify-content: center;
+}
 .arounded {
   display: flex;
   justify-content: space-around;
