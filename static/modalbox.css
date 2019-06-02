@@ -34,7 +34,7 @@
 .modal-content {
   background-color: #fefefe;
   min-width: 300px;
-  margin: 2% auto; 
+  margin: auto; 
   padding: 20px;
   position: relative;
   height: 85%;
@@ -54,6 +54,7 @@
 
 @media only screen and (max-width: 600px) {
   .modal-content {
-    margin: 7% auto;
+    margin: 3% auto;
+    height: 89%;
   }
 }
