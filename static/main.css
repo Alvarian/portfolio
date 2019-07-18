@@ -133,12 +133,6 @@ body {
 	width: 100%;
 }
 
-.downRes {
-	width: 100%; 
-	display: flex; 
-	justify-content: center; 
-	position: relative;
-}
 .tooltiptext {
 	opacity: 0;
 	width: 120px;
@@ -157,6 +151,12 @@ body {
 @keyframes tipFade {
 	from { opacity: 0 }
 	to { opacity: 1 }
+}
+.downRes {
+	width: 100%; 
+	display: flex; 
+	justify-content: center; 
+	position: relative;
 }
 .downRes:hover .tooltiptext {
 	animation-name: tipFade;
