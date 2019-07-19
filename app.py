@@ -5,6 +5,7 @@ import sys
 import logging
 import boto3
 import boto
+from flask_mysqldb import MySQL
 from os import environ
 from botocore.client import Config
 from boto.s3.connection import S3Connection
@@ -52,29 +53,42 @@ else:
 	Envstate.SECRET_KEY = all.keys().ACCESS_SECRET_KEY
 	Envstate.REGION = all.keys().REGION_NAME
 	Envstate.BUCKET = all.keys().BUCKET_NAME
+
 	Envstate.MASTER = all.keys().EXPECTED_MASTER
+
 	Envstate.MAIL_SERVER = all.keys().MAIL_SERVER
 	Envstate.MAIL_PORT = all.keys().MAIL_PORT
 	Envstate.MAIL_USERNAME = all.keys().MAIL_USERNAME
 	Envstate.MAIL_PASSWORD = all.keys().MAIL_PASSWORD
 	Envstate.MAIL_USE_TLS = all.keys().MAIL_USE_TLS
 	Envstate.MAIL_USE_SSL = all.keys().MAIL_USE_SSL
+
+	Envstate.MYSQL_HOST = all.keys().MYSQL_HOST
+	Envstate.MYSQL_USER = all.keys().MYSQL_USER
+	Envstate.MYSQL_PASSWORD = all.keys().MYSQL_PASSWORD
+	Envstate.MYSQL_DB = all.keys().MYSQL_DB
 # AWS_CONFIG = all.keys()
 
 ##INIT DYNAMO
-dynamodb = boto3.resource(
-	'dynamodb',
-	aws_access_key_id=Envstate.KEY_ID, 
-	aws_secret_access_key=Envstate.SECRET_KEY,
-	region_name=Envstate.REGION
-)
-dynamoClient = boto3.client(
-	'dynamodb', 
-	aws_access_key_id=Envstate.KEY_ID, 
-	aws_secret_access_key=Envstate.SECRET_KEY,
-	region_name=Envstate.REGION
-)
+# dynamodb = boto3.resource(
+# 	'dynamodb',
+# 	aws_access_key_id=Envstate.KEY_ID, 
+# 	aws_secret_access_key=Envstate.SECRET_KEY,
+# 	region_name=Envstate.REGION
+# )
+# dynamoClient = boto3.client(
+# 	'dynamodb', 
+# 	aws_access_key_id=Envstate.KEY_ID, 
+# 	aws_secret_access_key=Envstate.SECRET_KEY,
+# 	region_name=Envstate.REGION
+# )
 
+##INIT MYSQL
+app.config['MYSQL_HOST'] = Envstate.MYSQL_HOST
+app.config['MYSQL_USER'] = Envstate.MYSQL_USER
+app.config['MYSQL_PASSWORD'] = Envstate.MYSQL_PASSWORD
+app.config['MYSQL_DB'] = Envstate.MYSQL_DB
+mysql = MySQL(app)
 
 ##INIT BUCKET
 s3 = boto3.resource(
@@ -99,26 +113,26 @@ mail = Mail(app)
 
 
 ##AWS CONTENT STATE
-class TableData:
-	def __init__(self):
-		self.masterTable = dynamodb.Table('master')
-		self.contentTable = dynamodb.Table('content')
+# class TableData:
+# 	def __init__(self):
+# 		self.masterTable = dynamodb.Table('master')
+# 		self.contentTable = dynamodb.Table('content')
 
-	def master_data(self):
-		data = self.masterTable.scan()['Items']	
-		return data
+# 	def master_data(self):
+# 		data = self.masterTable.scan()['Items']	
+# 		return data
 
-	def content_data(self):
-		data = self.contentTable.scan()['Items']
-		return data
+# 	def content_data(self):
+# 		data = self.contentTable.scan()['Items']
+# 		return data
 
-	def contentIndex(self):
-		response = dynamoClient.describe_table(TableName='content')
-		index = response['Table']['ItemCount']
-		return index
+# 	def contentIndex(self):
+# 		response = dynamoClient.describe_table(TableName='content')
+# 		index = response['Table']['ItemCount']
+# 		return index
 
-print('length',len(TableData().content_data()))
-print('id',TableData().content_data()[0]['id'])
+# print('length',len(TableData().content_data()))
+# print('id',TableData().content_data()[0]['id'])
 
 
 @app.context_processor
@@ -181,8 +195,9 @@ def contact():
 
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
-	print(TableData().content_data())
-	return render_template('index.html', files = TableData().content_data())
+	# print(TableData().content_data())
+	# return render_template('index.html', files = TableData().content_data())
+	return
 
 class RegisterForm(Form):
 	username = StringField('Username', [validators.Length(min=4, max=25)])
@@ -201,24 +216,42 @@ def register():
 		# response = TableData().masterTable.query(
 		# 	KeyConditionExpression=Key('username').eq(username)
 		# )
-		if dynamoClient.describe_table(TableName='master')['Table']['ItemCount'] == 0: 
-			if username != Envstate.MASTER:
-				flash('That is not the expected master', 'success')
-				return redirect(url_for('register'))
-			else:		
-				TableData().masterTable.put_item(
-					Item={
-						'username': username,
-						'password': password
-					}
-				)
-				flash('You are now registered and can log in', 'success')
-				return redirect(url_for('login'))
-		elif TableData().master_data()[0]['username'] == Envstate.MASTER:
-			flash('Expected master is already registered', 'success')
-			return redirect(url_for('register'))
+		# if dynamoClient.describe_table(TableName='master')['Table']['ItemCount'] == 0: 
+		# 	if username != Envstate.MASTER:
+		# 		flash('That is not the expected master', 'success')
+		# 		return redirect(url_for('register'))
+		# 	else:		
+		# 		TableData().masterTable.put_item(
+		# 			Item={
+		# 				'username': username,
+		# 				'password': password
+		# 			}
+		# 		)
+		# 		flash('You are now registered and can log in', 'success')
+		# 		return redirect(url_for('login'))
+		# elif TableData().master_data()[0]['username'] == Envstate.MASTER:
+		# 	flash('Expected master is already registered', 'success')
+		# 	return redirect(url_for('register'))
+
+		# if(mysql table for user has a length of zero):
+		# 	if(username guessed does not equal expected username):
+		# 		flash('That is not the expected master', 'success')
+		# 		return redirect(url_for('register'))
+		# 	else:
+		# 		register
+		# 		flash('You are now registered and can log in', 'success')
+		# 		return redirect(url_for('login'))
+		# elif(mysql table has master user registered):
+		# 	flash('Expected master is already registered', 'success')
+		# 	return redirect(url_for('register'))
+
 	else:
 		return render_template('register.html', form=form)
+
+cur = mysql.connect().cursor()
+length = cur.execute('SELECT COUNT(*) FROM master');
+print (length)
+cur.close()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -226,8 +259,8 @@ def login():
 		username = request.form['username']
 		password_condidate = request.form['password']
 
-		result = TableData().master_data()[0]['password'] 
-		userquery = TableData().master_data()[0]['username'] 
+		# result = TableData().master_data()[0]['password'] 
+		# userquery = TableData().master_data()[0]['username'] 
 
 		if username != userquery:
 			flash('Invalid username', 'success')
@@ -283,32 +316,39 @@ def post():
 			State.FORM_STYLE = baseAWSURL+''.join(State.FORM_TITLE)+'/'+State.reqs[2].content_type.replace('/','-')
 			State.FORM_TYPE = 'Sample App'
 
+
+		## UPLOAD CONTENT INTO MYSQL
+		cur = mysql.connection.cursor()
+		cur.execute('INSERT INTO projects (app_type, deployed_url, description, game_file, git_url, icon_file, style_file, title ) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)',
+			(''.join(State.FORM_TYPE), ''.join(State.FORM_DEPLOYED), ''.join(State.FORM_DESCRIPTION), ''.join(State.FORM_GAME), ''.join(State.FORM_GIT), ''.join(State.FORM_ICON), ''.join(State.FORM_STYLE), ''.join(State.FORM_TITLE)))
+		cur.close()
+
 		## CREATES ID USING INDEX
-		def index():
-			dynaIndex = len(TableData().content_data())
-			if dynaIndex == 0:
-				return 1
-			else:
-				index = TableData().content_data()[0]['id']
-				print('old index',index)
-				print('new index',index+1)
-				return index+1
+		# def index():
+		# 	dynaIndex = len(TableData().content_data())
+		# 	if dynaIndex == 0:
+		# 		return 1
+		# 	else:
+		# 		index = TableData().content_data()[0]['id']
+		# 		print('old index',index)
+		# 		print('new index',index+1)
+		# 		return index+1
 
+		## UPLOAD CONTENT INTO DYNAMO
+		# TableData().contentTable.put_item(
+		# 	Item={
+		# 		'id': index(),
+		# 		'title': ''.join(State.FORM_TITLE),
+		# 		'description': ''.join(State.FORM_DESCRIPTION),
+		# 		'git_url': ''.join(State.FORM_GIT),
+		# 		'game_file': ''.join(State.FORM_GAME),
+		# 		'style_file': ''.join(State.FORM_STYLE),
+		# 		'icon_file': ''.join(State.FORM_ICON),				
+		# 		'deployed_url': ''.join(State.FORM_DEPLOYED),
+		# 		'app_type': ''.join(State.FORM_TYPE)
+		# 	}
+		# )
 
-		## UPLOAD CONTENT
-		TableData().contentTable.put_item(
-			Item={
-				'id': index(),
-				'title': ''.join(State.FORM_TITLE),
-				'description': ''.join(State.FORM_DESCRIPTION),
-				'git_url': ''.join(State.FORM_GIT),
-				'game_file': ''.join(State.FORM_GAME),
-				'style_file': ''.join(State.FORM_STYLE),
-				'icon_file': ''.join(State.FORM_ICON),				
-				'deployed_url': ''.join(State.FORM_DEPLOYED),
-				'app_type': ''.join(State.FORM_TYPE)
-			}
-		) 
 		if isinstance(State.reqs, list):
 			for file in State.reqs:
 				BUFF = file.read()
@@ -337,7 +377,7 @@ def post():
 		print ('content uploaded')
 		# flash('You successfully uploaded', 'success')
 		return redirect(url_for('post'))
-	return render_template('portal.html', files = TableData().content_data())
+	# return render_template('portal.html', files = TableData().content_data())
 
 @app.route('/portal/<ID>/', methods=['POST'])
 def delete(ID):
@@ -346,12 +386,11 @@ def delete(ID):
 		bucket = s3.Bucket(Envstate.BUCKET)
 		bucket.objects.filter(Prefix=name).delete()
 
-		# print(int(ID))
-		TableData().contentTable.delete_item(
-	        Key={
-				'id': int(ID)
-			}
-		)
+		# TableData().contentTable.delete_item(
+	 #        Key={
+		# 		'id': int(ID)
+		# 	}
+		# )
 		return redirect(url_for('post'))
 
 
