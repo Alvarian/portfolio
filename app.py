@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, url_for, session, request, logging
+from flask import Flask, render_template, flash, redirect, url_for, session, request, logging, jsonify, make_response
 import json
 import os
 import sys
@@ -195,9 +195,30 @@ def contact():
 
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
-	# print(TableData().content_data())
-	# return render_template('index.html', files = TableData().content_data())
-	return
+	cur = mysql.connection.cursor()
+
+	resultVal = cur.execute('SELECT * FROM projects')
+	if(resultVal > 0):
+		projects = cur.fetchall()
+		content = {}
+		payload = []
+		for result in projects:
+			content = {
+				'id': result[0],
+				'app_type': result[1],
+				'deployed_url': result[2],
+				'description': result[3],
+				'game_file': result[4],
+				'git_url': result[5],
+				'icon_file': result[6],
+				'style_file': result[7],
+				'title': result[8]
+			}
+			payload.append(content)
+			content = {}
+		print(payload[0]['title'])
+		return render_template('index.html', files = payload)
+	return render_template('index.html')
 
 class RegisterForm(Form):
 	username = StringField('Username', [validators.Length(min=4, max=25)])
@@ -208,6 +229,9 @@ class RegisterForm(Form):
 	confirm = PasswordField('Confirm Password')
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+	cur = mysql.connection.cursor()
+	# print (length, dbmaster)
+
 	form = RegisterForm(request.form)
 	if request.method == 'POST' and form.validate():
 
@@ -233,25 +257,31 @@ def register():
 		# 	flash('Expected master is already registered', 'success')
 		# 	return redirect(url_for('register'))
 
-		# if(mysql table for user has a length of zero):
-		# 	if(username guessed does not equal expected username):
-		# 		flash('That is not the expected master', 'success')
-		# 		return redirect(url_for('register'))
-		# 	else:
-		# 		register
-		# 		flash('You are now registered and can log in', 'success')
-		# 		return redirect(url_for('login'))
-		# elif(mysql table has master user registered):
-		# 	flash('Expected master is already registered', 'success')
-		# 	return redirect(url_for('register'))
+		cur.execute('SELECT COUNT(*) FROM master');
+		length = cur.fetchone()[0]
+		if not length:
+			if username != Envstate.MASTER:
+				flash('That is not the expected master', 'success')
+				return redirect(url_for('register'))
+			else:
+				cur.execute('INSERT INTO master (user, password) VALUES (%s, %s)', 
+					(username, password))
+				mysql.connection.commit()
+				flash('You are now registered and can log in', 'success')
+				return redirect(url_for('login'))
+		else:
+			cur.execute('SELECT user FROM master LIMIT 1')
+			dbmaster = cur.fetchone()[0]
+			if dbmaster == username:
+				flash('Expected master is already registered', 'success')
+				return redirect(url_for('register'))
 
+		cur.close()
 	else:
 		return render_template('register.html', form=form)
+	
 
-cur = mysql.connect().cursor()
-length = cur.execute('SELECT COUNT(*) FROM master');
-print (length)
-cur.close()
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -261,9 +291,18 @@ def login():
 
 		# result = TableData().master_data()[0]['password'] 
 		# userquery = TableData().master_data()[0]['username'] 
+		cur = mysql.connection.cursor()
 
-		if username != userquery:
+		cur.execute('SELECT user FROM master LIMIT 1')
+		dbmaster = cur.fetchone()[0]
+
+		cur.execute('SELECT password FROM master LIMIT 1')
+		result = cur.fetchone()[0]
+
+		if username != dbmaster:
 			flash('Invalid username', 'success')
+			cur.close()	
+
 			return redirect(url_for('login'))	
 		else: 
 			if sha256_crypt.verify(password_condidate, result):
@@ -271,10 +310,14 @@ def login():
 				session['logged_in'] = True
 				session['username'] = username
 				flash('You are now logged in', 'success')
+				cur.close()
+
 				return redirect(url_for('post'))
 			else:
 				app.logger.info('PASSWORD NOT MATCHED')
 				flash('Invalid login', 'success')
+				cur.close()
+				
 				return redirect(url_for('login'))
 
 	return render_template('login.html')
@@ -288,6 +331,7 @@ def logout():
 @app.route('/portal', methods=['GET', 'POST'])
 @is_logged_in
 def post():
+	cur = mysql.connection.cursor()
 	if request.method == 'POST':
 		class State:
 			FORM_TITLE = request.form['title'],
@@ -318,7 +362,6 @@ def post():
 
 
 		## UPLOAD CONTENT INTO MYSQL
-		cur = mysql.connection.cursor()
 		cur.execute('INSERT INTO projects (app_type, deployed_url, description, game_file, git_url, icon_file, style_file, title ) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)',
 			(''.join(State.FORM_TYPE), ''.join(State.FORM_DEPLOYED), ''.join(State.FORM_DESCRIPTION), ''.join(State.FORM_GAME), ''.join(State.FORM_GIT), ''.join(State.FORM_ICON), ''.join(State.FORM_STYLE), ''.join(State.FORM_TITLE)))
 		cur.close()
@@ -376,7 +419,31 @@ def post():
 
 		print ('content uploaded')
 		# flash('You successfully uploaded', 'success')
-		return redirect(url_for('post'))
+		return redirect(url_for('post'))		
+
+	resultVal = cur.execute('SELECT * FROM projects')
+	if(resultVal > 0):
+		projects = cur.fetchall()
+		content = {}
+		payload = []
+		for result in projects:
+			content = {
+				'id': result[0],
+				'app_type': result[1],
+				'deployed_url': result[2],
+				'description': result[3],
+				'game_file': result[4],
+				'git_url': result[5],
+				'icon_file': result[6],
+				'style_file': result[7],
+				'title': result[8]
+			}
+			payload.append(content)
+			content = {}
+		print(payload[0]['title'])
+		return render_template('portal.html', files = payload)
+
+	return render_template('portal.html')
 	# return render_template('portal.html', files = TableData().content_data())
 
 @app.route('/portal/<ID>/', methods=['POST'])

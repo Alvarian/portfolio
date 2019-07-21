@@ -63,7 +63,7 @@
 			<div class="gallery">
 			{% for file in files %}
 				<form class="card" action="/portal/{{ file.id }}/" method="POST">
-					<h3>{{ file.title }}</h3>
+					<h3>{{ file[0] }}</h3>
 					<img style="width: 150px;" src="{{ file.icon_file }}">
 					 <p>{{ file.description }}</p>
 					<input type="hidden" name="name" value="{{ file.title }}">
