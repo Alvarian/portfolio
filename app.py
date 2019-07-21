@@ -50,10 +50,7 @@ if 'ACCESS_KEY_ID' in os.environ:
 	Envstate.MAIL_USE_TLS = os.environ['MAIL_USE_TLS']
 	Envstate.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
 
-	Envstate.MYSQL_HOST = os.environ['MYSQL_HOST']
-	Envstate.MYSQL_USER = os.environ['MYSQL_USER']
-	Envstate.MYSQL_PASSWORD = os.environ['MYSQL_PASSWORD']
-	Envstate.MYSQL_DB = os.environ['MYSQL_DB']
+	Envstate.CLEARDB_DATABASE_URL = os.environ['CLEARDB_DATABASE_URL']
 else:
 	from config import all
 	Envstate.KEY_ID = all.keys().ACCESS_KEY_ID
@@ -91,11 +88,15 @@ else:
 # )
 
 ##INIT MYSQL
-app.config['MYSQL_HOST'] = Envstate.MYSQL_HOST
-app.config['MYSQL_USER'] = Envstate.MYSQL_USER
-app.config['MYSQL_PASSWORD'] = Envstate.MYSQL_PASSWORD
-app.config['MYSQL_DB'] = Envstate.MYSQL_DB
-mysql = MySQL(app)
+mysql
+if 'ACCESS_KEY_ID' in os.environ:
+	app.config['CLEARDB_DATABASE_URL'] = Envstate.CLEARDB_DATABASE_URL
+else:
+	app.config['MYSQL_HOST'] = Envstate.MYSQL_HOST
+	app.config['MYSQL_USER'] = Envstate.MYSQL_USER
+	app.config['MYSQL_PASSWORD'] = Envstate.MYSQL_PASSWORD
+	app.config['MYSQL_DB'] = Envstate.MYSQL_DB
+	mysql = MySQL(app)
 
 ##INIT BUCKET
 s3 = boto3.resource(
