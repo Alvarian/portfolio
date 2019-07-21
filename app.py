@@ -40,13 +40,20 @@ if 'ACCESS_KEY_ID' in os.environ:
 	Envstate.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
 	Envstate.REGION = os.environ['REGION_NAME']
 	Envstate.BUCKET = os.environ['BUCKET_NAME']
+
 	Envstate.MASTER = os.environ['EXPECTED_MASTER']
+
 	Envstate.MAIL_SERVER = os.environ['MAIL_SERVER']
 	Envstate.MAIL_PORT = os.environ['MAIL_PORT']
 	Envstate.MAIL_USERNAME = os.environ['MAIL_USERNAME']
 	Envstate.MAIL_PASSWORD = os.environ['MAIL_PASSWORD']
 	Envstate.MAIL_USE_TLS = os.environ['MAIL_USE_TLS']
 	Envstate.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
+
+	Envstate.MYSQL_HOST = os.environ['MYSQL_HOST']
+	Envstate.MYSQL_USER = os.environ['MYSQL_USER']
+	Envstate.MYSQL_PASSWORD = os.environ['MYSQL_PASSWORD']
+	Envstate.MYSQL_DB = os.environ['MYSQL_DB']
 else:
 	from config import all
 	Envstate.KEY_ID = all.keys().ACCESS_KEY_ID
