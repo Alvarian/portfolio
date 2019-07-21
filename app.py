@@ -331,7 +331,8 @@ def logout():
 @app.route('/portal', methods=['GET', 'POST'])
 @is_logged_in
 def post():
-	cur = mysql.connection.cursor()
+	conn = mysql.connection
+	cur = conn.cursor()
 	if request.method == 'POST':
 		class State:
 			FORM_TITLE = request.form['title'],
@@ -364,7 +365,7 @@ def post():
 		## UPLOAD CONTENT INTO MYSQL
 		cur.execute('INSERT INTO projects (app_type, deployed_url, description, game_file, git_url, icon_file, style_file, title ) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)',
 			(''.join(State.FORM_TYPE), ''.join(State.FORM_DEPLOYED), ''.join(State.FORM_DESCRIPTION), ''.join(State.FORM_GAME), ''.join(State.FORM_GIT), ''.join(State.FORM_ICON), ''.join(State.FORM_STYLE), ''.join(State.FORM_TITLE)))
-		cur.close()
+		conn.commit()
 
 		## CREATES ID USING INDEX
 		# def index():
@@ -440,7 +441,7 @@ def post():
 			}
 			payload.append(content)
 			content = {}
-		print(payload[0]['title'])
+		# print(payload[0]['title'])
 		return render_template('portal.html', files = payload)
 
 	return render_template('portal.html')
@@ -449,15 +450,23 @@ def post():
 @app.route('/portal/<ID>/', methods=['POST'])
 def delete(ID):
 	if request.method == 'POST':
-		name = request.form['name']
-		bucket = s3.Bucket(Envstate.BUCKET)
-		bucket.objects.filter(Prefix=name).delete()
+		##MYSQL delete
+		conn = mysql.connection
+		cur = conn.cursor()
+		cur.execute('DELETE FROM projects WHERE id = %s', (ID))
+		conn.commit()
 
+		##AWS delete
 		# TableData().contentTable.delete_item(
 	 #        Key={
 		# 		'id': int(ID)
 		# 	}
 		# )
+		name = request.form['name']
+		bucket = s3.Bucket(Envstate.BUCKET)
+		bucket.objects.filter(Prefix=name).delete()
+
+
 		return redirect(url_for('post'))
 
 
