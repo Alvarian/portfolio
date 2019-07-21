@@ -37,6 +37,7 @@ class Envstate:
 
 
 if 'ACCESS_KEY_ID' in os.environ:
+	# HEROKU
 	Envstate.KEY_ID = os.environ['ACCESS_KEY_ID']
 	Envstate.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
 	Envstate.REGION = os.environ['REGION_NAME']
@@ -56,6 +57,7 @@ if 'ACCESS_KEY_ID' in os.environ:
 	Envstate.MYSQL_PASSWORD = os.environ['MYSQL_PASSWORD']
 	Envstate.MYSQL_DB = os.environ['MYSQL_DB']
 else:
+	# LOCAL
 	from config import all
 	Envstate.KEY_ID = all.keys().ACCESS_KEY_ID
 	Envstate.SECRET_KEY = all.keys().ACCESS_SECRET_KEY
@@ -486,3 +488,7 @@ def delete(ID):
 
 if __name__ == '__main__':
 	app.run(debug=True)
+
+
+## REASOURCES ##
+# http://www.phpmyadmin.co/
