@@ -91,6 +91,7 @@ else:
 mysql
 if 'ACCESS_KEY_ID' in os.environ:
 	app.config['CLEARDB_DATABASE_URL'] = Envstate.CLEARDB_DATABASE_URL
+	mysql = MySQL(app)
 else:
 	app.config['MYSQL_HOST'] = Envstate.MYSQL_HOST
 	app.config['MYSQL_USER'] = Envstate.MYSQL_USER
