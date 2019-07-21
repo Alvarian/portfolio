@@ -35,6 +35,7 @@ class Envstate:
 	MAIL_USE_TLS = None,
 	MAIL_USE_SSL = None
 
+mysql = ''
 if 'ACCESS_KEY_ID' in os.environ:
 	Envstate.KEY_ID = os.environ['ACCESS_KEY_ID']
 	Envstate.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
@@ -51,6 +52,10 @@ if 'ACCESS_KEY_ID' in os.environ:
 	Envstate.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
 
 	Envstate.CLEARDB_DATABASE_URL = os.environ['CLEARDB_DATABASE_URL']
+	
+	##INIT MYSQL
+	app.config['CLEARDB_DATABASE_URL'] = Envstate.CLEARDB_DATABASE_URL
+	mysql = MySQL(app)
 else:
 	from config import all
 	Envstate.KEY_ID = all.keys().ACCESS_KEY_ID
@@ -71,6 +76,13 @@ else:
 	Envstate.MYSQL_USER = all.keys().MYSQL_USER
 	Envstate.MYSQL_PASSWORD = all.keys().MYSQL_PASSWORD
 	Envstate.MYSQL_DB = all.keys().MYSQL_DB
+
+	##INIT MYSQL
+	app.config['MYSQL_HOST'] = Envstate.MYSQL_HOST
+	app.config['MYSQL_USER'] = Envstate.MYSQL_USER
+	app.config['MYSQL_PASSWORD'] = Envstate.MYSQL_PASSWORD
+	app.config['MYSQL_DB'] = Envstate.MYSQL_DB
+	mysql = MySQL(app)
 # AWS_CONFIG = all.keys()
 
 ##INIT DYNAMO
@@ -87,17 +99,7 @@ else:
 # 	region_name=Envstate.REGION
 # )
 
-##INIT MYSQL
-mysql
-if 'ACCESS_KEY_ID' in os.environ:
-	app.config['CLEARDB_DATABASE_URL'] = Envstate.CLEARDB_DATABASE_URL
-	mysql = MySQL(app)
-else:
-	app.config['MYSQL_HOST'] = Envstate.MYSQL_HOST
-	app.config['MYSQL_USER'] = Envstate.MYSQL_USER
-	app.config['MYSQL_PASSWORD'] = Envstate.MYSQL_PASSWORD
-	app.config['MYSQL_DB'] = Envstate.MYSQL_DB
-	mysql = MySQL(app)
+
 
 ##INIT BUCKET
 s3 = boto3.resource(
