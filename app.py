@@ -5,7 +5,6 @@ import sys
 import logging
 import boto3
 import boto
-from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 from os import environ
 from botocore.client import Config
