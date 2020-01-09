@@ -1,19 +1,23 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging, jsonify, make_response
+
 import json
 import os
 import sys
 import logging
-import boto3
-import boto
 from flask_mysqldb import MySQL
 from os import environ
+
+import boto3
+import boto
 from botocore.client import Config
 from boto.s3.connection import S3Connection
 from boto3.dynamodb.conditions import Key, Attr
+
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
 from flask_mail import Mail, Message
+
 
 app = Flask(__name__, static_folder='static')
 app.secret_key='secret123'
@@ -21,89 +25,29 @@ app.secret_key='secret123'
 # app.logger.addHandler(logging.StreamHandler(sys.stdout))
 # app.logger.setLevel(logging.ERROR)
 
-##AWS CONFIG
+from config import envSwitch
+keys = envSwitch.keys()
+
 class Envstate:
-	KEY_ID = None,
-	SECRET_KEY = None,
-	REGION = None,
-	BUCKET = None,
-	MASTER = None,
-	MAIL_SERVER = None,
-	MAIL_PORT = None,
-	MAIL_USERNAME = None,
-	MAIL_PASSWORD = None,
-	MAIL_USE_TLS = None,
-	MAIL_USE_SSL = None
-
-
-if 'ACCESS_KEY_ID' in os.environ:
-	# HEROKU
-	Envstate.KEY_ID = os.environ['ACCESS_KEY_ID']
-	Envstate.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
-	Envstate.REGION = os.environ['REGION_NAME']
-	Envstate.BUCKET = os.environ['BUCKET_NAME']
-
-	Envstate.MASTER = os.environ['EXPECTED_MASTER']
-
-	Envstate.MAIL_SERVER = os.environ['MAIL_SERVER']
-	Envstate.MAIL_PORT = os.environ['MAIL_PORT']
-	Envstate.MAIL_USERNAME = os.environ['MAIL_USERNAME']
-	Envstate.MAIL_PASSWORD = os.environ['MAIL_PASSWORD']
-	Envstate.MAIL_USE_TLS = os.environ['MAIL_USE_TLS']
-	Envstate.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
-
-	Envstate.MYSQL_HOST = os.environ['MYSQL_HOST']
-	Envstate.MYSQL_USER = os.environ['MYSQL_USER']
-	Envstate.MYSQL_PASSWORD = os.environ['MYSQL_PASSWORD']
-	Envstate.MYSQL_DB = os.environ['MYSQL_DB']
-else:
-	# LOCAL
-	from config import all
-	Envstate.KEY_ID = all.keys().ACCESS_KEY_ID
-	Envstate.SECRET_KEY = all.keys().ACCESS_SECRET_KEY
-	Envstate.REGION = all.keys().REGION_NAME
-	Envstate.BUCKET = all.keys().BUCKET_NAME
-
-	Envstate.MASTER = all.keys().EXPECTED_MASTER
-
-	Envstate.MAIL_SERVER = all.keys().MAIL_SERVER
-	Envstate.MAIL_PORT = all.keys().MAIL_PORT
-	Envstate.MAIL_USERNAME = all.keys().MAIL_USERNAME
-	Envstate.MAIL_PASSWORD = all.keys().MAIL_PASSWORD
-	Envstate.MAIL_USE_TLS = all.keys().MAIL_USE_TLS
-	Envstate.MAIL_USE_SSL = all.keys().MAIL_USE_SSL
-
-	Envstate.MYSQL_HOST = all.keys().MYSQL_HOST
-	Envstate.MYSQL_USER = all.keys().MYSQL_USER
-	Envstate.MYSQL_PASSWORD = all.keys().MYSQL_PASSWORD
-	Envstate.MYSQL_DB = all.keys().MYSQL_DB
+	KEY_ID = keys.KEY_ID,
+	SECRET_KEY = keys.SECRET_KEY,
+	REGION = keys.REGION,
+	BUCKET = keys.BUCKET,
+	MASTER = keys.MASTER,
+	MAIL_SERVER = keys.MAIL_SERVER,
+	MAIL_PORT = keys.MAIL_PORT,
+	MAIL_USERNAME = keys.MAIL_USERNAME,
+	MAIL_PASSWORD = keys.MAIL_PASSWORD,
+	MAIL_USE_TLS = keys.MAIL_USE_TLS,
+	MAIL_USE_SSL = keys.MAIL_USE_SSL
 
 
 ##INIT MYSQL
-app.config['MYSQL_HOST'] = Envstate.MYSQL_HOST
-app.config['MYSQL_USER'] = Envstate.MYSQL_USER
-app.config['MYSQL_PASSWORD'] = Envstate.MYSQL_PASSWORD
-app.config['MYSQL_DB'] = Envstate.MYSQL_DB
+app.config['MYSQL_HOST'] = keys.MYSQL_HOST
+app.config['MYSQL_USER'] = keys.MYSQL_USER
+app.config['MYSQL_PASSWORD'] = keys.MYSQL_PASSWORD
+app.config['MYSQL_DB'] = keys.MYSQL_DB
 mysql = MySQL(app)
-
-
-# AWS_CONFIG = all.keys()
-
-##INIT DYNAMO
-# dynamodb = boto3.resource(
-# 	'dynamodb',
-# 	aws_access_key_id=Envstate.KEY_ID, 
-# 	aws_secret_access_key=Envstate.SECRET_KEY,
-# 	region_name=Envstate.REGION
-# )
-# dynamoClient = boto3.client(
-# 	'dynamodb', 
-# 	aws_access_key_id=Envstate.KEY_ID, 
-# 	aws_secret_access_key=Envstate.SECRET_KEY,
-# 	region_name=Envstate.REGION
-# )
-
-
 
 ##INIT BUCKET
 s3 = boto3.resource(
@@ -112,7 +56,7 @@ s3 = boto3.resource(
     aws_secret_access_key=Envstate.SECRET_KEY,
     config=Config(signature_version='s3v4')
 )
-baseAWSURL = "https://s3."+Envstate.REGION+".amazonaws.com/port-bucket/"
+baseAWSURL = "https://s3."+str(Envstate.REGION)+".amazonaws.com/port-bucket/"
 
 
 ##MAIL CONFIG
@@ -125,30 +69,6 @@ app.config.update(
 )
 
 mail = Mail(app)
-
-
-##AWS CONTENT STATE
-# class TableData:
-# 	def __init__(self):
-# 		self.masterTable = dynamodb.Table('master')
-# 		self.contentTable = dynamodb.Table('content')
-
-# 	def master_data(self):
-# 		data = self.masterTable.scan()['Items']	
-# 		return data
-
-# 	def content_data(self):
-# 		data = self.contentTable.scan()['Items']
-# 		return data
-
-# 	def contentIndex(self):
-# 		response = dynamoClient.describe_table(TableName='content')
-# 		index = response['Table']['ItemCount']
-# 		return index
-
-# print('length',len(TableData().content_data()))
-# print('id',TableData().content_data()[0]['id'])
-
 
 @app.context_processor
 def override_url_for():
