@@ -4,7 +4,7 @@ import json
 import os
 import sys
 import logging
-from flask_mysqldb import MySQL
+import ibm_db
 from os import environ
 
 import boto3
@@ -42,12 +42,9 @@ class Envstate:
 	MAIL_USE_SSL = keys.MAIL_USE_SSL
 
 
-##INIT MYSQL
-app.config['MYSQL_HOST'] = keys.MYSQL_HOST
-app.config['MYSQL_USER'] = keys.MYSQL_USER
-app.config['MYSQL_PASSWORD'] = keys.MYSQL_PASSWORD
-app.config['MYSQL_DB'] = keys.MYSQL_DB
-mysql = MySQL(app)
+# INIT DB2
+db2conn = ibm_db.connect(keys.DB2_KEY, "", "")
+
 
 ##INIT BUCKET
 s3 = boto3.resource(
@@ -130,29 +127,42 @@ def contact():
 
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
-	cur = mysql.connection.cursor()
+	def fetchIntoArray():
+		sql = "SELECT * FROM projects;"
 
-	resultVal = cur.execute('SELECT * FROM projects')
-	if(resultVal > 0):
-		projects = cur.fetchall()
+		stmt = ibm_db.prepare(db2conn,sql)
+		ibm_db.execute(stmt)
+
+		rows = []
+		result = ibm_db.fetch_assoc(stmt)
+		while result != False:
+			rows.append(result.copy())
+			result = ibm_db.fetch_assoc(stmt)
+
+		return rows
+	
+	if(len(fetchIntoArray()) > 0):
 		content = {}
 		payload = []
-		for result in projects:
+		for result in fetchIntoArray():
+			print(result)
 			content = {
-				'id': result[0],
-				'app_type': result[1],
-				'deployed_url': result[2],
-				'description': result[3],
-				'game_file': result[4],
-				'git_url': result[5],
-				'icon_file': result[6],
-				'style_file': result[7],
-				'title': result[8]
+				'id': result['ID'],
+				'app_type': result['APP_TYPE'],
+				'deployed_url': result['DEPLOYED_URL'],
+				'description': result['DESCRIPTION'],
+				'game_file': result['GAME_FILE'],
+				'git_url': result['GIT_URL'],
+				'icon_file': result['ICON_FILE'],
+				'style_file': result['STYLE_FILE'],
+				'title': result['TITLE']
 			}
 			payload.append(content)
 			content = {}
-		print(payload[0]['title'])
+
+		# ibm_db.close(db2conn)
 		return render_template('index.html', files = payload)
+	
 	return render_template('index.html')
 
 class RegisterForm(Form):
@@ -164,95 +174,84 @@ class RegisterForm(Form):
 	confirm = PasswordField('Confirm Password')
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-	cur = mysql.connection.cursor()
-	# print (length, dbmaster)
-
 	form = RegisterForm(request.form)
 	if request.method == 'POST' and form.validate():
 
 		username = form.username.data
 		password = sha256_crypt.encrypt(str(form.password.data))
-		# response = TableData().masterTable.query(
-		# 	KeyConditionExpression=Key('username').eq(username)
-		# )
-		# if dynamoClient.describe_table(TableName='master')['Table']['ItemCount'] == 0: 
-		# 	if username != Envstate.MASTER:
-		# 		flash('That is not the expected master', 'success')
-		# 		return redirect(url_for('register'))
-		# 	else:		
-		# 		TableData().masterTable.put_item(
-		# 			Item={
-		# 				'username': username,
-		# 				'password': password
-		# 			}
-		# 		)
-		# 		flash('You are now registered and can log in', 'success')
-		# 		return redirect(url_for('login'))
-		# elif TableData().master_data()[0]['username'] == Envstate.MASTER:
-		# 	flash('Expected master is already registered', 'success')
-		# 	return redirect(url_for('register'))
 
-		cur.execute('SELECT COUNT(*) FROM master');
-		length = cur.fetchone()[0]
-		if not length:
-			if username != Envstate.MASTER:
+		def returnOne(sql):	
+			stmt = ibm_db.prepare(db2conn,sql)
+			ibm_db.execute(stmt)
+			
+			return ibm_db.fetch_assoc(stmt)
+
+		if not returnOne('SELECT * FROM master'):
+			if username != ''.join(Envstate.MASTER):
+				# ibm_db.close(db2conn)
+
 				flash('That is not the expected master', 'success')
 				return redirect(url_for('register'))
 			else:
-				cur.execute('INSERT INTO master (user, password) VALUES (%s, %s)', 
-					(username, password))
-				mysql.connection.commit()
+				sql = 'INSERT INTO master (username, password) VALUES (?, ?)', 
+
+				stmt = ibm_db.prepare(db2conn,''.join(sql))
+				ibm_db.bind_param(stmt, 1, username)
+				ibm_db.bind_param(stmt, 2, password)
+				ibm_db.execute(stmt)
+
+				# ibm_db.close(db2conn)
+
 				flash('You are now registered and can log in', 'success')
 				return redirect(url_for('login'))
 		else:
-			cur.execute('SELECT user FROM master LIMIT 1')
-			dbmaster = cur.fetchone()[0]
+			sql = 'SELECT user FROM master LIMIT 1'
+			dbmaster = returnOne(sql)
 			if dbmaster == username:
-				flash('Expected master is already registered', 'success')
-				return redirect(url_for('register'))
+				# ibm_db.close(db2conn)
 
-		cur.close()
+				flash('Expected master is already registered', 'success')				
+				return redirect(url_for('register'))
+			
+			# ibm_db.close(db2conn)
+
 	else:
 		return render_template('register.html', form=form)
-	
-
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+	def returnOne(sql):	
+		stmt = ibm_db.prepare(db2conn,sql)
+		ibm_db.execute(stmt)
+		
+		return ibm_db.fetch_assoc(stmt)
+
 	if request.method == 'POST':
 		username = request.form['username']
 		password_condidate = request.form['password']
 
-		# result = TableData().master_data()[0]['password'] 
-		# userquery = TableData().master_data()[0]['username'] 
-		cur = mysql.connection.cursor()
+		dbmaster = returnOne('SELECT username FROM master LIMIT 1')
 
-		cur.execute('SELECT user FROM master LIMIT 1')
-		dbmaster = cur.fetchone()[0]
+		result = returnOne('SELECT password FROM master LIMIT 1')
+		if username != dbmaster['USERNAME']:
+			# ibm_db.close(db2conn)
 
-		cur.execute('SELECT password FROM master LIMIT 1')
-		result = cur.fetchone()[0]
-
-		if username != dbmaster:
 			flash('Invalid username', 'success')
-			cur.close()	
-
 			return redirect(url_for('login'))	
 		else: 
-			if sha256_crypt.verify(password_condidate, result):
+			if sha256_crypt.verify(password_condidate, result['PASSWORD']):
 				app.logger.info('PASSWORD MATCHED')
 				session['logged_in'] = True
 				session['username'] = username
-				flash('You are now logged in', 'success')
-				cur.close()
+				# ibm_db.close(db2conn)
 
+				flash('You are now logged in', 'success')
 				return redirect(url_for('post'))
 			else:
 				app.logger.info('PASSWORD NOT MATCHED')
+				# ibm_db.close(db2conn)
+
 				flash('Invalid login', 'success')
-				cur.close()
-				
 				return redirect(url_for('login'))
 
 	return render_template('login.html')
@@ -266,8 +265,6 @@ def logout():
 @app.route('/portal', methods=['GET', 'POST'])
 @is_logged_in
 def post():
-	conn = mysql.connection
-	cur = conn.cursor()
 	if request.method == 'POST':
 		class State:
 			FORM_TITLE = request.form['title'],
@@ -296,37 +293,27 @@ def post():
 			State.FORM_STYLE = baseAWSURL+''.join(State.FORM_TITLE)+'/'+State.reqs[2].content_type.replace('/','-')
 			State.FORM_TYPE = 'Sample App'
 
+		sql = """INSERT INTO projects (
+			app_type, 
+			deployed_url, 
+			description, 
+			game_file, 
+			git_url, 
+			icon_file, 
+			style_file, 
+			title 
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", 
 
-		## UPLOAD CONTENT INTO MYSQL
-		cur.execute('INSERT INTO projects (app_type, deployed_url, description, game_file, git_url, icon_file, style_file, title ) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)',
-			(''.join(State.FORM_TYPE), ''.join(State.FORM_DEPLOYED), ''.join(State.FORM_DESCRIPTION), ''.join(State.FORM_GAME), ''.join(State.FORM_GIT), ''.join(State.FORM_ICON), ''.join(State.FORM_STYLE), ''.join(State.FORM_TITLE)))
-		conn.commit()
-
-		## CREATES ID USING INDEX
-		# def index():
-		# 	dynaIndex = len(TableData().content_data())
-		# 	if dynaIndex == 0:
-		# 		return 1
-		# 	else:
-		# 		index = TableData().content_data()[0]['id']
-		# 		print('old index',index)
-		# 		print('new index',index+1)
-		# 		return index+1
-
-		## UPLOAD CONTENT INTO DYNAMO
-		# TableData().contentTable.put_item(
-		# 	Item={
-		# 		'id': index(),
-		# 		'title': ''.join(State.FORM_TITLE),
-		# 		'description': ''.join(State.FORM_DESCRIPTION),
-		# 		'git_url': ''.join(State.FORM_GIT),
-		# 		'game_file': ''.join(State.FORM_GAME),
-		# 		'style_file': ''.join(State.FORM_STYLE),
-		# 		'icon_file': ''.join(State.FORM_ICON),				
-		# 		'deployed_url': ''.join(State.FORM_DEPLOYED),
-		# 		'app_type': ''.join(State.FORM_TYPE)
-		# 	}
-		# )
+		stmt = ibm_db.prepare(db2conn,''.join(sql))
+		ibm_db.bind_param(stmt, 1, ''.join(State.FORM_TYPE))
+		ibm_db.bind_param(stmt, 2, ''.join(State.FORM_DEPLOYED))
+		ibm_db.bind_param(stmt, 3, ''.join(State.FORM_DESCRIPTION))
+		ibm_db.bind_param(stmt, 4, ''.join(State.FORM_GAME))
+		ibm_db.bind_param(stmt, 5, ''.join(State.FORM_GIT))
+		ibm_db.bind_param(stmt, 6, ''.join(State.FORM_ICON))
+		ibm_db.bind_param(stmt, 7, ''.join(State.FORM_STYLE))
+		ibm_db.bind_param(stmt, 8, ''.join(State.FORM_TITLE))
+		ibm_db.execute(stmt)
 
 		if isinstance(State.reqs, list):
 			for file in State.reqs:
@@ -357,25 +344,39 @@ def post():
 		# flash('You successfully uploaded', 'success')
 		return redirect(url_for('post'))		
 
-	resultVal = cur.execute('SELECT * FROM projects')
-	if(resultVal > 0):
-		projects = cur.fetchall()
+	def fetchIntoArray():
+		sql = "SELECT * FROM projects;"
+
+		stmt = ibm_db.prepare(db2conn,sql)
+		ibm_db.execute(stmt)
+
+		rows = []
+		result = ibm_db.fetch_assoc(stmt)
+		while result != False:
+			rows.append(result.copy())
+			result = ibm_db.fetch_assoc(stmt)
+
+		return rows
+
+	if(len(fetchIntoArray()) > 0):
 		content = {}
 		payload = []
-		for result in projects:
+		for result in fetchIntoArray():
 			content = {
-				'id': result[0],
-				'app_type': result[1],
-				'deployed_url': result[2],
-				'description': result[3],
-				'game_file': result[4],
-				'git_url': result[5],
-				'icon_file': result[6],
-				'style_file': result[7],
-				'title': result[8]
+				'id': result['ID'],
+				'app_type': result['APP_TYPE'],
+				'deployed_url': result['DEPLOYED_URL'],
+				'description': result['DESCRIPTION'],
+				'game_file': result['GAME_FILE'],
+				'git_url': result['GIT_URL'],
+				'icon_file': result['ICON_FILE'],
+				'style_file': result['STYLE_FILE'],
+				'title': result['TITLE']
 			}
 			payload.append(content)
 			content = {}
+
+		# ibm_db.close(db2conn)
 		# print(payload[0]['title'])
 		return render_template('portal.html', files = payload)
 
@@ -385,22 +386,16 @@ def post():
 @app.route('/portal/<ID>/', methods=['POST'])
 def delete(ID):
 	if request.method == 'POST':
-		##MYSQL delete
-		conn = mysql.connection
-		cur = conn.cursor()
-		cur.execute('DELETE FROM projects WHERE id = %s', (ID))
-		conn.commit()
+		# db2 delete
+		sql = 'DELETE FROM projects WHERE id = ?'
+		stmt = ibm_db.prepare(db2conn, sql)
+		ibm_db.bind_param(stmt, 1, ID)
+		ibm_db.execute(stmt)
 
-		##AWS delete
-		# TableData().contentTable.delete_item(
-	 #        Key={
-		# 		'id': int(ID)
-		# 	}
-		# )
+		# AWS bucket delete
 		name = request.form['name']
 		bucket = s3.Bucket(Envstate.BUCKET)
 		bucket.objects.filter(Prefix=name).delete()
-
 
 		return redirect(url_for('post'))
 
