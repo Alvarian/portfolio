@@ -2,7 +2,7 @@
 
 CREATE TABLE master(
 	id int AUTO_INCREMENT,
-	user VARCHAR(35),
+	username VARCHAR(35),
 	password VARCHAR(100),
 	PRIMARY KEY (id)
 );
