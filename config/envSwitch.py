@@ -19,10 +19,6 @@ class keys:
 			self.MAIL_USE_TLS = os.environ['MAIL_USE_TLS']
 			self.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
 
-			# self.DB2_HOST = os.environ['DB2_HOST']
-			# self.DB2_USER = os.environ['DB2_USER']
-			# self.DB2_PASSWORD = os.environ['DB2_PASSWORD']
-			# self.DB2_DB = os.environ['DB2_DB']
 			self.DB2_KEY = os.environ['DB2_KEY']
 		else:
 			from dotenv import load_dotenv
@@ -42,8 +38,4 @@ class keys:
 			self.MAIL_USE_TLS = os.getenv("MAIL_USE_TLS")
 			self.MAIL_USE_SSL = os.getenv("MAIL_USE_SSL")
 
-			self.DB2_HOST = os.getenv("DB2_HOST")
-			self.DB2_USER = os.getenv("DB2_USER")
-			self.DB2_PASSWORD = os.getenv("DB2_PASSWORD")
-			self.DB2_DB = os.getenv("DB2_DB")
 			self.DB2_KEY = os.getenv("DB2_KEY")
