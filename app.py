@@ -41,7 +41,7 @@ class Envstate:
 	MAIL_USE_TLS = keys.MAIL_USE_TLS,
 	MAIL_USE_SSL = keys.MAIL_USE_SSL
 
-
+print(keys.DB2_KEY)
 # INIT DB2
 db2conn = ibm_db.connect(keys.DB2_KEY, "", "")
 
