@@ -7,34 +7,51 @@ import sys
 import logging
 from os import environ
 
-# import boto3
-# import boto
-# from botocore.client import Config
-# from boto.s3.connection import S3Connection
-# from boto3.dynamodb.conditions import Key, Attr
+import boto3
+import boto
+from botocore.client import Config
+from boto.s3.connection import S3Connection
+from boto3.dynamodb.conditions import Key, Attr
 
 # from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 # from passlib.hash import sha256_crypt
 # from functools import wraps
-# from flask_mail import Mail, Message
+from flask_mail import Mail, Message
+from config import envSwitch
+keys = envSwitch.keys()
+
+class Envstate:
+	KEY_ID = keys.KEY_ID,
+	SECRET_KEY = keys.SECRET_KEY,
+	REGION = keys.REGION,
+	BUCKET = keys.BUCKET,
+	MASTER = keys.MASTER,
+	MAIL_SERVER = keys.MAIL_SERVER,
+	MAIL_PORT = keys.MAIL_PORT,
+	MAIL_USERNAME = keys.MAIL_USERNAME,
+	MAIL_PASSWORD = keys.MAIL_PASSWORD,
+	MAIL_USE_TLS = keys.MAIL_USE_TLS,
+	MAIL_USE_SSL = keys.MAIL_USE_SSL,
+	DATABASE_URL = keys.DATABASE_URL,
+	IS_LOCAL = keys.IS_LOCAL
 
 
 app = Flask(__name__)
+app.secret_key=''.join(Envstate.SECRET_KEY)
 
-ENV = 'dev'
-
-if ENV == 'dev':
-    app.debug = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://master:123456@localhost/api_dev'
+if Envstate.IS_LOCAL:
+	app.debug = True
+	app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
 else:
-    app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = ''
+	print('guuh')
+	app.debug = False
+	app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-class Feedback(db.Model):
+class Projects(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
     app_type = db.Column(db.String(50))
@@ -66,27 +83,8 @@ class Feedback(db.Model):
         self.style_file = style_file
         self.title = title
 
-
 # app.logger.addHandler(logging.StreamHandler(sys.stdout))
 # app.logger.setLevel(logging.ERROR)
-
-# from config import envSwitch
-# keys = envSwitch.keys()
-
-# class Envstate:
-# 	KEY_ID = keys.KEY_ID,
-# 	SECRET_KEY = keys.SECRET_KEY,
-# 	REGION = keys.REGION,
-# 	BUCKET = keys.BUCKET,
-# 	MASTER = keys.MASTER,
-# 	MAIL_SERVER = keys.MAIL_SERVER,
-# 	MAIL_PORT = keys.MAIL_PORT,
-# 	MAIL_USERNAME = keys.MAIL_USERNAME,
-# 	MAIL_PASSWORD = keys.MAIL_PASSWORD,
-# 	MAIL_USE_TLS = keys.MAIL_USE_TLS,
-# 	MAIL_USE_SSL = keys.MAIL_USE_SSL
-
-
 
 
 # ##INIT BUCKET
@@ -99,16 +97,15 @@ class Feedback(db.Model):
 # baseAWSURL = "https://s3."+str(Envstate.REGION)+".amazonaws.com/port-bucket/"
 
 
-# ##MAIL CONFIG
-# app.config.update(
-# 	MAIL_SERVER = Envstate.MAIL_SERVER, 
-# 	MAIL_PORT = Envstate.MAIL_PORT,
-# 	MAIL_USE_SSL = Envstate.MAIL_USE_SSL,
-# 	MAIL_USERNAME = Envstate.MAIL_USERNAME,
-# 	MAIL_PASSWORD = Envstate.MAIL_PASSWORD
-# )
-
-# mail = Mail(app)
+##MAIL CONFIG
+app.config.update(
+	MAIL_SERVER = ''.join(Envstate.MAIL_SERVER), 
+	MAIL_PORT = ''.join(Envstate.MAIL_PORT),
+	MAIL_USE_SSL = Envstate.MAIL_USE_SSL,
+	MAIL_USERNAME = ''.join(Envstate.MAIL_USERNAME),
+	MAIL_PASSWORD = ''.join(Envstate.MAIL_PASSWORD)
+)
+mail = Mail(app)
 
 # @app.context_processor
 # def override_url_for():
@@ -133,7 +130,7 @@ class Feedback(db.Model):
 # 			return redirect(url_for('login'))
 # 	return wrap
 
-# ##ROUTES
+## ROUTES
 @app.route('/', methods=['GET', 'POST'])
 def about():
 	return render_template('about.html')
@@ -142,69 +139,65 @@ def about():
 # def hobbies():
 # 	return render_template('hobbies.html')
 
-# @app.route('/contact', methods=['GET', 'POST'])
-# def contact():
-# 	errors = []
-# 	if request.method == 'POST':
-# 		if not request.form['name']:
-# 			errors.append('Please provide your name')
-# 		if not request.form['email']:
-# 			errors.append('Please provide your email')
-# 		if not request.form['message']:
-# 			errors.append('No hello? :(')
-# 		if len(errors) == 1:
-# 			print(errors)
-# 			flash(errors[0], 'success')
-# 		elif len(errors) > 1:
-# 			print(errors)
-# 			flash('Please fill in all fields', 'success')
-# 		else:
-# 			msg = Message('A hello from '+ request.form['name'], sender=Envstate.MAIL_USERNAME, recipients=[Envstate.MAIL_USERNAME])
-# 			msg.html = '<p>'+request.form['message']+'</p>'+'<p>email: '+request.form['email']+'</p>'
-# 			mail.send(msg)
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+	errors = []
+	if request.method == 'POST':
+		if not request.form['name']:
+			errors.append('Please provide your name')
+		if not request.form['email']:
+			errors.append('Please provide your email')
+		if not request.form['message']:
+			errors.append('No hello? :(')
+		if len(errors) == 1:
+			print(errors)
+			flash(errors[0], 'success')
+		elif len(errors) > 1:
+			print(errors)
+			flash('Please fill in all fields', 'success')
+		else:
+			# import inspect
+			print(''.join(Envstate.MAIL_USERNAME))
+			msg = Message(
+				subject="Message from "+request.form['name'],
+				sender=''.join(Envstate.MAIL_USERNAME), 
+				recipients=[''.join(Envstate.MAIL_USERNAME)]
+			)
+			msg.html = '<p>'+request.form['message']+'</p>'+'<p>email: '+request.form['email']+'</p>'
+			mail.send(msg)
 
-# 			flash('Submitted! Thank you for reaching out, will get back to you shortly', 'success')
-# 			return redirect(url_for('contact'))
+			flash('Submitted! Thank you for reaching out, will get back to you shortly', 'success')
+			return redirect(url_for('contact'))
 
-# 	return render_template('contact.html')
+	return render_template('contact.html')
 
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
-	# def fetchIntoArray():
-	# 	sql = "SELECT * FROM projects;"
+	def fetchIntoArray():
+		SQL = "SELECT * FROM projects;"
+		result = db.session.execute(SQL).fetchall()
 
-	# 	stmt = ibm_db.prepare(db2conn,sql)
-	# 	ibm_db.execute(stmt)
+		return result
 
-	# 	rows = []
-	# 	result = ibm_db.fetch_assoc(stmt)
-	# 	while result != False:
-	# 		rows.append(result.copy())
-	# 		result = ibm_db.fetch_assoc(stmt)
+	if(len(fetchIntoArray()) > 0):
+		content = {}
+		payload = []
+		for result in fetchIntoArray():
+			content = {
+				'id': result[0],
+				'app_type': result[1],
+				'deployed_url': result[2],
+				'description': result[3],
+				'game_file': result[4],
+				'git_url': result[5],
+				'icon_file': result[6],
+				'style_file': result[7],
+				'title': result[8]
+			}
+			payload.append(content)
+			content = {}
 
-	# 	return rows
-	
-	# if(len(fetchIntoArray()) > 0):
-	# 	content = {}
-	# 	payload = []
-	# 	for result in fetchIntoArray():
-	# 		print(result)
-	# 		content = {
-	# 			'id': result['ID'],
-	# 			'app_type': result['APP_TYPE'],
-	# 			'deployed_url': result['DEPLOYED_URL'],
-	# 			'description': result['DESCRIPTION'],
-	# 			'game_file': result['GAME_FILE'],
-	# 			'git_url': result['GIT_URL'],
-	# 			'icon_file': result['ICON_FILE'],
-	# 			'style_file': result['STYLE_FILE'],
-	# 			'title': result['TITLE']
-	# 		}
-	# 		payload.append(content)
-	# 		content = {}
-
-	# 	# ibm_db.close(db2conn)
-	# 	return render_template('index.html', files = payload)
+		return render_template('index.html', files = payload)
 	
 	return render_template('index.html')
 
