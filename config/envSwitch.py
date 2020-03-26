@@ -41,3 +41,4 @@ class keys:
 			self.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
 
 			self.DATABASE_URL = os.environ['DATABASE_URL']
+			self.IS_LOCAL = os.environ['IS_LOCAL']
