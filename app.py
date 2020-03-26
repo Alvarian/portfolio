@@ -45,7 +45,7 @@ if Envstate.IS_LOCAL:
 else:
 	print('guuh')
 	app.debug = False
-	app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL+"?sslmode=require")
+	app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
