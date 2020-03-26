@@ -26,14 +26,20 @@ IS_LOCAL=True
 
 ## Install Provided Packages
 Firstly, go to the main folder directory in terminal/command prompt, and type
-```> pip install pipenv```
+```
+> pip install pipenv
+```
 Once downloaded type 
-```> pipenv shell```
+```
+> pipenv shell
+```
 
 Once in the pip VM, use requirements.txt as a grocery list for pip to shop for needed to get this application going. 
 
 Type 
-```> pipenv install```
+```
+> pipenv install
+```
 
 ## Database Setup
 This application uses postgres, make sure to have that installed from https://www.postgresql.org/download/ before continuing. Once again go to your system's environmental variables and make sure the downloaded folder of postres exposing the main postgres exe file, is included in the path.
@@ -53,8 +59,12 @@ This will create our table 'projects' from our Projects model constructor at lin
 
 ### Lastly
 Migrate provided seeds into the projects table. In the pip VM type
-```> psql -h hostname -d databasename -U username -f ./db/seeds/project_seed.sql```
+```
+> psql -h hostname -d databasename -U username -f ./db/seeds/project_seed.sql
+```
 
 ## Start Application
 In the main directory, while in the pip VM, type
-```> python app.py```
+```
+> python app.py
+```
