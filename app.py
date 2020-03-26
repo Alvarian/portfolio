@@ -7,11 +7,11 @@ import sys
 import logging
 from os import environ
 
-import boto3
-import boto
-from botocore.client import Config
-from boto.s3.connection import S3Connection
-from boto3.dynamodb.conditions import Key, Attr
+# import boto3
+# import boto
+# from botocore.client import Config
+# from boto.s3.connection import S3Connection
+# from boto3.dynamodb.conditions import Key, Attr
 
 # from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 # from passlib.hash import sha256_crypt
@@ -35,20 +35,14 @@ class Envstate:
 	DATABASE_URL = keys.DATABASE_URL,
 	IS_LOCAL = keys.IS_LOCAL
 
-
+##INIT FLASK
 app = Flask(__name__)
 app.secret_key=''.join(Envstate.SECRET_KEY)
+app.debug = Envstate.IS_LOCAL[0]
 
-if Envstate.IS_LOCAL:
-	app.debug = True
-	app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
-else:
-	print('guuh')
-	app.debug = False
-	app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL+"?sslmode=require")
-
+##INIT DB
+app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 
 class Projects(db.Model):
@@ -86,7 +80,6 @@ class Projects(db.Model):
 # app.logger.addHandler(logging.StreamHandler(sys.stdout))
 # app.logger.setLevel(logging.ERROR)
 
-
 # ##INIT BUCKET
 # s3 = boto3.resource(
 #     's3',
@@ -97,7 +90,7 @@ class Projects(db.Model):
 # baseAWSURL = "https://s3."+str(Envstate.REGION)+".amazonaws.com/port-bucket/"
 
 
-##MAIL CONFIG
+##INIT MAIL
 app.config.update(
 	MAIL_SERVER = ''.join(Envstate.MAIL_SERVER), 
 	MAIL_PORT = ''.join(Envstate.MAIL_PORT),
@@ -439,7 +432,3 @@ def gallery():
 
 if __name__ == '__main__':
 	app.run()
-
-
-## REASOURCES ##
-# http://www.phpmyadmin.co/
