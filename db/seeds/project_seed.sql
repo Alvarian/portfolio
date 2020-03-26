@@ -62,5 +62,3 @@ VALUES (
 	'https://s3.us-east-2.amazonaws.com/port-bucket/Rivalry/text-css', 
 	'Rivalry'
 );
-
-# mysql -u root -p py_port < C:\Users\Administrator\Desktop\Coding\webDev\deployed_apps\portfolio\flask_v\db\seeds\project_seed.sql
