@@ -2,7 +2,7 @@
 My portfolio. Technology stack is HTML, flask and AWS S3 bucket only to write in legacy version(currently disabled in this version). Hosted on heroku, using postgres add-on for database. This version is just representing the structure of what I want my final version to have, using different and more personally preferred web stacks.
 
 # Testimony
-Although I will not use this application to represent my portfolio in the long term, I thoroughly enjoyed, using the need to have a portfolio up and running, as an excuse to get to know python. 
+Although I will not use this application to represent my portfolio in the long term, I thoroughly enjoyed using the need to have a portfolio up and running, as an excuse to get to know python. 
 
 I planned as I coded. Nothing was really planned from the getgo, except for knowing what reading and writting capabilities it should possess. With that said I have went through three databases finalizing to heroku's awesome provided DB service. The first of which I used dynamoDB, a non-sql, provided by AWS in combination with S3 bucket, but did not scale to a visitor's traffic without having to pay. So I thought, lets divide the weight, and looked else-where.
 
