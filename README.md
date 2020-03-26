@@ -46,7 +46,7 @@ This application uses postgres, make sure to have that installed from https://ww
 
 Once installed and environment variables are set, open pgadmin as an administrator. Create a user in the Login/Group Roles menu and enable that username as superuser in the priviledges tab. Remember the user and password if you gave it one. In the same menu create a new database, name given does not matter.
 
-Go to your .env file and set DATABASE_URL to "postgresql://<INPUT SUPERUSER>:<INPUT PASSWORD GIVEN>@localhost/<DATABASE NAME>"
+Go to your .env file and set DATABASE_URL to "postgresql://-INPUT SUPERUSER-:-INPUT PASSWORD GIVEN-@localhost/-DATABASE NAME-"
   
 Then in your pip VM, in the main directory, type 
 ```
