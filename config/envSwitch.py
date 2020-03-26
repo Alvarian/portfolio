@@ -6,7 +6,7 @@ class keys:
 		from dotenv import load_dotenv
 		load_dotenv()
 
-		if os.getenv("IS_LOCAL"):
+		if os.getenv("IS_LOCAL") == 'True':
 			print('in local', os.getenv("IS_LOCAL"))
 			self.KEY_ID = os.getenv("ACCESS_KEY_ID")
 			self.SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
