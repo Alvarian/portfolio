@@ -3,7 +3,28 @@ import os
 
 class keys:
 	def __init__(self):
-		if 'ACCESS_KEY_ID' in os.environ:
+		from dotenv import load_dotenv
+		load_dotenv()
+
+		if os.getenv("IS_LOCAL") == 'True':
+			print('in local', os.getenv("IS_LOCAL"))
+			self.KEY_ID = os.getenv("ACCESS_KEY_ID")
+			self.SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
+			self.REGION = os.getenv("REGION_NAME")
+			self.BUCKET = os.getenv("BUCKET_NAME")
+
+			self.MASTER = os.getenv("EXPECTED_MASTER")
+
+			self.MAIL_SERVER = os.getenv("MAIL_SERVER")
+			self.MAIL_PORT = os.getenv("MAIL_PORT")
+			self.MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+			self.MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+			self.MAIL_USE_TLS = os.getenv("MAIL_USE_TLS")
+			self.MAIL_USE_SSL = os.getenv("MAIL_USE_SSL")
+
+			self.DATABASE_URL = os.getenv("DATABASE_URL")
+			self.IS_LOCAL = os.getenv("IS_LOCAL")
+		else:
 			# HEROKU
 			self.KEY_ID = os.environ['ACCESS_KEY_ID']
 			self.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
@@ -19,23 +40,5 @@ class keys:
 			self.MAIL_USE_TLS = os.environ['MAIL_USE_TLS']
 			self.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
 
-			self.DB2_KEY = os.environ['DB2_KEY']
-		else:
-			from dotenv import load_dotenv
-			load_dotenv()
-
-			self.KEY_ID = os.getenv("ACCESS_KEY_ID")
-			self.SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
-			self.REGION = os.getenv("REGION_NAME")
-			self.BUCKET = os.getenv("BUCKET_NAME")
-
-			self.MASTER = os.getenv("EXPECTED_MASTER")
-
-			self.MAIL_SERVER = os.getenv("MAIL_SERVER")
-			self.MAIL_PORT = os.getenv("MAIL_PORT")
-			self.MAIL_USERNAME = os.getenv("MAIL_USERNAME")
-			self.MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
-			self.MAIL_USE_TLS = os.getenv("MAIL_USE_TLS")
-			self.MAIL_USE_SSL = os.getenv("MAIL_USE_SSL")
-
-			self.DB2_KEY = os.getenv("DB2_KEY")
+			self.DATABASE_URL = os.environ['DATABASE_URL']
+			self.IS_LOCAL = os.environ['IS_LOCAL']
