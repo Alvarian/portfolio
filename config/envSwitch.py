@@ -14,7 +14,7 @@ class keys:
 			# self.REGION = os.getenv("REGION_NAME")
 			# self.BUCKET = os.getenv("BUCKET_NAME")
 
-			self.MASTER = os.getenv("EXPECTED_MASTER")
+			# self.MASTER = os.getenv("EXPECTED_MASTER")
 
 			self.MAIL_SERVER = os.getenv("MAIL_SERVER")
 			self.MAIL_PORT = os.getenv("MAIL_PORT")
@@ -34,7 +34,7 @@ class keys:
 			# self.REGION = os.environ['REGION_NAME']
 			# self.BUCKET = os.environ['BUCKET_NAME']
 
-			self.MASTER = os.environ['EXPECTED_MASTER']
+			# self.MASTER = os.environ['EXPECTED_MASTER']
 
 			self.MAIL_SERVER = os.environ['MAIL_SERVER']
 			self.MAIL_PORT = os.environ['MAIL_PORT']
