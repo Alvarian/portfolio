@@ -17,7 +17,7 @@ class Envstate:
 	# SECRET_KEY = keys.SECRET_KEY,
 	# REGION = keys.REGION,
 	# BUCKET = keys.BUCKET,
-	MASTER = keys.MASTER,
+	# MASTER = keys.MASTER,
 	MAIL_SERVER = keys.MAIL_SERVER,
 	MAIL_PORT = keys.MAIL_PORT,
 	MAIL_USERNAME = keys.MAIL_USERNAME,
