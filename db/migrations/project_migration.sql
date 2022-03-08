@@ -8,7 +8,7 @@ CREATE TABLE master(
 );
 
 CREATE TABLE projects(
-	id int AUTO_INCREMENT, 
+	id serial PRIMARY KEY, 
 	app_type VARCHAR(255), 
 	deployed_url VARCHAR(255), 
 	description VARCHAR(255), 
@@ -16,8 +16,7 @@ CREATE TABLE projects(
 	git_url VARCHAR(255), 
 	icon_file VARCHAR(255), 
 	style_file VARCHAR(255), 
-	title VARCHAR(255), 
-	PRIMARY KEY (id)
+	title VARCHAR(255)
 );
 
 -- mysql -u root -p py_port < C:\Users\Administrator\Desktop\Coding\webDev\deployed_apps\portfolio\flask_v\db\schemas\project_schema.sql
