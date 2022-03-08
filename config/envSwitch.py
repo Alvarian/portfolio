@@ -43,5 +43,5 @@ class keys:
 			self.MAIL_USE_TLS = os.environ['MAIL_USE_TLS']
 			self.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
 
-			self.DATABASE_URL = os.environ['HEROKU_POSTGRESQL_IVORY_URL']
+			self.DATABASE_URL = os.environ['HEROKU_POSTGRESQL_IVORY_URL'].replace("://", "ql://", 1)
 			self.IS_LOCAL = os.environ['IS_LOCAL'] == "True"
