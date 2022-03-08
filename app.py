@@ -30,8 +30,8 @@ class Envstate:
 ##INIT FLASK
 app = Flask(__name__)
 # app.secret_key=''.join(Envstate.SECRET_KEY)
-app.debug = Envstate.IS_LOCAL
-# app.debug = True
+# app.debug = Envstate.IS_LOCAL
+app.debug = False
 
 ##INIT DB
 app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
