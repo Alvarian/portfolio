@@ -13,10 +13,10 @@ from config import envSwitch
 keys = envSwitch.keys()
 
 class Envstate:
-	KEY_ID = keys.KEY_ID,
-	SECRET_KEY = keys.SECRET_KEY,
-	REGION = keys.REGION,
-	BUCKET = keys.BUCKET,
+	# KEY_ID = keys.KEY_ID,
+	# SECRET_KEY = keys.SECRET_KEY,
+	# REGION = keys.REGION,
+	# BUCKET = keys.BUCKET,
 	MASTER = keys.MASTER,
 	MAIL_SERVER = keys.MAIL_SERVER,
 	MAIL_PORT = keys.MAIL_PORT,
@@ -29,8 +29,9 @@ class Envstate:
 
 ##INIT FLASK
 app = Flask(__name__)
-app.secret_key=''.join(Envstate.SECRET_KEY)
-app.debug = Envstate.IS_LOCAL[0]
+# app.secret_key=''.join(Envstate.SECRET_KEY)
+app.debug = Envstate.IS_LOCAL
+# app.debug = True
 
 ##INIT DB
 app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
@@ -74,7 +75,7 @@ app.config.update(
 	MAIL_SERVER = ''.join(Envstate.MAIL_SERVER), 
 	MAIL_PORT = ''.join(Envstate.MAIL_PORT),
 	MAIL_USE_SSL = Envstate.MAIL_USE_SSL,
-	MAIL_USERNAME = ''.join(Envstate.MAIL_USERNAME),
+	MAIL_USERNAMMAIL_PASSWORDE = ''.join(Envstate.MAIL_USERNAME),
 	MAIL_PASSWORD = ''.join(Envstate.MAIL_PASSWORD)
 )
 mail = Mail(app)
@@ -110,7 +111,7 @@ def contact():
 				recipients=[''.join(Envstate.MAIL_USERNAME)]
 			)
 			msg.html = '<p>'+request.form['message']+'</p>'+'<p>email: '+request.form['email']+'</p>'
-			mail.send(msg)
+			# python.send(msg)
 
 			flash('Submitted! Thank you for reaching out, will get back to you shortly', 'success')
 			return redirect(url_for('contact'))
