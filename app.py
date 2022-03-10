@@ -14,7 +14,7 @@ keys = envSwitch.keys()
 
 class Envstate:
 	# KEY_ID = keys.KEY_ID,
-	# SECRET_KEY = keys.SECRET_KEY,
+	SECRET_KEY = keys.SECRET_KEY,
 	# REGION = keys.REGION,
 	# BUCKET = keys.BUCKET,
 	# MASTER = keys.MASTER,
@@ -29,7 +29,7 @@ class Envstate:
 
 ##INIT FLASK
 app = Flask(__name__)
-# app.secret_key=''.join(Envstate.SECRET_KEY)
+app.secret_key=''.join(Envstate.SECRET_KEY)
 # app.debug = Envstate.IS_LOCAL
 app.debug = False
 
