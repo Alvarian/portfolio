@@ -10,7 +10,7 @@ class keys:
 		if os.getenv("IS_LOCAL") == "True":
 			print('in local', os.getenv("IS_LOCAL"))
 			# self.KEY_ID = os.getenv("ACCESS_KEY_ID")
-			# self.SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
+			self.SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
 			# self.REGION = os.getenv("REGION_NAME")
 			# self.BUCKET = os.getenv("BUCKET_NAME")
 
@@ -30,7 +30,7 @@ class keys:
 
 			print('in heroku', os.environ['IS_LOCAL'])
 			# self.KEY_ID = os.environ['ACCESS_KEY_ID']
-			# self.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
+			self.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
 			# self.REGION = os.environ['REGION_NAME']
 			# self.BUCKET = os.environ['BUCKET_NAME']
 
