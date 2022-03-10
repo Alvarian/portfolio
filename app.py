@@ -75,7 +75,7 @@ app.config.update(
 	MAIL_SERVER = ''.join(Envstate.MAIL_SERVER), 
 	MAIL_PORT = ''.join(Envstate.MAIL_PORT),
 	MAIL_USE_SSL = Envstate.MAIL_USE_SSL,
-	MAIL_USERNAMMAIL_PASSWORDE = ''.join(Envstate.MAIL_USERNAME),
+	MAIL_USERNAME = ''.join(Envstate.MAIL_USERNAME),
 	MAIL_PASSWORD = ''.join(Envstate.MAIL_PASSWORD)
 )
 mail = Mail(app)
