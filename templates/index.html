@@ -52,11 +52,12 @@
 								</div>
 							</div>
 
-							<script type="text/javascript" src="{{ file.game_file }}"></script>
+							<script type="application/javascript" src="{{ file.game_file }}"></script>
 							<script>
 								// When the user clicks on the button, open the modal 
+								// console.log(file)
 								$(document).ready(() => {
-									$('head').append('<link rel="stylesheet" type="text/css" href="{{ file.style_file }}">');
+									// $('head').append('<link rel="stylesheet" type="text/css" href="{{ file.style_file }}">');
 									$(document).ready(() => {
 										{{ file.title }}.start(document.querySelector(`.{{ file.title }}_model`));
 									});
