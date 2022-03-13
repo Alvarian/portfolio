@@ -40,8 +40,8 @@ limiter = Limiter(
     default_limits=["200 per day", "50 per hour"]
 )
 
-# app.debug = Envstate.IS_LOCAL
-app.debug = False
+app.debug = Envstate.IS_LOCAL
+# app.debug = False
 
 ##INIT DB
 app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
