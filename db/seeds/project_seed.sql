@@ -7,7 +7,8 @@ INSERT INTO projects (
 	game_file, 
 	git_url, 
 	icon_file, 
-	style_file, 
+	secret_key, 
+	init_vector, 
 	title 
 )
 VALUES (
@@ -16,8 +17,9 @@ VALUES (
 	'A memory card game!', 
 	'None', 
 	'https://github.com/Alvarian/DEK', 
-	'https://s3.us-east-2.amazonaws.com/port-bucket/DEK/image-jpeg', 
-	'None', 
+	'https://s3.us-east-2.amazonaws.com/port-bucket/DEK/image-jpeg',
+	'None',
+	'None',
 	'DEK'
 );
 
@@ -28,7 +30,8 @@ INSERT INTO projects (
 	game_file, 
 	git_url, 
 	icon_file, 
-	style_file, 
+	secret_key, 
+	init_vector, 
 	title 
 )
 VALUES (
@@ -38,7 +41,8 @@ VALUES (
 	'https://s3.us-east-2.amazonaws.com/port-bucket/Mystic8/text-javascript', 
 	'https://github.com/Alvarian/static_env/tree/master/views/partials/ALTZ-082B', 
 	'https://s3.us-east-2.amazonaws.com/port-bucket/Mystic8/image-png', 
-	'https://s3.us-east-2.amazonaws.com/port-bucket/Mystic8/text-css', 
+	'None',
+	'76 a1 a6 dd 5f a7 13 8d 86 e3 bd 5c a8 55 1f 25',
 	'Mystic8'
 );
 
@@ -49,7 +53,8 @@ INSERT INTO projects (
 	game_file, 
 	git_url, 
 	icon_file, 
-	style_file, 
+	secret_key, 
+	init_vector, 
 	title 
 )
 VALUES (
@@ -59,6 +64,7 @@ VALUES (
 	'https://s3.us-east-2.amazonaws.com/port-bucket/Rivalry/text-javascript', 
 	'https://github.com/Alvarian/RIVALRY', 
 	'https://s3.us-east-2.amazonaws.com/port-bucket/Rivalry/image-png', 
-	'https://s3.us-east-2.amazonaws.com/port-bucket/Rivalry/text-css', 
+	'None',
+	'None',
 	'Rivalry'
 );
