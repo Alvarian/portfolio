@@ -154,7 +154,7 @@ def gallery():
 			payload.append(content)
 			content = {}
 
-		return render_template('index.html', files = payload)
+		return render_template('index.html', files = payload, len = len(payload))
 	
 	return render_template('index.html')
 

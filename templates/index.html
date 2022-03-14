@@ -20,6 +20,10 @@
 	</div>
 </nav>
 
+<script>
+		const { throttle, debounce } = Window.lib; 
+</script>
+
 <div id="app">
 	<h1 class="orb codepro" style="text-align: center;">Project Gallery</h1>
 	<div class="row">
@@ -38,42 +42,37 @@
 
 		<div class="cards">
 			<div class="gallery gall">
-			{% for file in files %}
-				<div style="display: none;" class="open_{{ file.id }}" id="modal">
-
+			{% for i in range(0, len) %}
+				<div style="display: none;" class="open_{{ files[i].id }}" id="modal">
 					<!-- FOR GAMES -->
-					{% if file.game_file %}
-						{% if file.game_file == 'None' %}
+					{% if files[i].game_file %}
+						{% if files[i].game_file == 'None' %}
 						{% else %}
 							<div class="modal-content">
-								<a href="#" class="close {{ file.id }}_close">X</a>
+								<a href="#" class="close {{ files[i].id }}_close">X</a>
 								<div class="border">
-									<div style="width: 100%; height: 100%" class="{{ file.title }}_model"></div>
+									<div style="width: 100%; height: 100%" class="{{ files[i].title }}_model"></div>
 								</div>
 							</div>
 
-							<script type="application/javascript" src="{{ file.game_file }}"></script>
+							<script type="application/javascript" src="{{ files[i].game_file }}"></script>
 							<script>
 								// When the user clicks on the button, open the modal 
-								// console.log(file)
 								$(document).ready(() => {
-									// $('head').append('<link rel="stylesheet" type="text/css" href="{{ file.style_file }}">');
-									$(document).ready(() => {
-										{{ file.title }}.start(document.querySelector(`.{{ file.title }}_model`));
-									});
-								});		
+									Window.games["{{i}}"](document.querySelector(`.{{ files[i].title }}_model`));
+								});
 							</script>
 						{% endif %}
 					{% endif %}
 
 					<!-- FOR DEPLOYED -->
-					{% if file.deployed_url %}
-						{% if file.deployed_url == 'None' %}
+					{% if files[i].deployed_url %}
+						{% if files[i].deployed_url == 'None' %}
 						{% else %}
 							<div class="modal-content">
-								<a href="#" class="close {{ file.id }}_close">X</a>
+								<a href="#" class="close {{ files[i].id }}_close">X</a>
 								<div class="border">
-									<iframe frameborder="0" src="{{ file.deployed_url }}" height="100%" width="100%"></iframe>
+									<iframe frameborder="0" src="{{ files[i].deployed_url }}" height="100%" width="100%"></iframe>
 								</div>
 							</div>
 						{% endif %}
@@ -82,41 +81,41 @@
 
 				<div class="dropCard">
 					<div style="position: relative;">
-						<div style="background-image: url('{{ file.icon_file }}');" class="card card_{{ file.id }}"></div>
-						<div class="article lay lay_{{ file.id }}">
-							<h2 class="clickOpen orbi card_{{ file.id }}">OPEN</h2>
+						<div style="background-image: url('{{ files[i].icon_file }}');" class="card card_{{ files[i].id }}"></div>
+						<div class="article lay lay_{{ files[i].id }}">
+							<h2 class="clickOpen orbi card_{{ files[i].id }}">OPEN</h2>
 						</div>
 					</div>
 					<div style="height: 100px;"></div>
 					<!-- GITHUB button -->
-					<a class="gitBTN" target="_blank" href={{ file.git_url }}><i class="fab fa-4x fa-github"></i></a>
+					<a class="gitBTN" target="_blank" href={{ files[i].git_url }}><i class="fab fa-4x fa-github"></i></a>
 				</div>
 
 				<script>
 					$(window).ready(() => {
 						let clickWin = (e) => {
 							let element = e.target.className;
-							if(element == 'article lay lay_{{ file.id }}' || element == 'clickOpen orbi card_{{ file.id }}' || element == 'card card_{{ file.id }}'){
-								$(".card_{{ file.id }}").css('transform', 'scale(1.2)');
-								$(".lay_{{ file.id }}").css('display','flex');
-								$(".description").text('{{ file.description }}');
-								$(".title").text('{{ file.title }}');
-								$(".type").text('{{ file.app_type }}');
+							if(element == 'article lay lay_{{ files[i].id }}' || element == 'clickOpen orbi card_{{ files[i].id }}' || element == 'card card_{{ files[i].id }}'){
+								$(".card_{{ files[i].id }}").css('transform', 'scale(1.2)');
+								$(".lay_{{ files[i].id }}").css('display','flex');
+								$(".description").text('{{ files[i].description }}');
+								$(".title").text('{{ files[i].title }}');
+								$(".type").text('{{ files[i].app_type }}');
 								// console.log('over');
 							} else {
-								$(".card_{{ file.id }}").css('transform', 'scale(1)');
-								$(".lay_{{ file.id }}").css('transform', 'scale(1)');
-								$(".lay_{{ file.id }}").css('display', 'none');
+								$(".card_{{ files[i].id }}").css('transform', 'scale(1)');
+								$(".lay_{{ files[i].id }}").css('transform', 'scale(1)');
+								$(".lay_{{ files[i].id }}").css('display', 'none');
 								// console.log('out', element);
 							}
 						}
 						if(window.innerWidth <= 600){
-							$('.card_{{ file.id }}').on('click', (e) => {
-								$(".card_{{ file.id }}").css('transform', 'scale(1.2)');
-								$(".lay_{{ file.id }}").css('display','flex');
-								$(".description").text('{{ file.description }}');
-								$(".title").text('{{ file.title }}');
-								$(".type").text('{{ file.app_type }}');
+							$('.card_{{ files[i].id }}').on('click', (e) => {
+								$(".card_{{ files[i].id }}").css('transform', 'scale(1.2)');
+								$(".lay_{{ files[i].id }}").css('display','flex');
+								$(".description").text('{{ files[i].description }}');
+								$(".title").text('{{ files[i].title }}');
+								$(".type").text('{{ files[i].app_type }}');
 								console.log('lay');
 							});
 							$(window).on('click', (e) => {
@@ -124,17 +123,17 @@
 							});
 							$(window).on('click', (e) => {
 								let element = e.target.className;
-								if(element == 'article lay lay_{{ file.id }}' || element == 'clickOpen orbi card_{{ file.id }}'){
+								if(element == 'article lay lay_{{ files[i].id }}' || element == 'clickOpen orbi card_{{ files[i].id }}'){
 
-									$(".open_{{ file.id }}").css('display','block');
+									$(".open_{{ files[i].id }}").css('display','block');
 								}
 							});
 						} else {
 							$(window).on('click', (e) => {
 								let element = e.target.className;
-								if(element == 'article lay lay_{{ file.id }}' || element == 'clickOpen orbi card_{{ file.id }}'){
+								if(element == 'article lay lay_{{ files[i].id }}' || element == 'clickOpen orbi card_{{ files[i].id }}'){
 
-									$(".open_{{ file.id }}").css('display','block');
+									$(".open_{{ files[i].id }}").css('display','block');
 								}
 							});
 							$(window).on('mouseover', (e) => {
@@ -144,8 +143,8 @@
 					})	
 
 					// When the user clicks on <span> (x), close the modal
-					document.getElementsByClassName("{{ file.id }}_close")[0].onclick = () => {
-						$(".open_{{ file.id }}").css('display','none');
+					document.getElementsByClassName("{{ files[i].id }}_close")[0].onclick = () => {
+						$(".open_{{ files[i].id }}").css('display','none');
 					}
 				</script>
 			{% endfor %}		
