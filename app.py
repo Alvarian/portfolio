@@ -10,11 +10,17 @@ from os import environ
 from flask_mail import Mail, Message
 from config import envSwitch
 
+import redis
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-keys = envSwitch.keys()
 
+# r = redis.Redis(
+#     host='ec2-52-72-148-215.compute-1.amazonaws.com',
+#     port=21830, 
+#     password='p4f0fc4675891253ce05bc1c26c5059b79b481017b400407eb561062c864e2b87')
+
+keys = envSwitch.keys()
 class Envstate:
 	# KEY_ID = keys.KEY_ID,
 	SECRET_KEY = keys.SECRET_KEY,
@@ -28,11 +34,15 @@ class Envstate:
 	MAIL_USE_TLS = keys.MAIL_USE_TLS,
 	MAIL_USE_SSL = keys.MAIL_USE_SSL,
 	DATABASE_URL = keys.DATABASE_URL,
+	REDIS_TLS_URL = keys.REDIS_TLS_URL,
+	REDIS_URL = keys.REDIS_URL,
 	IS_LOCAL = keys.IS_LOCAL
 
 ##INIT FLASK
 app = Flask(__name__)
 app.secret_key=''.join(Envstate.SECRET_KEY)
+
+r = redis.from_url(''.join(Envstate.REDIS_URL))
 
 limiter = Limiter(
     app,
@@ -128,15 +138,26 @@ def contact():
 
 	return render_template('contact.html')
 
+@app.route('/projects/cache', methods=['POST'])
+def register_cache():
+	print(request)
+
+	return redirect(url_for('gallery'))
+
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
+	if r.get('projects'):
+		payload = json.loads(r.get('projects'))
+		print(payload)
+		return render_template('index.html', files = payload, len = len(payload))
+
 	def fetchIntoArray():
 		SQL = "SELECT * FROM projects;"
 		result = db.session.execute(SQL).fetchall()
 
 		return result
 
-	if(len(fetchIntoArray()) > 0):
+	if (len(fetchIntoArray()) > 0):
 		content = {}
 		payload = []
 		for result in fetchIntoArray():

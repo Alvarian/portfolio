@@ -24,6 +24,8 @@ class keys:
 			self.MAIL_USE_SSL = os.getenv("MAIL_USE_SSL")
 
 			self.DATABASE_URL = os.getenv("HEROKU_POSTGRESQL_IVORY_URL")
+			self.REDIS_TLS_URL = os.getenv("REDIS_TLS_URL")
+			self.REDIS_URL = os.getenv("REDIS_URL")
 			self.IS_LOCAL = os.getenv("IS_LOCAL") == "True"
 		else:
 			# HEROKU
@@ -44,4 +46,6 @@ class keys:
 			self.MAIL_USE_SSL = os.environ['MAIL_USE_SSL']
 
 			self.DATABASE_URL = os.environ['HEROKU_POSTGRESQL_IVORY_URL'].replace("://", "ql://", 1)
+			self.REDIS_TLS_URL = os.environ['REDIS_TLS_URL']
+			self.REDIS_URL = os.environ['REDIS_URL']
 			self.IS_LOCAL = os.environ['IS_LOCAL'] == "True"

@@ -17,6 +17,9 @@ CREATE TABLE projects(
 	icon_file VARCHAR(255), 
 	secret_key BYTEA UNIQUE, 
 	init_vector BYTEA UNIQUE, 
+	game_toc,
+	icon_toc,
+	table_toc,
 	title VARCHAR(50)
 );
 
