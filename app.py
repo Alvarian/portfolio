@@ -148,8 +148,8 @@ def register_cache():
 def gallery():
 	if r.get('projects'):
 		payload = json.loads(r.get('projects'))
-		print(payload)
-		return render_template('index.html', files = payload, len = len(payload))
+		
+		return render_template('index.html', files = payload, len = len(payload), is_cached = "yes")
 
 	def fetchIntoArray():
 		SQL = "SELECT * FROM projects;"
@@ -175,7 +175,7 @@ def gallery():
 			payload.append(content)
 			content = {}
 
-		return render_template('index.html', files = payload, len = len(payload))
+		return render_template('index.html', files = payload, len = len(payload), is_cached = "no")
 	
 	return render_template('index.html')
 
