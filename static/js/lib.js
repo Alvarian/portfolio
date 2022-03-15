@@ -1,16 +1,12 @@
 import { throttle, debounce } from "lodash";
-import { createDecipheriv } from "crypto";
+import { AES, enc } from "crypto-js";
 
 
-function decryptAndEvaluateCode(unevaluatedEncryptedCode, Securitykey, initVector) {
+function decryptAndEvaluateCode(unevaluatedEncryptedCode, Securitykey) {
     // the decipher function
-    const decipher = createDecipheriv("aes-256-cbc", Securitykey, initVector);
+    const decryptedData = AES.decrypt(unevaluatedEncryptedCode, Securitykey).toString(enc.Utf8);;
 
-    let decryptedData = decipher.update(unevaluatedEncryptedCode, "hex", "utf-8");
-
-    decryptedData += decipher.final("utf8");
-
-    return eval(decryptedData);
+    eval(decryptedData);
 }
 
 Window.lib = { 

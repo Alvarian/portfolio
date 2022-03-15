@@ -21,7 +21,7 @@
 </nav>
 
 <script>
-		const { throttle, debounce } = Window.lib; 
+	const { throttle, debounce, decryptAndEvaluateCode } = Window.lib; 
 </script>
 
 <div id="app">
@@ -55,11 +55,33 @@
 								</div>
 							</div>
 
-							<script type="application/javascript" src="{{ files[i].game_file }}"></script>
 							<script>
 								// When the user clicks on the button, open the modal 
 								$(document).ready(() => {
-									Window.games["{{i}}"](document.querySelector(`.{{ files[i].title }}_model`));
+									$.ajax({
+										url: "{{ files[i].game_file }}",
+										type: "GET",
+										crossDomain: true, 
+										success: function(encryptedScript) {
+											if ("{{ is_cached }}" === "no") {
+												let payload = files[i];
+												payload.game_file = encryptedScript;
+
+												$.ajax({
+													url: "/projects/cache", 
+													type: "POST", 
+													data: JSON.stringify(payload),
+													success: function(result){
+														console.log(result);
+													}
+												});
+											}
+											// decryptAndEvaluateCode(encryptedScript, {{ files[i].securitykey }})
+											eval(encryptedScript)
+
+											Window.games["{{i}}"](document.querySelector(`.{{ files[i].title }}_model`));
+										}
+									})
 								});
 							</script>
 						{% endif %}
