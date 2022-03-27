@@ -1,16 +1,10 @@
-import { throttle, debounce } from "lodash";
-import { AES, enc } from "crypto-js";
-
-
-function decryptAndEvaluateCode(unevaluatedEncryptedCode, Securitykey) {
+function unZipDecryptAndEvaluate(unevaluatedUnzippedEncryptedCode, securitykey) {
     // the decipher function
-    const decryptedData = AES.decrypt(unevaluatedEncryptedCode, Securitykey).toString(enc.Utf8);;
+    console.log(unevaluatedUnzippedEncryptedCode.length, securitykey);
+    console.log(CryptoJS)
+    // const decryptedData = AES.decrypt(unevaluatedEncryptedCode, securitykey).toString(enc.Utf8);;
 
-    eval(decryptedData);
+    // if (!decryptedData) return null;
+
+    // eval(decryptedData);
 }
-
-Window.lib = { 
-    throttle, 
-    debounce,
-    decryptAndEvaluateCode
-};
