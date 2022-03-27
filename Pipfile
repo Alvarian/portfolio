@@ -14,7 +14,8 @@ gunicorn = "*"
 flask-mail = "*"
 python-dotenv = "*"
 Flask-Limiter = "*"
-redis="*"
+flask_redis = "*"
+redis = "2.10.6"
 
 [requires]
 python_version = "3.7"
