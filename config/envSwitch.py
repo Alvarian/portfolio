@@ -8,7 +8,10 @@ class keys:
 
 		if os.getenv("IS_LOCAL") == "True":
 			print('in local', os.getenv("IS_LOCAL"))
-			self.SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
+			self.SECRET_KEY = os.getenv("SECRET_KEY")
+			self.ACCESS_SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
+			self.ACCESS_KEY_ID = os.getenv("ACCESS_KEY_ID")
+			self.BUCKET_NAME = os.getenv("BUCKET_NAME")
 
 			self.MAIL_SERVER = os.getenv("MAIL_SERVER")
 			self.MAIL_PORT = os.getenv("MAIL_PORT")
@@ -25,7 +28,10 @@ class keys:
 			# HEROKU
 
 			print('in heroku', os.environ['IS_LOCAL'])
-			self.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
+			self.SECRET_KEY = os.environ['SECRET_KEY']
+			self.ACCESS_SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
+			self.ACCESS_KEY_ID = os.environ['ACCESS_KEY_ID']
+			self.BUCKET_NAME = os.environ['BUCKET_NAME']
 
 			self.MAIL_SERVER = os.environ['MAIL_SERVER']
 			self.MAIL_PORT = os.environ['MAIL_PORT']
