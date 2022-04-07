@@ -1,5 +1,4 @@
 from flask import Flask
-from distutils.util import strtobool
 import os
 
 class keys:
@@ -9,12 +8,7 @@ class keys:
 
 		if os.getenv("IS_LOCAL") == "True":
 			print('in local', os.getenv("IS_LOCAL"))
-			# self.KEY_ID = os.getenv("ACCESS_KEY_ID")
 			self.SECRET_KEY = os.getenv("ACCESS_SECRET_KEY")
-			# self.REGION = os.getenv("REGION_NAME")
-			# self.BUCKET = os.getenv("BUCKET_NAME")
-
-			# self.MASTER = os.getenv("EXPECTED_MASTER")
 
 			self.MAIL_SERVER = os.getenv("MAIL_SERVER")
 			self.MAIL_PORT = os.getenv("MAIL_PORT")
@@ -31,12 +25,7 @@ class keys:
 			# HEROKU
 
 			print('in heroku', os.environ['IS_LOCAL'])
-			# self.KEY_ID = os.environ['ACCESS_KEY_ID']
 			self.SECRET_KEY = os.environ['ACCESS_SECRET_KEY']
-			# self.REGION = os.environ['REGION_NAME']
-			# self.BUCKET = os.environ['BUCKET_NAME']
-
-			# self.MASTER = os.environ['EXPECTED_MASTER']
 
 			self.MAIL_SERVER = os.environ['MAIL_SERVER']
 			self.MAIL_PORT = os.environ['MAIL_PORT']

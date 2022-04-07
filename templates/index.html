@@ -51,7 +51,7 @@
 								</div>
 							</div>
 
-							<script>
+							<!-- <script>
 								// When the user clicks on the button, open the modal 
 								$(document).ready(() => {
 									$.ajax({
@@ -75,13 +75,72 @@
 											// decryptAndEvaluateCode(encryptedScript, {{ files[i].securitykey }})
 											eval(encryptedScript)
 
-											Window.games["{{i}}"](document.querySelector(`.{{ files[i].title }}_model`));
+											const setCacheResponse = await fetch("/projects/set-cache", {
+												method: 'POST',
+												headers: {
+													'Accept': 'application/json',
+													'Content-Type': 'application/json'
+												},
+												body: JSON.stringify({
+													data: zippedS3ResponseData,
+													title: "{{ files[i].title }}"
+												})
+											});
+											if (!setCacheResponse.ok) throw setCacheResponse;
+
+											unZipDecryptAndEvaluate(zippedS3ResponseData, "{{ files[i].secret }}");
+										} else {
+											console.log("process data", getResponseData.length)
+											unZipDecryptAndEvaluate(getResponseData, "{{ files[i].secret }}");
 										}
-									})
-								});
-							</script>
+									} catch (err) {
+										console.log(err)
+									}
+								}
+
+
+
+									// fetch("{{ files[i].game_file }}")
+									// 	.then(res => {
+									// 		if (!isCached) {
+									// 			return res.text();
+									// 		}
+
+									// 		return res.json();
+									// 	})
+									// 	.then(zippedOrCachedData => {
+									// 		const payloadToCache = JSON.parse(`{{ files[i]|tojson|safe }}`);
+									// 		payloadToCache.game_file = zippedOrCachedData;
+									// 		const formatted = JSON.stringify(payloadToCache);
+									// 		// console.log(formatted);
+
+									// 		if (!isCached) {
+									// 			fetch("/projects/cache", {
+									// 				method: "POST",
+									// 				headers: {
+									// 					'Accept': 'application/json',
+									// 					'Content-Type': 'application/json'
+									// 				},
+									// 				body: formatted
+									// 			})
+									// 			.then(res => res)
+									// 			.then(newCachedData => {
+									// 				console.log("decrypt cached payload", newCachedData)
+									// 				// decryptAndEvaluateCode(newCachedData, "{{ files[i].secret }}")
+												
+									// 				// Window.games["{{i}}"](document.querySelector(`.{{ files[i].title }}_model`));
+									// 			})
+									// 			.catch(error => console.log(error));
+									// 		} else {
+									// 			console.log("decrypt cached payload", zippedOrCachedData)
+									// 			// decryptAndEvaluateCode(newCachedData, "{{ files[i].secret }}")
+
+									// 			// Window.games["{{i}}"](document.querySelector(`.{{ files[i].title }}_model`));
+									// 		}
+									// 	})
+									// 	.catch(error => console.log(error));
+							</script> -->
 						{% endif %}
-					{% endif %}
 
 					<!-- FOR DEPLOYED -->
 					{% if files[i].website %}
@@ -150,7 +209,9 @@
 							$(window).on('click', (e) => {
 								let element = e.target.className;
 								if(element == 'article lay lay_{{ files[i].id }}' || element == 'clickOpen orbi card_{{ files[i].id }}'){
-
+									if (handleGameCoreFetch) {
+										handleGameCoreFetch();
+									}
 									$(".open_{{ files[i].id }}").css('display','block');
 								}
 							});
