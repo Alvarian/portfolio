@@ -20,10 +20,6 @@
 	</div>
 </nav>
 
-<script>
-	const { throttle, debounce, decryptAndEvaluateCode } = Window.lib; 
-</script>
-
 <div id="app">
 	<h1 class="orb codepro" style="text-align: center;">Project Gallery</h1>
 	<div class="row">
@@ -45,8 +41,8 @@
 			{% for i in range(0, len) %}
 				<div style="display: none;" class="open_{{ files[i].id }}" id="modal">
 					<!-- FOR GAMES -->
-					{% if files[i].game_file %}
-						{% if files[i].game_file == 'None' %}
+					{% if files[i].app %}
+						{% if files[i].app == 'None' %}
 						{% else %}
 							<div class="modal-content">
 								<a href="#" class="close {{ files[i].id }}_close">X</a>
@@ -59,20 +55,20 @@
 								// When the user clicks on the button, open the modal 
 								$(document).ready(() => {
 									$.ajax({
-										url: "{{ files[i].game_file }}",
+										url: "{{ files[i].app }}",
 										type: "GET",
 										crossDomain: true, 
 										success: function(encryptedScript) {
 											if ("{{ is_cached }}" === "no") {
-												let payload = files[i];
-												payload.game_file = encryptedScript;
-
+												let payload = "{{ files[i] }}";
+												payload.app = encryptedScript;
+												
 												$.ajax({
 													url: "/projects/cache", 
 													type: "POST", 
 													data: JSON.stringify(payload),
 													success: function(result){
-														console.log(result);
+														console.log("cached");
 													}
 												});
 											}
@@ -88,13 +84,13 @@
 					{% endif %}
 
 					<!-- FOR DEPLOYED -->
-					{% if files[i].deployed_url %}
-						{% if files[i].deployed_url == 'None' %}
+					{% if files[i].website %}
+						{% if files[i].website == 'None' %}
 						{% else %}
 							<div class="modal-content">
 								<a href="#" class="close {{ files[i].id }}_close">X</a>
 								<div class="border">
-									<iframe frameborder="0" src="{{ files[i].deployed_url }}" height="100%" width="100%"></iframe>
+									<iframe frameborder="0" src="{{ files[i].website }}" height="100%" width="100%"></iframe>
 								</div>
 							</div>
 						{% endif %}
@@ -103,14 +99,14 @@
 
 				<div class="dropCard">
 					<div style="position: relative;">
-						<div style="background-image: url('{{ files[i].icon_file }}');" class="card card_{{ files[i].id }}"></div>
+						<div style="background-image: url('{{ files[i].icon }}');" class="card card_{{ files[i].id }}"></div>
 						<div class="article lay lay_{{ files[i].id }}">
 							<h2 class="clickOpen orbi card_{{ files[i].id }}">OPEN</h2>
 						</div>
 					</div>
 					<div style="height: 100px;"></div>
 					<!-- GITHUB button -->
-					<a class="gitBTN" target="_blank" href={{ files[i].git_url }}><i class="fab fa-4x fa-github"></i></a>
+					<a class="gitBTN" target="_blank" href={{ files[i].repository }}><i class="fab fa-4x fa-github"></i></a>
 				</div>
 
 				<script>
@@ -122,7 +118,7 @@
 								$(".lay_{{ files[i].id }}").css('display','flex');
 								$(".description").text('{{ files[i].description }}');
 								$(".title").text('{{ files[i].title }}');
-								$(".type").text('{{ files[i].app_type }}');
+								$(".type").text('{{ files[i].projectType }}');
 								// console.log('over');
 							} else {
 								$(".card_{{ files[i].id }}").css('transform', 'scale(1)');
@@ -137,7 +133,7 @@
 								$(".lay_{{ files[i].id }}").css('display','flex');
 								$(".description").text('{{ files[i].description }}');
 								$(".title").text('{{ files[i].title }}');
-								$(".type").text('{{ files[i].app_type }}');
+								$(".type").text('{{ files[i].projectType }}');
 								console.log('lay');
 							});
 							$(window).on('click', (e) => {

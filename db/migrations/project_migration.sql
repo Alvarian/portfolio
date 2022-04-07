@@ -15,11 +15,11 @@ CREATE TABLE projects(
 	game_file VARCHAR(255) UNIQUE, 
 	git_url VARCHAR(255) UNIQUE, 
 	icon_file VARCHAR(255) UNIQUE, 
-	secret_key VARCHAR(50) UNIQUE, 
-	game_toc,
-	icon_toc,
-	table_toc,
+	secret_key VARCHAR(100) UNIQUE, -- sha
+	game_toc VARCHAR(50), -- momentjs
+	icon_toc VARCHAR(50), -- momentjs
+	table_toc VARCHAR(50), -- momentjs
 	title VARCHAR(50)
 );
 
--- mysql -u root -p py_port < C:\Users\Administrator\Desktop\Coding\webDev\deployed_apps\portfolio\flask_v\db\schemas\project_schema.sql
+-- heroku pg:psql postgresql-perpendicular-73303 --app alvarian-portfolio-v1

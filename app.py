@@ -15,11 +15,6 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 
-# r = redis.Redis(
-#     host='ec2-52-72-148-215.compute-1.amazonaws.com',
-#     port=21830, 
-#     password='p4f0fc4675891253ce05bc1c26c5059b79b481017b400407eb561062c864e2b87')
-
 keys = envSwitch.keys()
 class Envstate:
 	# KEY_ID = keys.KEY_ID,
@@ -43,7 +38,7 @@ app = Flask(__name__)
 app.secret_key=''.join(Envstate.SECRET_KEY)
 
 r = redis.from_url(''.join(Envstate.REDIS_URL))
-
+# print(r.keys())
 limiter = Limiter(
     app,
     key_func=get_remote_address,
@@ -140,16 +135,16 @@ def contact():
 
 @app.route('/projects/cache', methods=['POST'])
 def register_cache():
-	print(request)
+	print('cache this',json.loads(request.get_json(force=True)))
 
 	return redirect(url_for('gallery'))
 
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
-	if r.get('projects'):
-		payload = json.loads(r.get('projects'))
+	# if r.get('projects'):
+	# 	payload = json.loads(r.get('projects'))
 		
-		return render_template('index.html', files = payload, len = len(payload), is_cached = "yes")
+	# 	return render_template('index.html', files = payload, len = len(payload), is_cached = "yes")
 
 	def fetchIntoArray():
 		SQL = "SELECT * FROM projects;"
@@ -163,14 +158,16 @@ def gallery():
 		for result in fetchIntoArray():
 			content = {
 				'id': result[0],
-				'app_type': result[1],
-				'deployed_url': result[2],
+				'projectType': result[1],
+				'website': result[2],
 				'description': result[3],
-				'game_file': result[4],
-				'git_url': result[5],
-				'icon_file': result[6],
-				'style_file': result[7],
-				'title': result[8]
+				'app': result[4],
+				'repository': result[5],
+				'icon': result[6],
+				'createdAt': result[8],
+				'updatedAt': result[9],
+				'title': result[10],
+				'version': result[11]
 			}
 			payload.append(content)
 			content = {}

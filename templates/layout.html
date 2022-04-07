@@ -21,9 +21,8 @@
 
 </head>
 <body>
-	<script type="application/javascript" src="{{ url_for('static', filename='/dist/lib.bundle.js') }}"></script>
 	<script>		
-		Window.games = [];
+		Window.games = {};
 
 		$(document).keydown(function(e){ 
     if(e.which === 123){ 
