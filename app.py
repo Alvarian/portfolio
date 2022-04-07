@@ -28,13 +28,13 @@ class Envstate:
 	MAIL_USE_SSL = keys.MAIL_USE_SSL,
 	DATABASE_URL = keys.DATABASE_URL,
 	REDIS_URL = keys.REDIS_URL,
-	IS_LOCAL = keys.IS_LOCAL,
-	REDIS_URL = keys.REDIS_URL
+	IS_LOCAL = keys.IS_LOCAL
 
 ##INIT FLASK
 app = Flask(__name__)
 app.secret_key = ''.join(Envstate.SECRET_KEY)
-app.debug = (Envstate.IS_LOCAL)[0]
+app.debug = True
+# app.debug = (Envstate.IS_LOCAL)[0]
 
 ##INIT REDIS
 r = redis.from_url(''.join(Envstate.REDIS_URL))
@@ -112,7 +112,7 @@ def register_cache():
 
 	return json.dumps(True)
 
-from modules.main import get_one_and_unzip
+from modules.main import get_one_and_unzip, get_decryption_of_unzipped
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
 	# if r.get('projects'):
@@ -143,10 +143,11 @@ def gallery():
 				'title': result[10],
 				'version': result[11]
 			}
+			get_decryption_of_unzipped(get_one_and_unzip(result[10], result[11], result[1]))
 			
 			payload.append(content)
 			content = {}
-		get_one_and_unzip()
+
 		return render_template('index.html', files = payload, len = len(payload))
 	
 	return render_template('index.html')
