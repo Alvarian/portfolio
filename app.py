@@ -45,9 +45,6 @@ limiter = Limiter(
     default_limits=["200 per day", "50 per hour"]
 )
 
-app.debug = Envstate.IS_LOCAL
-# app.debug = False
-
 ##INIT DB
 app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -57,7 +54,7 @@ db = SQLAlchemy(app)
 app.config.update(
 	MAIL_SERVER = ''.join(Envstate.MAIL_SERVER), 
 	MAIL_PORT = ''.join(Envstate.MAIL_PORT),
-	MAIL_USE_SSL = Envstate.MAIL_USE_SSL,
+	MAIL_USE_SSL = ''.join(Envstate.MAIL_USE_SSL),
 	MAIL_USERNAME = ''.join(Envstate.MAIL_USERNAME),
 	MAIL_PASSWORD = ''.join(Envstate.MAIL_PASSWORD)
 )
@@ -101,11 +98,11 @@ def contact():
 
 	return render_template('contact.html')
 
-@app.route('/projects/cache', methods=['POST'])
-def register_cache():
-	print('cache this',json.loads(request.get_json(force=True)))
+# @app.route('/projects/cache', methods=['POST'])
+# def register_cache():
+# 	print('cache this',json.loads(request.get_json(force=True)))
 
-	return json.dumps(False)
+# 	return json.dumps(False)
 
 @app.route('/projects/set-cache', methods=['GET', 'POST'])
 def register_cache():
@@ -115,6 +112,7 @@ def register_cache():
 
 	return json.dumps(True)
 
+from modules.main import get_one_and_unzip
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
 	# if r.get('projects'):
@@ -148,7 +146,7 @@ def gallery():
 			
 			payload.append(content)
 			content = {}
-
+		get_one_and_unzip()
 		return render_template('index.html', files = payload, len = len(payload))
 	
 	return render_template('index.html')
