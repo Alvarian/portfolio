@@ -1,5 +1,7 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
+from flask_redis import FlaskRedis
+import redis
 
 import json
 import os
@@ -17,11 +19,7 @@ from flask_limiter.util import get_remote_address
 
 keys = envSwitch.keys()
 class Envstate:
-	# KEY_ID = keys.KEY_ID,
 	SECRET_KEY = keys.SECRET_KEY,
-	# REGION = keys.REGION,
-	# BUCKET = keys.BUCKET,
-	# MASTER = keys.MASTER,
 	MAIL_SERVER = keys.MAIL_SERVER,
 	MAIL_PORT = keys.MAIL_PORT,
 	MAIL_USERNAME = keys.MAIL_USERNAME,
@@ -29,14 +27,16 @@ class Envstate:
 	MAIL_USE_TLS = keys.MAIL_USE_TLS,
 	MAIL_USE_SSL = keys.MAIL_USE_SSL,
 	DATABASE_URL = keys.DATABASE_URL,
-	REDIS_TLS_URL = keys.REDIS_TLS_URL,
 	REDIS_URL = keys.REDIS_URL,
-	IS_LOCAL = keys.IS_LOCAL
+	IS_LOCAL = keys.IS_LOCAL,
+	REDIS_URL = keys.REDIS_URL
 
 ##INIT FLASK
 app = Flask(__name__)
-app.secret_key=''.join(Envstate.SECRET_KEY)
+app.secret_key = ''.join(Envstate.SECRET_KEY)
+app.debug = (Envstate.IS_LOCAL)[0]
 
+##INIT REDIS
 r = redis.from_url(''.join(Envstate.REDIS_URL))
 # print(r.keys())
 limiter = Limiter(
@@ -52,38 +52,6 @@ app.debug = Envstate.IS_LOCAL
 app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
-class Projects(db.Model):
-    __tablename__ = 'projects'
-    id = db.Column(db.Integer, primary_key=True)
-    app_type = db.Column(db.String(50))
-    deployed_url = db.Column(db.String(255))
-    description = db.Column(db.Text())
-    game_file = db.Column(db.String(255))
-    git_url = db.Column(db.String(255))
-    icon_file = db.Column(db.String(255))
-    style_file = db.Column(db.String(255))
-    title = db.Column(db.String(50))
-
-    def __init__(
-    	self, 
-    	app_type, 
-    	deployed_url, 
-    	description, 
-    	game_file, 
-    	git_url, 
-    	icon_file,
-    	style_file,
-    	title
-    ):
-        self.app_type = app_type
-        self.deployed_url = deployed_url
-        self.description = description
-        self.game_file = game_file
-        self.git_url = git_url
-        self.icon_file = icon_file
-        self.style_file = style_file
-        self.title = title
 
 ##INIT MAIL
 app.config.update(
@@ -137,7 +105,15 @@ def contact():
 def register_cache():
 	print('cache this',json.loads(request.get_json(force=True)))
 
-	return redirect(url_for('gallery'))
+	return json.dumps(False)
+
+@app.route('/projects/set-cache', methods=['GET', 'POST'])
+def register_cache():
+	projectDataAndName = request.get_json()
+	
+	r.setex(projectDataAndName['title'], 60, projectDataAndName['data'])
+
+	return json.dumps(True)
 
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
@@ -169,10 +145,11 @@ def gallery():
 				'title': result[10],
 				'version': result[11]
 			}
+			
 			payload.append(content)
 			content = {}
 
-		return render_template('index.html', files = payload, len = len(payload), is_cached = "no")
+		return render_template('index.html', files = payload, len = len(payload))
 	
 	return render_template('index.html')
 
