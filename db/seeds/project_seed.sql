@@ -17,7 +17,7 @@ VALUES (
 	'A memory card game!', 
 	'None', 
 	'https://github.com/Alvarian/DEK', 
-	'https://s3.us-east-2.amazonaws.com/port-bucket/DEK/image-jpeg',
+	'https://dvj70ijwahy8c.cloudfront.net/DEK/icon',
 	'None',
 	'None',
 	'DEK'
@@ -38,9 +38,9 @@ VALUES (
 	'Sample App', 
 	'None', 
 	'Order the digits, least to greatest, top to bottom, left to right leaving the blank dud last to disarm the bomb!', 
-	'https://s3.us-east-2.amazonaws.com/port-bucket/Mystic8/text-javascript', 
+	'https://dvj70ijwahy8c.cloudfront.net/Mystic8/v3.bundle.js', 
 	'https://github.com/Alvarian/static_env/tree/master/views/partials/ALTZ-082B', 
-	'https://s3.us-east-2.amazonaws.com/port-bucket/Mystic8/image-png', 
+	'https://dvj70ijwahy8c.cloudfront.net/Mystic8/icon', 
 	'None',
 	'76 a1 a6 dd 5f a7 13 8d 86 e3 bd 5c a8 55 1f 25',
 	'Mystic8'
@@ -61,9 +61,9 @@ VALUES (
 	'Sample App', 
 	'None', 
 	'Pick a side and get three strikes in a row before your opponent does!', 
-	'https://s3.us-east-2.amazonaws.com/port-bucket/Rivalry/text-javascript', 
+	'https://dvj70ijwahy8c.cloudfront.net/Rivalry/v3.bundle.js', 
 	'https://github.com/Alvarian/RIVALRY', 
-	'https://s3.us-east-2.amazonaws.com/port-bucket/Rivalry/image-png', 
+	'https://dvj70ijwahy8c.cloudfront.net/Rivalry/icon', 
 	'None',
 	'None',
 	'Rivalry'
