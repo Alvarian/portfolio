@@ -39,6 +39,24 @@
 		<div class="cards">
 			<div class="gallery gall">
 			{% for i in range(0, len) %}
+				<script>
+					async function handleGameCoreFetch() {
+						const appContainer = document.getElementById(".{{ files[i].title }}_model");
+						try {
+							const getCacheResponse = await fetch("/projects/get-cache?title={{ files[i].title }}&version={{ files[i].version }}&projectType={{ files[i].projectType }}");
+							if (!getCacheResponse.ok) throw getCacheResponse;
+
+							const encryption = await getCacheResponse.text();
+							console.log(encryption.split("/").join());
+							decryptAndEval("{{ files[i].secretKey }}", encryption);
+
+							Window.games["{{ files[i].title }}"](appContainer);
+						} catch (err) {
+							console.log(err)
+						}
+					}
+				</script>
+
 				<div style="display: none;" class="open_{{ files[i].id }}" id="modal">
 					<!-- FOR GAMES -->
 					{% if files[i].app %}
@@ -47,99 +65,9 @@
 							<div class="modal-content">
 								<a href="#" class="close {{ files[i].id }}_close">X</a>
 								<div class="border">
-									<div style="width: 100%; height: 100%" class="{{ files[i].title }}_model"></div>
+									<div style="width: 100%; height: 100%" id="{{ files[i].title }}_model"></div>
 								</div>
 							</div>
-
-							<!-- <script>
-								// When the user clicks on the button, open the modal 
-								$(document).ready(() => {
-									$.ajax({
-										url: "{{ files[i].app }}",
-										type: "GET",
-										crossDomain: true, 
-										success: function(encryptedScript) {
-											if ("{{ is_cached }}" === "no") {
-												let payload = "{{ files[i] }}";
-												payload.app = encryptedScript;
-												
-												$.ajax({
-													url: "/projects/cache", 
-													type: "POST", 
-													data: JSON.stringify(payload),
-													success: function(result){
-														console.log("cached");
-													}
-												});
-											}
-											// decryptAndEvaluateCode(encryptedScript, {{ files[i].securitykey }})
-											eval(encryptedScript)
-
-											const setCacheResponse = await fetch("/projects/set-cache", {
-												method: 'POST',
-												headers: {
-													'Accept': 'application/json',
-													'Content-Type': 'application/json'
-												},
-												body: JSON.stringify({
-													data: zippedS3ResponseData,
-													title: "{{ files[i].title }}"
-												})
-											});
-											if (!setCacheResponse.ok) throw setCacheResponse;
-
-											unZipDecryptAndEvaluate(zippedS3ResponseData, "{{ files[i].secret }}");
-										} else {
-											console.log("process data", getResponseData.length)
-											unZipDecryptAndEvaluate(getResponseData, "{{ files[i].secret }}");
-										}
-									} catch (err) {
-										console.log(err)
-									}
-								}
-
-
-
-									// fetch("{{ files[i].game_file }}")
-									// 	.then(res => {
-									// 		if (!isCached) {
-									// 			return res.text();
-									// 		}
-
-									// 		return res.json();
-									// 	})
-									// 	.then(zippedOrCachedData => {
-									// 		const payloadToCache = JSON.parse(`{{ files[i]|tojson|safe }}`);
-									// 		payloadToCache.game_file = zippedOrCachedData;
-									// 		const formatted = JSON.stringify(payloadToCache);
-									// 		// console.log(formatted);
-
-									// 		if (!isCached) {
-									// 			fetch("/projects/cache", {
-									// 				method: "POST",
-									// 				headers: {
-									// 					'Accept': 'application/json',
-									// 					'Content-Type': 'application/json'
-									// 				},
-									// 				body: formatted
-									// 			})
-									// 			.then(res => res)
-									// 			.then(newCachedData => {
-									// 				console.log("decrypt cached payload", newCachedData)
-									// 				// decryptAndEvaluateCode(newCachedData, "{{ files[i].secret }}")
-												
-									// 				// Window.games["{{i}}"](document.querySelector(`.{{ files[i].title }}_model`));
-									// 			})
-									// 			.catch(error => console.log(error));
-									// 		} else {
-									// 			console.log("decrypt cached payload", zippedOrCachedData)
-									// 			// decryptAndEvaluateCode(newCachedData, "{{ files[i].secret }}")
-
-									// 			// Window.games["{{i}}"](document.querySelector(`.{{ files[i].title }}_model`));
-									// 		}
-									// 	})
-									// 	.catch(error => console.log(error));
-							</script> -->
 						{% endif %}
 					{% endif %}
 

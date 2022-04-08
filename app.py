@@ -97,28 +97,27 @@ def contact():
 			return redirect(url_for('contact'))
 
 	return render_template('contact.html')
-
-# @app.route('/projects/cache', methods=['POST'])
-# def register_cache():
-# 	print('cache this',json.loads(request.get_json(force=True)))
-
-# 	return json.dumps(False)
-
-@app.route('/projects/set-cache', methods=['GET', 'POST'])
+r.delete('Mystic8')
+from modules.main import get_one_and_unzip
+@app.route('/projects/get-cache', methods=['GET', 'POST'])
 def register_cache():
-	projectDataAndName = request.get_json()
+	has_cache = r.exists(request.args.get('title'))
+	print(r.get(request.args.get('title')))
+	if has_cache:
+		return r.get(request.args.get('title'))
+
+	encryption = get_one_and_unzip(request.args.get('title'), request.args.get('version'), request.args.get('projectType'))
 	
-	r.setex(projectDataAndName['title'], 60, projectDataAndName['data'])
+	r.setex(request.args.get('title'), 2000, encryption['project'])
+	
+	return encryption['project']
 
-	return json.dumps(True)
-
-from modules.main import get_one_and_unzip, get_decryption_of_unzipped
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
-	# if r.get('projects'):
-	# 	payload = json.loads(r.get('projects'))
+	if r.get('projects'):
+		payload = json.loads(r.get('projects'))
 		
-	# 	return render_template('index.html', files = payload, len = len(payload), is_cached = "yes")
+		return render_template('index.html', files = payload, len = len(payload))
 
 	def fetchIntoArray():
 		SQL = "SELECT * FROM projects;"
@@ -135,19 +134,19 @@ def gallery():
 				'projectType': result[1],
 				'website': result[2],
 				'description': result[3],
-				'app': result[4],
 				'repository': result[5],
 				'icon': result[6],
-				'createdAt': result[8],
-				'updatedAt': result[9],
+				'secretKey': result[7],
+				# 'createdAt': result[8],
+				# 'updatedAt': result[9],
 				'title': result[10],
 				'version': result[11]
 			}
-			get_decryption_of_unzipped(get_one_and_unzip(result[10], result[11], result[1]))
 			
 			payload.append(content)
 			content = {}
 
+		r.setex("projects", 5000, json.dumps(payload))
 		return render_template('index.html', files = payload, len = len(payload))
 	
 	return render_template('index.html')

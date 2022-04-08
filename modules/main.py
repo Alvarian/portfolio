@@ -13,10 +13,10 @@ s3 = boto3.client('s3',
 def get_one_and_unzip(title, version, project_type):
     if not project_type:
         return None
-
+    print(title, version, project_type)
     payload = {}
     projectKey = title+"/"+version
-
+    
     zipped = s3.get_object(Bucket=keys.BUCKET_NAME, Key=projectKey)['Body'].read()
     buffer = io.BytesIO(zipped)
 
@@ -28,5 +28,3 @@ def get_one_and_unzip(title, version, project_type):
     
     return payload
 
-def get_decryption_of_unzipped(secret_key, encryption):
-    print(secret_key, encryption)

@@ -23,6 +23,7 @@
 <body>
 	<script>		
 		Window.games = {};
+		Window.libs = {};
 
 		$(document).keydown(function(e){ 
     if(e.which === 123){ 
@@ -37,9 +38,13 @@
 	{% endblock %}	
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script type="application/javascript" src="{{ url_for('static', filename='/js/lib.js') }}"></script>
+	<script type="application/javascript" src="{{ url_for('static', filename='/src/main.js') }}"></script>
+	<script type="application/javascript" src="{{ url_for('static', filename='/src/lib/AESdecrypt.bundle.js') }}"></script>
+	<script type="application/javascript" src="{{ url_for('static', filename='/src/lib/throttleAndDebounce.bundle.js') }}"></script>
 
 	<script type="text/javascript">
+		const { throttle, debounce, decryptAndEval } = Window.libs;
+		
 		$('input').keypress(function(e){
 			if(e.which == 13){
 				e.preventDefault();
