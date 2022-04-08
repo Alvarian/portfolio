@@ -97,14 +97,12 @@ def contact():
 			return redirect(url_for('contact'))
 
 	return render_template('contact.html')
-r.delete('Mystic8')
+	
 from modules.main import get_one_and_unzip
 @app.route('/projects/get-cache', methods=['GET', 'POST'])
 def register_cache():
-	has_cache = r.exists(request.args.get('title'))
-	print(r.get(request.args.get('title')))
-	if has_cache:
-		return r.get(request.args.get('title'))
+	# if r and r.exists(request.args.get('title')):
+	# 	return r.get(request.args.get('title'))
 
 	encryption = get_one_and_unzip(request.args.get('title'), request.args.get('version'), request.args.get('projectType'))
 	
@@ -114,10 +112,10 @@ def register_cache():
 
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
-	if r.get('projects'):
-		payload = json.loads(r.get('projects'))
+	# if r and r.exists('projects'):
+	# 	payload = json.loads(r.get('projects'))
 		
-		return render_template('index.html', files = payload, len = len(payload))
+	# 	return render_template('index.html', files = payload, len = len(payload))
 
 	def fetchIntoArray():
 		SQL = "SELECT * FROM projects;"
