@@ -37,8 +37,8 @@ app.debug = True
 # app.debug = (Envstate.IS_LOCAL)[0]
 
 ##INIT REDIS
-r = redis.from_url(''.join(Envstate.REDIS_URL))
-# print(r.keys())
+# r = redis.from_url(''.join(Envstate.REDIS_URL))
+
 limiter = Limiter(
     app,
     key_func=get_remote_address,
@@ -105,8 +105,8 @@ def register_cache():
 	# 	return r.get(request.args.get('title'))
 
 	encryption = get_one_and_unzip(request.args.get('title'), request.args.get('version'), request.args.get('projectType'))
-	
-	r.setex(request.args.get('title'), 2000, encryption['project'])
+
+	# r.setex(request.args.get('title'), 2000, encryption['project'])
 	
 	return encryption['project']
 
@@ -144,7 +144,7 @@ def gallery():
 			payload.append(content)
 			content = {}
 
-		r.setex("projects", 5000, json.dumps(payload))
+		# r.setex("projects", 5000, json.dumps(payload))
 		return render_template('index.html', files = payload, len = len(payload))
 	
 	return render_template('index.html')
