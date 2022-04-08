@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 boto3 = "*"
-pycrypto = "*"
+pycryptodome = "*"
 zipfile36 = "*"
 psycopg2 = "*"
 psycopg2-binary = "*"
