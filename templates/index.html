@@ -47,7 +47,7 @@
 							if (!getCacheResponse.ok) throw getCacheResponse;
 
 							const encryption = await getCacheResponse.text();
-							console.log(encryption.split("/").join());
+							
 							decryptAndEval("{{ files[i].secretKey }}", encryption);
 
 							Window.games["{{ files[i].title }}"](appContainer);
@@ -73,7 +73,7 @@
 
 					<!-- FOR DEPLOYED -->
 					{% if files[i].website %}
-						{% if files[i].website == 'None' %}
+						{% if files[i].website %}
 						{% else %}
 							<div class="modal-content">
 								<a href="#" class="close {{ files[i].id }}_close">X</a>
