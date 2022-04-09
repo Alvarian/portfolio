@@ -19,7 +19,7 @@ def get_one_and_unzip(title, version, project_type):
     
     zipped = s3.get_object(Bucket=keys.BUCKET_NAME, Key=projectKey)['Body'].read()
     buffer = io.BytesIO(zipped)
-
+    
     unzipped = zipfile.ZipFile(buffer)
     for filename in unzipped.namelist():
         asset = filename.split(".")[0]
@@ -32,7 +32,13 @@ def get_all_from_key(key):
     list = s3.list_objects_v2(
         Bucket=keys.BUCKET_NAME,
         EncodingType='url',
-        Prefix=key,
-    )
+        Prefix=key+"/slides/",
+    )['Contents']
 
-    print(list)
+    payload = {}
+    list.pop(0)
+    for slide in list:
+        slideName = slide['Key'].split("/")[2]
+        payload[slideName] = str(s3.get_object(Bucket=keys.BUCKET_NAME, Key=slide['Key'])['Body'].read())
+
+    return payload
