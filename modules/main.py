@@ -13,7 +13,7 @@ s3 = boto3.client('s3',
 def get_one_and_unzip(title, version, project_type):
     if not project_type:
         return None
-    print(title, version, project_type)
+        
     payload = {}
     projectKey = title+"/"+version
     
@@ -28,3 +28,11 @@ def get_one_and_unzip(title, version, project_type):
     
     return payload
 
+def get_all_from_key(key):
+    list = s3.list_objects_v2(
+        Bucket=keys.BUCKET_NAME,
+        EncodingType='url',
+        Prefix=key,
+    )
+
+    print(list)

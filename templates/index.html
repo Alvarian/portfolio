@@ -87,7 +87,7 @@
 								let element = e.target.className;
 								if(element == 'article lay lay_{{ files[i].id }}' || element == 'clickOpen orbi card_{{ files[i].id }}'){
 
-									$("#project_modal").css('display','block');
+									loadModalContent("{{ files[i].secretKey }}", "{{ files[i].title }}", "{{ files[i].version }}", "{{ files[i].projectType }}", "{{ files[i].website }}")
 								}
 							});
 						} else {
@@ -101,12 +101,7 @@
 								clickWin(e);
 							});
 						}
-					})	
-
-					// When the user clicks on <span> (x), close the modal
-					function handleClose(elementId) {
-						document.getElementById(elementId).style.display = "none";
-					}
+					});
 				</script>
 			{% endfor %}		
 			</div>

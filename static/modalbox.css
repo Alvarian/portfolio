@@ -34,7 +34,7 @@
 .modal-content {
   background-color: #fefefe;
   min-width: 300px;
-  margin: 50px auto; 
+  margin: auto; 
   padding: 20px;
   position: relative;
   height: 85%;
