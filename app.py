@@ -37,7 +37,7 @@ app.debug = True
 # app.debug = (Envstate.IS_LOCAL)[0]
 
 ##INIT REDIS
-# r = redis.from_url(''.join(Envstate.REDIS_URL))
+r = redis.from_url(''.join(Envstate.REDIS_URL))
 
 limiter = Limiter(
     app,
@@ -101,14 +101,20 @@ def contact():
 from modules.main import get_one_and_unzip, get_all_from_key
 @app.route('/projects/get-slides', methods=['GET', 'POST'])
 def fetch_and_cache_buffers():
-	slideBuffers = get_all_from_key()
-
-	return 200
+	title = request.args.get('title')
+	if r and r.exists(title):
+		slides = json.loads(r.get(title))
+		return slides
+	
+	slideBuffers = get_all_from_key(title)
+	r.setex(title, 2000, json.dumps(slideBuffers))
+	
+	return slideBuffers
 
 @app.route('/projects/get-cache', methods=['GET', 'POST'])
 def register_cache():
-	# if r and r.exists(request.args.get('title')):
-	# 	return r.get(request.args.get('title'))
+	if r and r.exists(request.args.get('title')):
+		return r.get(request.args.get('title'))
 
 	encryption = get_one_and_unzip(request.args.get('title'), request.args.get('version'), request.args.get('projectType'))
 
