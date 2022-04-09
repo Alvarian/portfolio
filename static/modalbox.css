@@ -1,5 +1,5 @@
 /* The Modal (background) */
-#modal {
+.modal {
   position: fixed; /* Stay in place */
   z-index: 10; /* Sit on top */
   left: 0;
@@ -34,7 +34,7 @@
 .modal-content {
   background-color: #fefefe;
   min-width: 300px;
-  margin: auto; 
+  margin: 50px auto; 
   padding: 20px;
   position: relative;
   height: 85%;

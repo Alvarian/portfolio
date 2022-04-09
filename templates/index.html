@@ -39,52 +39,6 @@
 		<div class="cards">
 			<div class="gallery gall">
 			{% for i in range(0, len) %}
-				<script>
-					async function handleGameCoreFetch() {
-						const appContainer = document.getElementById(".{{ files[i].title }}_model");
-						try {
-							const getCacheResponse = await fetch("/projects/get-cache?title={{ files[i].title }}&version={{ files[i].version }}&projectType={{ files[i].projectType }}");
-							if (!getCacheResponse.ok) throw getCacheResponse;
-
-							const encryption = await getCacheResponse.text();
-							
-							decryptAndEval("{{ files[i].secretKey }}", encryption);
-
-							Window.games["{{ files[i].title }}"](appContainer);
-						} catch (err) {
-							console.log(err)
-						}
-					}
-				</script>
-
-				<div style="display: none;" class="open_{{ files[i].id }}" id="modal">
-					<!-- FOR GAMES -->
-					{% if files[i].app %}
-						{% if files[i].app == 'None' %}
-						{% else %}
-							<div class="modal-content">
-								<a href="#" class="close {{ files[i].id }}_close">X</a>
-								<div class="border">
-									<div style="width: 100%; height: 100%" id="{{ files[i].title }}_model"></div>
-								</div>
-							</div>
-						{% endif %}
-					{% endif %}
-
-					<!-- FOR DEPLOYED -->
-					{% if files[i].website %}
-						{% if files[i].website %}
-						{% else %}
-							<div class="modal-content">
-								<a href="#" class="close {{ files[i].id }}_close">X</a>
-								<div class="border">
-									<iframe frameborder="0" src="{{ files[i].website }}" height="100%" width="100%"></iframe>
-								</div>
-							</div>
-						{% endif %}
-					{% endif %}
-				</div>
-
 				<div class="dropCard">
 					<div style="position: relative;">
 						<div style="background-image: url('{{ files[i].icon }}');" class="card card_{{ files[i].id }}"></div>
@@ -123,6 +77,8 @@
 								$(".title").text('{{ files[i].title }}');
 								$(".type").text('{{ files[i].projectType }}');
 								console.log('lay');
+
+								loadModalContent("{{ files[i].secretKey }}", "{{ files[i].title }}", "{{ files[i].version }}", "{{ files[i].projectType }}", "{{ files[i].website }}")
 							});
 							$(window).on('click', (e) => {
 								clickWin(e);
@@ -131,17 +87,14 @@
 								let element = e.target.className;
 								if(element == 'article lay lay_{{ files[i].id }}' || element == 'clickOpen orbi card_{{ files[i].id }}'){
 
-									$(".open_{{ files[i].id }}").css('display','block');
+									$("#project_modal").css('display','block');
 								}
 							});
 						} else {
 							$(window).on('click', (e) => {
 								let element = e.target.className;
 								if(element == 'article lay lay_{{ files[i].id }}' || element == 'clickOpen orbi card_{{ files[i].id }}'){
-									if (handleGameCoreFetch) {
-										handleGameCoreFetch();
-									}
-									$(".open_{{ files[i].id }}").css('display','block');
+									loadModalContent("{{ files[i].secretKey }}", "{{ files[i].title }}", "{{ files[i].version }}", "{{ files[i].projectType }}", "{{ files[i].website }}")
 								}
 							});
 							$(window).on('mouseover', (e) => {
@@ -151,8 +104,8 @@
 					})	
 
 					// When the user clicks on <span> (x), close the modal
-					document.getElementsByClassName("{{ files[i].id }}_close")[0].onclick = () => {
-						$(".open_{{ files[i].id }}").css('display','none');
+					function handleClose(elementId) {
+						document.getElementById(elementId).style.display = "none";
 					}
 				</script>
 			{% endfor %}		
