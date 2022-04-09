@@ -104,30 +104,32 @@ def fetch_and_cache_buffers():
 	title = request.args.get('title')
 	if r and r.exists(title):
 		slides = json.loads(r.get(title))
+		print("cache found for slides")
 		return slides
 	
 	slideBuffers = get_all_from_key(title)
-	r.setex(title, 2000, json.dumps(slideBuffers))
+	r.setex(title, 60*30, json.dumps(slideBuffers))
 	
 	return slideBuffers
 
 @app.route('/projects/get-cache', methods=['GET', 'POST'])
 def register_cache():
 	if r and r.exists(request.args.get('title')):
+		print("cache found for project")
 		return r.get(request.args.get('title'))
 
 	encryption = get_one_and_unzip(request.args.get('title'), request.args.get('version'), request.args.get('projectType'))
 
-	# r.setex(request.args.get('title'), 2000, encryption['project'])
+	r.setex(request.args.get('title'), 60*30, encryption['project'])
 	
 	return encryption['project']
 
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
-	# if r and r.exists('projects'):
-	# 	payload = json.loads(r.get('projects'))
-		
-	# 	return render_template('index.html', files = payload, len = len(payload))
+	if r and r.exists('projects'):
+		payload = json.loads(r.get('projects'))
+		print("cache found for gallery")
+		return render_template('index.html', files = payload, len = len(payload))
 
 	def fetchIntoArray():
 		SQL = "SELECT * FROM projects;"
@@ -156,7 +158,7 @@ def gallery():
 			payload.append(content)
 			content = {}
 
-		# r.setex("projects", 5000, json.dumps(payload))
+		r.setex("projects", 60*10, json.dumps(payload))
 		return render_template('index.html', files = payload, len = len(payload))
 	
 	return render_template('index.html')
