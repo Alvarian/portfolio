@@ -12,9 +12,11 @@ async function loadModalContent(secretKey, title, version, projectType, website)
                 
                 decryptAndEval(secretKey, encryption);
 
-                Window.games[`${ title }`](appContainer);
+                Window.games[title](appContainer);
 
                 projectModal.style.display = "block";
+
+                delete Window.games[title];
             } catch (err) {
                 console.log(err)
             } finally {
@@ -33,4 +35,17 @@ async function loadModalContent(secretKey, title, version, projectType, website)
             console.log(`${ projectType } not a caught modal content`);
             break;
     }
+}
+
+// When the user clicks on <span> (x), close the modal
+function handleClose(modalID) {
+    switch (modalID) {
+        case "project_modal":
+            document.getElementById("project_model_container").innerHTML = "";
+            break;
+        case "web_modal":
+            document.getElementById("web_modal_container").src = "";
+            break;
+    }
+    document.getElementById(modalID).style.display = "none";
 }

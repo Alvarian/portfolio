@@ -98,7 +98,13 @@ def contact():
 
 	return render_template('contact.html')
 	
-from modules.main import get_one_and_unzip
+from modules.main import get_one_and_unzip, get_all_from_key
+@app.route('/projects/get-slides', methods=['GET', 'POST'])
+def fetch_and_cache_buffers():
+	slideBuffers = get_all_from_key()
+
+	return 200
+
 @app.route('/projects/get-cache', methods=['GET', 'POST'])
 def register_cache():
 	# if r and r.exists(request.args.get('title')):
