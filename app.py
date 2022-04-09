@@ -97,8 +97,9 @@ def contact():
 			return redirect(url_for('contact'))
 
 	return render_template('contact.html')
-	
+
 from modules.main import get_one_and_unzip, get_all_from_key
+# r.delete('Epoch')
 @app.route('/projects/get-slides', methods=['GET', 'POST'])
 def fetch_and_cache_buffers():
 	title = request.args.get('title')
@@ -107,8 +108,8 @@ def fetch_and_cache_buffers():
 		print("cache found for slides")
 		return slides
 	
-	slideBuffers = get_all_from_key(title)
-	r.setex(title, 60*30, json.dumps(slideBuffers))
+	slideBuffers = json.dumps(get_all_from_key(title))
+	r.setex(title, 60*30, slideBuffers)
 	
 	return slideBuffers
 
@@ -124,6 +125,7 @@ def register_cache():
 	
 	return encryption['project']
 
+# r.delete('projects')
 @app.route('/projects', methods=['GET', 'POST'])
 def gallery():
 	if r and r.exists('projects'):
