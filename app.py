@@ -16,6 +16,8 @@ import redis
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
+from modules.s3 import get_one_and_unzip
+from modules.pg import get_all_projects, get_slides_from_project
 
 keys = envSwitch.keys()
 class Envstate:
@@ -98,18 +100,18 @@ def contact():
 
 	return render_template('contact.html')
 
-from modules.main import get_one_and_unzip, get_all_from_key
-# r.delete('Epoch')
 @app.route('/projects/get-slides', methods=['GET', 'POST'])
 def fetch_and_cache_buffers():
+	projectID = request.args.get('projectID')
 	title = request.args.get('title')
-	if r and r.exists(title):
-		slides = json.loads(r.get(title))
+	if r and r.exists(title+"Slides"):
 		print("cache found for slides")
-		return slides
+		return r.get(title+"Slides")
 	
-	slideBuffers = json.dumps(get_all_from_key(title))
-	r.setex(title, 60*30, slideBuffers)
+	results = get_slides_from_project(db, projectID)
+
+	slideBuffers = json.dumps(results)
+	r.setex(title+"Slides", 60*30, slideBuffers)
 	
 	return slideBuffers
 
@@ -133,36 +135,11 @@ def gallery():
 		print("cache found for gallery")
 		return render_template('index.html', files = payload, len = len(payload))
 
-	def fetchIntoArray():
-		SQL = "SELECT * FROM projects;"
-		result = db.session.execute(SQL).fetchall()
+	results = get_all_projects(db)
+	if (len(results) > 0):
+		r.setex("projects", 60*10, json.dumps(results))
+		return render_template('index.html', files = results, len = len(results))
 
-		return result
-
-	if (len(fetchIntoArray()) > 0):
-		content = {}
-		payload = []
-		for result in fetchIntoArray():
-			content = {
-				'id': result[0],
-				'projectType': result[1],
-				'website': result[2],
-				'description': result[3],
-				'repository': result[5],
-				'icon': result[6],
-				'secretKey': result[7],
-				# 'createdAt': result[8],
-				# 'updatedAt': result[9],
-				'title': result[10],
-				'version': result[11]
-			}
-			
-			payload.append(content)
-			content = {}
-
-		r.setex("projects", 60*10, json.dumps(payload))
-		return render_template('index.html', files = payload, len = len(payload))
-	
 	return render_template('index.html')
 
 
