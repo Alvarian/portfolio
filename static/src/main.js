@@ -52,18 +52,24 @@ async function loadModalContent(secretKey, title, version, projectType, website,
                 
                 listOfImageData.forEach(slide => {
                     const slideContainer = document.createElement('div');
-                    slideContainer.className = "slideCard";
+                    if (listOfImageData.indexOf(slide) === 0) {
+                        slideContainer.className = "slideCard active";
+                    } else {
+                        slideContainer.className = "slideCard";
+                    }
 
                     const img = document.createElement('img');
                     img.src = slide.slideUrl;
+                    img.className = "slideImage";
 
-                    const desc = document.createElement('div');
+                    const desc = document.createElement('p');
                     desc.innerText = slide.description;
 
                     slideContainer.appendChild(img);
                     slideContainer.appendChild(desc);
 
-                    presentation_modal.appendChild(slideContainer);
+                    appContainer.appendChild(slideContainer);
+                    presentationModal.style.display = "block"
                 });
 
                 presentation_modal.style.display = "block";
@@ -87,9 +93,28 @@ function handleClose(modalID) {
         case "web_modal":
             document.getElementById("web_modal_container").src = "";
             break;
-        case "presentation_modal":
-            document.getElementById("presentation_model_container").innerHTML = "";
-            break;
+        // case "presentation_modal":
+        //     document.getElementById("presentation_model_container").innerHTML = "";
+        //     break;
     }
     document.getElementById(modalID).style.display = "none";
+}
+
+let currentSlidePosition = 0;
+const slideCards = document.getElementsByClassName("slideCard");
+
+function slideNext() {
+    slideCards[currentSlidePosition].classList.remove("active");
+    currentSlidePosition ++;
+    if (currentSlidePosition === slideCards.length)
+        currentSlidePosition = 0;
+    slideCards[currentSlidePosition].classList.add("active");
+}
+
+function slidePrevious() {
+    slideCards[currentSlidePosition].classList.remove("active");
+    currentSlidePosition --;
+    if (currentSlidePosition < 0)
+        currentSlidePosition = (slideCards.length - 1);
+    slideCards[currentSlidePosition].classList.add("active");
 }
