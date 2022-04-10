@@ -8,7 +8,7 @@ function _base64ToArrayBuffer(base64) {
     return bytes.buffer;
 }
 
-async function loadModalContent(secretKey, title, version, projectType, website, presentationRoot) {
+async function loadModalContent(secretKey, title, version, projectType, website, id) {
     let appContainer;
     switch (projectType) {
         case "Application":
@@ -45,16 +45,25 @@ async function loadModalContent(secretKey, title, version, projectType, website,
             const presentationModal = document.getElementById("presentation_modal");
             appContainer = document.getElementById("presentation_model_container");
             try {
-                const getCacheResponse = await fetch(`/projects/get-slides?title=${ title }`);
+                const getCacheResponse = await fetch(`/projects/get-slides?projectID=${ id }&title=${ title }`);
                 if (!getCacheResponse.ok) throw getCacheResponse;
 
                 const listOfImageData = await getCacheResponse.json();
                 
-                listOfImageData.slides.forEach(slide => {
+                listOfImageData.forEach(slide => {
+                    const slideContainer = document.createElement('div');
+                    slideContainer.className = "slideCard";
+
                     const img = document.createElement('img');
-                    img.src = slide;
-                    console.log(slide)
-                    presentationModal.appendChild(img);
+                    img.src = slide.slideUrl;
+
+                    const desc = document.createElement('div');
+                    desc.innerText = slide.description;
+
+                    slideContainer.appendChild(img);
+                    slideContainer.appendChild(desc);
+
+                    presentation_modal.appendChild(slideContainer);
                 });
 
                 presentation_modal.style.display = "block";

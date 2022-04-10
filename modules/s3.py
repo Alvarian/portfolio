@@ -36,15 +36,13 @@ def get_all_from_key(key):
     )['Contents']
 
     payload = []
-    # image = {}
+    image = {}
     list.pop(0)
     for slide in list:
-        # slideName = slide['Key'].split("/")[2]
-        # image['name'] = slideName
-        # image['data'] = str(s3.get_object(Bucket=keys.BUCKET_NAME, Key=slide['Key'])['Body'].read())
-        # payload.append(image)
-        # image = {}
-        
-        payload.append(keys.BUCKET_ROOT+slide['Key'])
+        slideName = slide['Key'].split("/")[2]
+        image['name'] = slideName
+        image['data'] = str(s3.get_object(Bucket=keys.BUCKET_NAME, Key=slide['Key'])['Body'].read())
+        payload.append(image)
+        image = {}
 
     return {"slides": payload}
