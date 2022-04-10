@@ -43,8 +43,8 @@
 	<script type="application/javascript" src="{{ url_for('static', filename='/src/lib/throttleAndDebounce.bundle.js') }}"></script>
 
 	<script type="text/javascript">
-		const { throttle, debounce, decryptAndEval } = Window.libs;
-		
+		const { _, decryptAndEval } = Window.libs;
+
 		$('input').keypress(function(e){
 			if(e.which == 13){
 				e.preventDefault();
@@ -100,27 +100,29 @@
 		});
 
 		// MENU VERSION ON RESIZE
-		$(window).resize(() => {
-			tog();
-			let w = window.innerWidth;
-			console.log('out',w);
-			if(w <= 600){
-				console.log('in',w);
-				$('.naver').css('display', 'none');
-				$('.drop').empty().append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).css('display','block');
-				loop2(iters, (i) => {
-					$('.dropBtn').append($('<div></div>').addClass('lines'));			
-					if(i == '/'){
-						$('.dropMenu').append($(`<a href="${i}">${i}home</a>`).addClass('bleach'));
-					} else {
-						$('.dropMenu').append($(`<a href="${i}">${i}</a>`).addClass('bleach'));
-					}
-				});
-			} else {
-				$('.naver').css('display', 'block');
-				$('.drop').css('display', 'none');
-			}
-		});
+		$(window).resize(
+			_.throttle(() => {
+				tog();
+				let w = window.innerWidth;
+				console.log('out',w);
+				if(w <= 600){
+					console.log('in',w);
+					$('.naver').css('display', 'none');
+					$('.drop').empty().append($('<div></div>').addClass("dropBtn"), $('<div></div>').addClass("dropMenu")).css('display','block');
+					loop2(iters, (i) => {
+						$('.dropBtn').append($('<div></div>').addClass('lines'));			
+						if(i == '/'){
+							$('.dropMenu').append($(`<a href="${i}">${i}home</a>`).addClass('bleach'));
+						} else {
+							$('.dropMenu').append($(`<a href="${i}">${i}</a>`).addClass('bleach'));
+						}
+					});
+				} else {
+					$('.naver').css('display', 'block');
+					$('.drop').css('display', 'none');
+				}
+			}, 1000)
+		);
 
 	</script>
 
