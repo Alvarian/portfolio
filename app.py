@@ -41,11 +41,11 @@ app.debug = True
 ##INIT REDIS
 r = redis.from_url(''.join(Envstate.REDIS_URL))
 
-limiter = Limiter(
-    app,
-    key_func=get_remote_address,
-    default_limits=["200 per day", "50 per hour"]
-)
+# limiter = Limiter(
+#     app,
+#     key_func=get_remote_address,
+#     default_limits=["200 per day", "50 per hour"]
+# )
 
 ##INIT DB
 app.config['SQLALCHEMY_DATABASE_URI'] = ''.join(Envstate.DATABASE_URL)
@@ -61,7 +61,6 @@ app.config.update(
 	MAIL_PASSWORD = ''.join(Envstate.MAIL_PASSWORD)
 )
 mail = Mail(app)
-
 
 ## ROUTES
 @app.route('/', methods=['GET', 'POST'])
@@ -93,7 +92,7 @@ def contact():
 				recipients=[''.join(Envstate.MAIL_USERNAME)]
 			)
 			msg.html = '<p>'+request.form['message']+'</p>'+'<p>email: '+request.form['email']+'</p>'
-			# python.send(msg)
+			mail.send(msg)
 
 			flash('Submitted! Thank you for reaching out, will get back to you shortly', 'success')
 			return redirect(url_for('contact'))

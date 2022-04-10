@@ -1,8 +1,24 @@
 <div class="modal" style="display: none;" id="presentation_modal">
   <div class="modal-content">
-      <a href="#" class="close" onclick="handleClose('presentation_modal')">X</a>
-      <div class="border">
-          <div style="width: 100%; height: 100%" id="presentation_model_container"></div>
+    <a href="#" class="close" onclick="handleClose('presentation_modal')">X</a>
+    <div class="border">
+      <div class="slider" id="presentation_model_container">
+        <!-- MOCK SLIDES -->
+        <!-- <div class="slideCard active">
+          <img class="slideImage" src="https://api.lorem.space/image/house?w=550&h=550" />
+          <p>Slide 1</p>
+        </div>
+
+        <div class="slideCard">
+          <img class="slideImage" src="https://api.lorem.space/image/car?w=550&h=550" />
+          <p>Slide 2</p>
+        </div> -->
       </div>
+
+      <dvi style="position: absolute; z-index: 9999; top: 77%; width: 95%; display: flex; justify-content: space-between;">
+        <button onclick="slidePrevious()" class="prev"><</button>
+        <button onclick="slideNext()" class="next">></button>
+      </div>
+    </div>
   </div>
 </div>
