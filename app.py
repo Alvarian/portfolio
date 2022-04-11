@@ -31,12 +31,11 @@ class Envstate:
 	DATABASE_URL = keys.DATABASE_URL,
 	REDIS_URL = keys.REDIS_URL,
 	IS_LOCAL = keys.IS_LOCAL
-
+	
 ##INIT FLASK
 app = Flask(__name__)
 app.secret_key = ''.join(Envstate.SECRET_KEY)
-app.debug = True
-# app.debug = (Envstate.IS_LOCAL)[0]
+app.debug = Envstate.IS_LOCAL
 
 ##INIT REDIS
 r = redis.from_url(''.join(Envstate.REDIS_URL))
