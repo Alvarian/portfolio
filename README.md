@@ -1,4 +1,4 @@
-# https://ivanalvarez.herokuapp.com/
+# http://alvarian-portfolio-v1.herokuapp.com/
 My portfolio. Technology stack is HTML, flask and AWS S3 bucket only to write in legacy version(currently disabled in this version). Hosted on heroku, using postgres add-on for database. This version is just representing the structure of what I want my final version to have, using different and more personally preferred web stacks.
 
 # Testimony
