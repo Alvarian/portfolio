@@ -14,6 +14,7 @@ pub fn db_init() -> postgres::Client {
     let database_password: String = var("PSQL_PASS").unwrap();
     let database_name: String = var("PSQL_DB").unwrap();
     
+    // USE URL INSTEAD
     Client::connect(
         &format!(
             "host={} dbname={} user={} password={}",

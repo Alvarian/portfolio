@@ -1,0 +1,59 @@
+version: "3"
+services:  
+  client:
+    build:
+      context: client
+      dockerfile: DockerFile
+    ports:
+      - "3000:3000"
+    networks:
+      - webnet
+    env_file:
+      - "./client/react.env"
+    depends_on:
+      - server
+  db:
+    image: postgres
+    networks: 
+      - webnet
+    environment:
+      POSTGRES_PASSWORD: ${PSQL_PASS}
+      POSTGRES_DB: ${PSQL_DB}
+      POSTGRES_INITDB_ARGS: "-A md5"
+  server:
+    build:
+      context: server
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    networks:
+      - webnet  
+    env_file: 
+      - "./client_api/rocket.env"
+    depends_on: 
+      - db    
+  # panel:
+  #   build: 
+  #     context: aws_api
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - webnet
+  #   env_file: 
+  #     - "./aws_api/.env"
+  #   depends_on: 
+  #     - db
+  # nginx:
+  #   image: nginx
+  #   ports:
+  #     - "80:80"
+  #   networks:
+  #     - webnet
+  #   depends_on:
+  #     - gateway
+  #     - panel
+networks:
+  webnet:
