@@ -78,7 +78,7 @@
 								$(".type").text('{{ files[i].projectType }}');
 								console.log('lay');
 
-								loadModalContent("{{ files[i].secretKey }}", "{{ files[i].title }}", "{{ files[i].version }}", "{{ files[i].projectType }}", "{{ files[i].website }}", "{{ files[i].id }}")
+								_.throttle(loadModalContent("{{ files[i].secretKey }}", "{{ files[i].title }}", "{{ files[i].version }}", "{{ files[i].projectType }}", "{{ files[i].website }}", "{{ files[i].id }}"), 1000)
 							});
 							$(window).on('click', (e) => {
 								clickWin(e);
@@ -87,14 +87,14 @@
 								let element = e.target.className;
 								if(element == 'article lay lay_{{ files[i].id }}' || element == 'clickOpen orbi card_{{ files[i].id }}'){
 
-									loadModalContent("{{ files[i].secretKey }}", "{{ files[i].title }}", "{{ files[i].version }}", "{{ files[i].projectType }}", "{{ files[i].website }}", "{{ files[i].id }}")
+									_.throttle(loadModalContent("{{ files[i].secretKey }}", "{{ files[i].title }}", "{{ files[i].version }}", "{{ files[i].projectType }}", "{{ files[i].website }}", "{{ files[i].id }}"), 1000)
 								}
 							});
 						} else {
 							$(window).on('click', (e) => {
 								let element = e.target.className;
 								if(element == 'article lay lay_{{ files[i].id }}' || element == 'clickOpen orbi card_{{ files[i].id }}'){
-									loadModalContent("{{ files[i].secretKey }}", "{{ files[i].title }}", "{{ files[i].version }}", "{{ files[i].projectType }}", "{{ files[i].website }}", "{{ files[i].id }}")
+									_.throttle(loadModalContent("{{ files[i].secretKey }}", "{{ files[i].title }}", "{{ files[i].version }}", "{{ files[i].projectType }}", "{{ files[i].website }}", "{{ files[i].id }}"), 1000)
 								}
 							});
 							$(window).on('mouseover', (e) => {

@@ -1,17 +1,3 @@
-function makeVisible(e) {
-    console.log(e)
-}
-
-function _base64ToArrayBuffer(base64) {
-    var binary_string = window.atob(base64);
-    var len = binary_string.length;
-    var bytes = new Uint8Array(len);
-    for (var i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-    }
-    return bytes.buffer;
-}
-
 async function loadModalContent(secretKey, title, version, projectType, website, id) {
     let appContainer;
     switch (projectType) {
@@ -48,6 +34,7 @@ async function loadModalContent(secretKey, title, version, projectType, website,
         case "Presentation":
             const presentationModal = document.getElementById("presentation_modal");
             appContainer = document.getElementById("presentation_model_container");
+            appContainer.innerHTML = "";
             try {
                 const getCacheResponse = await fetch(`/projects/get-slides?projectID=${ id }&title=${ title }`);
                 if (!getCacheResponse.ok) throw getCacheResponse;
@@ -122,3 +109,4 @@ function slidePrevious() {
         currentSlidePosition = (slideCards.length - 1);
     slideCards[currentSlidePosition].classList.add("active");
 }
+
