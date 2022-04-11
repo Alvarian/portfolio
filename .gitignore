@@ -2,7 +2,7 @@
 Pipfile.lock
 
 # Procfile 
-requirements.txt
+# requirements.txt
 .vscode/
 
 # Byte-compiled / optimized / DLL files
