@@ -8,7 +8,8 @@ pub fn build() -> Rocket {
 		.mount(
 			"/api/v1/projects", 
 			routes![
-				projects::read_all
+				projects::read_all,
+				projects::read_slides_of_one,
 			],
 		)
 		.register(catchers![handling::not_found])

@@ -3,23 +3,21 @@ use std::string::String;
 use serde::{Deserialize, Serialize};
 
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Debug, Serialize)]
 pub struct Project {
     pub id: i32,
-    pub title: String,
+    pub project_type: String,
+    pub website: Option<String>,
     pub description: String,
-    pub deployed_url: String,
-    pub game_file: String,
-    pub style_file: String,
-    pub git_url: String,
-    pub icon_file: String,
-    pub slides: Vec<Service>
+    pub app: Option<String>,
+    pub repository: String,
+    pub icon: String,
+    pub secret_key: Option<String>
 }
 
-#[derive(Deserialize, Serialize)]
-pub struct Service {
-    pub id: i32,
-    pub name: String,
+#[derive(Deserialize, Debug, Serialize)]
+pub struct Slides {
+    // pub id: i32,
     pub project_id: i32,
     pub image_url: String,
     pub description: String
