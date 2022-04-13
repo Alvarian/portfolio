@@ -4,6 +4,11 @@ use rocket_contrib::json::Json;
 use crate::config::{db};
 use crate::models;
 
+impl std::fmt::Debug for models::Project {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Hi")
+    }
+}
 
 #[get("/")]
 pub fn read_all() -> Json<Vec<models::Project>> {
@@ -64,6 +69,7 @@ pub fn read_all() -> Json<Vec<models::Project>> {
             });
         }
     }
+    println!("format {:?} arguments", proj_result);
 
     Json(proj_result)
 }
