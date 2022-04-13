@@ -1,5 +1,6 @@
 use rocket::{get};
 use rocket_contrib::json::Json;
+use serde_json;
 
 use crate::config::{db};
 use crate::models;
@@ -13,17 +14,18 @@ impl std::fmt::Debug for models::Project {
 #[get("/")]
 pub fn read_all() -> Json<Vec<models::Project>> {
     let mut proj_result = Vec::new();
-
+    // let project_list = db::db_init().query("SELECT * FROM public.projects", &[]).unwrap();
+    
     for proj_row in db::db_init().query("SELECT * FROM public.projects", &[]).unwrap() {
         let id: i32 = proj_row.get(0);
         let title: &str = proj_row.get(1);
         let description: &str = proj_row.get(2);
-        let deployed_url: &str = proj_row.get(3);
-        let game_file: &str = proj_row.get(4);
-        let style_file: &str = proj_row.get(5);
+        let deployed_url: &str = serde_json::from_str(proj_row.get(3)).unwrap();
+        let game_file: &str = serde_json::from_str(proj_row.get(4)).unwrap();
+        let style_file: &str = serde_json::from_str(proj_row.get(5)).unwrap();
         let git_url: &str = proj_row.get(6);
         let icon_file: &str = proj_row.get(7);
-
+        
         let mut service_result = Vec::new();
 
         if game_file.is_empty() && style_file.is_empty() && deployed_url.is_empty() {

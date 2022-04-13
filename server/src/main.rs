@@ -42,5 +42,7 @@ fn make_cors() -> Cors {
 }
 
 fn main() {
-    routes::build().attach(make_cors()).launch();
+    routes::build()
+        // .attach(make_cors())
+        .launch();
 }
