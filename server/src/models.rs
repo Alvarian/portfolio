@@ -17,10 +17,10 @@ pub struct Project {
 
 #[derive(Deserialize, Debug, Serialize)]
 pub struct Slides {
-    // pub id: i32,
-    pub project_id: i32,
+    pub id: i32,
     pub image_url: String,
-    pub description: String
+    pub project_id: i32,
+    pub description: String,
 }
 
 

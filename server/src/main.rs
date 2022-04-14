@@ -4,6 +4,7 @@ mod config;
 mod routes;
 mod controllers;
 mod models;
+mod mods;
 
 use rocket::http::Method::{Get}; // 1
 // use rocket_cors::{
