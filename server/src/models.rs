@@ -9,10 +9,11 @@ pub struct Project {
     pub project_type: String,
     pub website: Option<String>,
     pub description: String,
-    pub app: Option<String>,
     pub repository: String,
     pub icon: String,
-    pub secret_key: Option<String>
+    pub secret_key: Option<String>,
+    pub title: String,
+    pub version: Option<String>
 }
 
 #[derive(Deserialize, Debug, Serialize)]

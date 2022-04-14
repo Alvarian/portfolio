@@ -1,3 +1,6 @@
+use aws_config::meta::region::RegionProviderChain;
+use aws_sdk_s3::{Client, Error};
+
 use rocket::{get};
 use rocket_contrib::json::Json;
 use serde_json;
@@ -6,6 +9,9 @@ use crate::config::{db};
 use crate::models::{Project, Slides};
 
 use crate::mods::{main};
+
+extern crate dotenv;
+use std::env::var;
 
 
 #[get("/")]
@@ -18,13 +24,14 @@ pub fn read_all() -> Json<Vec<Project>> {
             project_type: proj_row.get(1),
             website: proj_row.get(2),
             description: proj_row.get(3),
-            app: proj_row.get(4),
             repository: proj_row.get(5),
             icon: proj_row.get(6),
-            secret_key: proj_row.get(7)
+            secret_key: proj_row.get(7),
+            title: proj_row.get(10),
+            version: proj_row.get(11),
         });
     }
-
+    println!("{:?}", proj_result);
     Json(proj_result)
 }
 
@@ -42,4 +49,24 @@ pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
     }
 
     Json(proj_result)
+}
+
+#[get("/app?<title>&<version>&<project_type>")]
+pub async fn read_unzip_app_of_one(title: String, version: String, project_type: String) {
+    // dotenv::from_filename("rocket.env").ok();
+    // let access_key: String = var("ACCESS_KEY_ID").unwrap();
+    let bucket_name: String = var("BUCKET_NAME").unwrap();
+
+    let region_provider = RegionProviderChain::default_provider().or_else("us-east-2");
+    let config = aws_config::from_env().region(region_provider).load().await;
+    let client = Client::new(&config);
+
+    let encryption = client
+        .get_object()
+        .bucket(bucket_name)
+        .key(format!("{}/{}", &title, &version));
+
+    println!("Object: {:?}", encryption);
+
+    println!("{}, {}, {}", &title, &version, &project_type);
 }
