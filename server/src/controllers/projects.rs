@@ -52,7 +52,7 @@ pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
 }
 
 #[get("/app?<title>&<version>&<project_type>")]
-pub async fn read_unzip_app_of_one(title: String, version: String, project_type: String) {
+pub fn read_app_of_one(title: String, version: String, project_type: String) {
     // dotenv::from_filename("rocket.env").ok();
     // let access_key: String = var("ACCESS_KEY_ID").unwrap();
     let bucket_name: String = var("BUCKET_NAME").unwrap();
