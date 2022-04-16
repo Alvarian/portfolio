@@ -1,5 +1,9 @@
 use aws_sdk_s3::{config, types, Client, Credentials, Region};
-use redis;
+
+extern crate r2d2_redis;
+use r2d2_redis::{r2d2, redis, RedisConnectionManager};
+use r2d2_redis::redis::Commands;
+
 use aws_smithy_http;
 use zip;
 use rocket::{get};
@@ -82,45 +86,51 @@ pub async fn read_app_of_one(title: String, version: String, project_type: Strin
     dotenv::from_filename("rocket.env").ok();
     let redis_url: String = var("REDIS_URL").unwrap();
 
-    let redis_client = redis::Client::open(redis_url).unwrap();
-    let mut con = redis_client.get_tokio_connection().await?;
+    let manager = RedisConnectionManager::new(format!("{}", redis_url)).unwrap();
+    let pool = r2d2::Pool::builder()
+        .build(manager)
+        .unwrap();
     // throw away the result, just make sure it does not fail
-    // let _ : () = con.setex("my_key", 10, 42)?;
+    let mut conn = pool.get().unwrap();
     // read back the key and return it.  Because the return value
     // from the function is a result for integer this will automatically
     // convert into one.
-    // con.get("my_key");
 
-    let bucket_name: String = var("BUCKET_NAME").unwrap();
-	let access_key: String = var("ACCESS_KEY_ID").unwrap();
-	let secret_key: String = var("ACCESS_SECRET_KEY").unwrap();
-	let region: String = var("BUCKET_REGION").unwrap();
+    if conn.exists(format!("{}", title)).unwrap() {
+        let doc: std::string::String = conn.get(format!("{}", title)).unwrap();
 
-	let cred = Credentials::new(access_key, secret_key, None, None, "loaded-from-custom-env");
+        Ok(doc)
+    } else {
+        let bucket_name: String = var("BUCKET_NAME").unwrap();
+        let access_key: String = var("ACCESS_KEY_ID").unwrap();
+        let secret_key: String = var("ACCESS_SECRET_KEY").unwrap();
+        let region: String = var("BUCKET_REGION").unwrap();
 
-	let region = Region::new(region);
-	let conf_builder = config::Builder::new().region(region).credentials_provider(cred);
-	let conf = conf_builder.build();
+        let cred = Credentials::new(access_key, secret_key, None, None, "loaded-from-custom-env");
 
-	let client = Client::from_conf(conf);
+        let region = Region::new(region);
+        let conf_builder = config::Builder::new().region(region).credentials_provider(cred);
+        let conf = conf_builder.build();
 
-    let res = client
-        .get_object()
-        .bucket(bucket_name)
-        .key(format!("{}/{}", &title, &version))
-        .send().await?;
+        let client = Client::from_conf(conf);
 
-    let stream: types::ByteStream = res.body;
+        let res = client
+            .get_object()
+            .bucket(bucket_name)
+            .key(format!("{}/{}", &title, &version))
+            .send().await?;
 
-    let zipped_buff = stream.collect().await.map(|data| data.into_bytes());
-    let encryption = match zipped_buff {
-        Ok(buffer) => unzip_from_buff(buffer),
-        Err(_) => panic!("Shoot me")
-    };
-    println!("Encryption: {:?}", encryption);
-    println!("{}, {}, {}", &title, &version, &project_type);
+        let stream: types::ByteStream = res.body;
 
-    Ok(encryption)
+        let zipped_buff = stream.collect().await.map(|data| data.into_bytes());
+        let encryption = match zipped_buff {
+            Ok(buffer) => unzip_from_buff(buffer),
+            Err(_) => panic!("Shoot me")
+        };
+        let _: () = conn.set(format!("{}", title), &encryption)?;
+
+        Ok(encryption)
+    }
 }
 
 fn unzip_from_buff(buf: Bytes) -> std::string::String {
