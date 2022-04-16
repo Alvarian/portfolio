@@ -1,4 +1,5 @@
 use aws_sdk_s3::{config, types, Client, Credentials, Region};
+use redis;
 use aws_smithy_http;
 use zip;
 use rocket::{get};
@@ -17,6 +18,13 @@ use std::env::var;
 pub enum S3Errors {
     StreamErr(aws_smithy_http::byte_stream::Error),
     FutureErr(types::SdkError<aws_sdk_s3::error::GetObjectError>),
+    RedisErr(redis::RedisError)
+}
+
+impl From<redis::RedisError> for S3Errors {
+    fn from(err: redis::RedisError) -> Self {
+        S3Errors::RedisErr(err)
+    }
 }
 
 impl From<aws_smithy_http::byte_stream::Error> for S3Errors {
@@ -72,6 +80,17 @@ pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
 #[get("/app?<title>&<version>&<project_type>")]
 pub async fn read_app_of_one(title: String, version: String, project_type: String) -> std::result::Result<std::string::String, S3Errors> {
     dotenv::from_filename("rocket.env").ok();
+    let redis_url: String = var("REDIS_URL").unwrap();
+
+    let redis_client = redis::Client::open(redis_url).unwrap();
+    let mut con = redis_client.get_tokio_connection().await?;
+    // throw away the result, just make sure it does not fail
+    // let _ : () = con.setex("my_key", 10, 42)?;
+    // read back the key and return it.  Because the return value
+    // from the function is a result for integer this will automatically
+    // convert into one.
+    // con.get("my_key");
+
     let bucket_name: String = var("BUCKET_NAME").unwrap();
 	let access_key: String = var("ACCESS_KEY_ID").unwrap();
 	let secret_key: String = var("ACCESS_SECRET_KEY").unwrap();
