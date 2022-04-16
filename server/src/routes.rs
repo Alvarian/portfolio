@@ -10,8 +10,8 @@ pub fn build() -> Rocket {
 			routes![
 				projects::read_all,
 				projects::read_slides_of_one,
-				projects::read_unzip_app_of_one
-			],
+				projects::read_app_of_one
+			]
 		)
 		.register(catchers![handling::not_found])
 }

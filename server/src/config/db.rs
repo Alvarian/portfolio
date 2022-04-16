@@ -2,7 +2,6 @@ extern crate dhb_postgres_heroku;
 use dhb_postgres_heroku::{get_client};
 
 extern crate dotenv;
-// use dotenv::dotenv;
 use std::env::var;
 
 
