@@ -97,10 +97,12 @@ pub async fn read_app_of_one(title: String, version: String, project_type: Strin
     // convert into one.
 
     if conn.exists(format!("{}", title)).unwrap() {
+        print!("cached encryption");
         let doc: std::string::String = conn.get(format!("{}", title)).unwrap();
 
         Ok(doc)
     } else {
+        println!("not cached yet");
         let bucket_name: String = var("BUCKET_NAME").unwrap();
         let access_key: String = var("ACCESS_KEY_ID").unwrap();
         let secret_key: String = var("ACCESS_SECRET_KEY").unwrap();
@@ -127,7 +129,7 @@ pub async fn read_app_of_one(title: String, version: String, project_type: Strin
             Ok(buffer) => unzip_from_buff(buffer),
             Err(_) => panic!("Shoot me")
         };
-        let _: () = conn.set(format!("{}", title), &encryption)?;
+        let _: () = conn.set_ex(format!("{}", title), &encryption, 60*60)?;
 
         Ok(encryption)
     }
