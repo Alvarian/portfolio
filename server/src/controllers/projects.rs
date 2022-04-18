@@ -48,22 +48,45 @@ impl From<types::SdkError<aws_sdk_s3::error::GetObjectError>> for S3Errors {
 #[get("/")]
 pub fn read_all() -> Json<Vec<Project>> {
     let mut proj_result = Vec::new();
-    
-    for proj_row in db::db_init().query("SELECT * FROM public.projects", &[]).unwrap() {
-        proj_result.push(Project {
-            id: proj_row.get(0),
-            project_type: proj_row.get(1),
-            website: proj_row.get(2),
-            description: proj_row.get(3),
-            repository: proj_row.get(5),
-            icon: proj_row.get(6),
-            secret_key: proj_row.get(7),
-            title: proj_row.get(10),
-            version: proj_row.get(11),
-        });
+    dotenv::from_filename("rocket.env").ok();
+    let redis_url: String = var("REDIS_URL").unwrap();
+
+    let manager = RedisConnectionManager::new(format!("{}", redis_url)).unwrap();
+    let pool = r2d2::Pool::builder()
+        .build(manager)
+        .unwrap();
+        
+    let mut conn = pool.get().unwrap();
+
+    if conn.exists("projects").unwrap() {
+        let doc: std::string::String = conn.get("projects").unwrap();
+        
+        let parsed: Vec<Project> = from_str(&doc).unwrap();
+
+        Json(parsed)
+    } else {
+        for proj_row in db::db_init().query("SELECT * FROM public.projects", &[]).unwrap() {
+            proj_result.push(Project {
+                id: proj_row.get(0),
+                project_type: proj_row.get(1),
+                website: proj_row.get(2),
+                description: proj_row.get(3),
+                repository: proj_row.get(5),
+                icon: proj_row.get(6),
+                secret_key: proj_row.get(7),
+                title: proj_row.get(10),
+                version: proj_row.get(11),
+            });
+        }
+        println!("not cached yet: {:?}", &proj_result);
+        let pretty = PrettyConfig::new()
+            .depth_limit(2)
+            .enumerate_arrays(true);
+        let s = to_string_pretty(&proj_result, pretty).expect("Serialization failed");
+        let _: () = conn.set_ex("projects", s, 60*60).unwrap();
+
+        Json(proj_result)
     }
-    println!("{:?}", proj_result);
-    Json(proj_result)
 }
 
 #[get("/slides?<id>")]
@@ -79,8 +102,8 @@ pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
     let mut conn = pool.get().unwrap();
     let mut proj_result = Vec::new();
 
-    if conn.exists("slides").unwrap() {
-        let doc: std::string::String = conn.get("slides").unwrap();
+    if conn.exists(format!("slides_{}", &id)).unwrap() {
+        let doc: std::string::String = conn.get(format!("slides_{}", &id)).unwrap();
         
         let parsed: Vec<Slides> = from_str(&doc).unwrap();
 
@@ -99,7 +122,7 @@ pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
             .depth_limit(2)
             .enumerate_arrays(true);
         let s = to_string_pretty(&proj_result, pretty).expect("Serialization failed");
-        let _: () = conn.set_ex("slides", s, 60*60).unwrap();
+        let _: () = conn.set_ex(format!("slides_{}", &id), s, 60*60).unwrap();
 
         Json(proj_result)
     }
