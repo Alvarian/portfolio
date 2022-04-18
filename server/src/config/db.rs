@@ -8,7 +8,7 @@ extern crate dotenv;
 use std::env::var;
 
 
-pub fn db_init() -> dhb_postgres_heroku::Client {
+pub fn pg_init() -> dhb_postgres_heroku::Client {
     dotenv::from_filename("rocket.env").ok();
     let database_url: String = var("HEROKU_POSTGRESQL_IVORY_URL").unwrap();
     
@@ -42,9 +42,4 @@ pub fn redis_init() -> r2d2::Pool<RedisConnectionManager> {
     r2d2::Pool::builder()
         .build(manager)
         .unwrap()
-
-    // match r2d2::Pool::builder().max_size(15).build(manager) {
-    //     Ok(pool) => pool,
-    //     Err(e) => panic!("Error: failed to create database pool {}", e),
-    // }
 }
