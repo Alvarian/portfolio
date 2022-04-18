@@ -1,4 +1,5 @@
 use aws_sdk_s3::{config, Client, Credentials, Region};
+use r2d2_redis::{r2d2, redis, RedisConnectionManager};
 
 extern crate dhb_postgres_heroku;
 use dhb_postgres_heroku::{get_client};
@@ -30,4 +31,20 @@ pub fn aws_client() -> std::result::Result<aws_sdk_s3::Client, aws_sdk_s3::Error
 
     let client = Client::from_conf(conf);
 	Ok(client)
+}
+
+pub fn redis_init() -> r2d2::Pool<RedisConnectionManager> {
+    dotenv::from_filename("rocket.env").ok();
+    let redis_url: String = var("REDIS_URL").unwrap();
+
+    let manager = RedisConnectionManager::new(format!("{}", redis_url)).unwrap();
+    
+    r2d2::Pool::builder()
+        .build(manager)
+        .unwrap()
+
+    // match r2d2::Pool::builder().max_size(15).build(manager) {
+    //     Ok(pool) => pool,
+    //     Err(e) => panic!("Error: failed to create database pool {}", e),
+    // }
 }

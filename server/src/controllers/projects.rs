@@ -3,11 +3,14 @@ use aws_sdk_s3::{config, types, Client, Credentials, Region};
 extern crate r2d2_redis;
 use r2d2_redis::{r2d2, redis, RedisConnectionManager};
 use r2d2_redis::redis::Commands;
+use r2d2::PooledConnection;
 
 use aws_smithy_http;
-use zip;
-use rocket::{get};
+use rocket::{Outcome, Request, State, get};
+use rocket::request::{self, FromRequest};
 use rocket_contrib::json::Json;
+use rocket::http::Status;
+
 use ron::de::from_str;
 use ron::ser::{to_string_pretty, PrettyConfig};
 
@@ -18,6 +21,7 @@ use crate::mods::main::{print_type_of, unzip_from_buff};
 
 extern crate dotenv;
 use std::env::var;
+use std::ops::{Deref, DerefMut};
 
 #[derive(Debug)]
 pub enum S3Errors {
@@ -44,21 +48,38 @@ impl From<types::SdkError<aws_sdk_s3::error::GetObjectError>> for S3Errors {
     }
 }
 
+pub struct Conn(PooledConnection<RedisConnectionManager>);
+impl<'a, 'r> FromRequest<'a, 'r> for Conn {
+    type Error = ();
+
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<Conn, ()> {
+        let pool = request.guard::<State<r2d2::Pool<RedisConnectionManager>>>()?;
+        match pool.get() {
+            Ok(database) => Outcome::Success(Conn(database)),
+            Err(_) => Outcome::Failure((Status::ServiceUnavailable, ())),
+        }
+    }
+}
+impl Deref for Conn {
+    type Target = PooledConnection<RedisConnectionManager>;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+impl DerefMut for Conn {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+
 #[get("/")]
-pub fn read_all() -> Json<Vec<Project>> {
+pub fn read_all(mut redis_conn: Conn) -> Json<Vec<Project>> {
     let mut proj_result = Vec::new();
-    dotenv::from_filename("rocket.env").ok();
-    let redis_url: String = var("REDIS_URL").unwrap();
 
-    let manager = RedisConnectionManager::new(format!("{}", redis_url)).unwrap();
-    let pool = r2d2::Pool::builder()
-        .build(manager)
-        .unwrap();
-        
-    let mut conn = pool.get().unwrap();
-
-    if conn.exists("projects").unwrap() {
-        let doc: std::string::String = conn.get("projects").unwrap();
+    if redis_conn.exists("projects").unwrap() {
+        println!("projects cached!");
+        let doc: std::string::String = redis_conn.get("projects").unwrap();
         
         let parsed: Vec<Project> = from_str(&doc).unwrap();
 
@@ -82,27 +103,20 @@ pub fn read_all() -> Json<Vec<Project>> {
             .depth_limit(2)
             .enumerate_arrays(true);
         let s = to_string_pretty(&proj_result, pretty).expect("Serialization failed");
-        let _: () = conn.set_ex("projects", s, 60*60).unwrap();
+        let _: () = redis_conn.set_ex("projects", s, 60*60).unwrap();
 
         Json(proj_result)
     }
 }
 
 #[get("/slides?<id>")]
-pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
-    dotenv::from_filename("rocket.env").ok();
-    let redis_url: String = var("REDIS_URL").unwrap();
-
-    let manager = RedisConnectionManager::new(format!("{}", redis_url)).unwrap();
-    let pool = r2d2::Pool::builder()
-        .build(manager)
-        .unwrap();
-        
-    let mut conn = pool.get().unwrap();
+pub fn read_slides_of_one(mut redis_conn: Conn, id: i32) -> Json<Vec<Slides>> {
     let mut proj_result = Vec::new();
 
-    if conn.exists(format!("slides_{}", &id)).unwrap() {
-        let doc: std::string::String = conn.get(format!("slides_{}", &id)).unwrap();
+    if redis_conn.exists(format!("slides_{}", &id)).unwrap() {
+        println!("slides cached!");
+
+        let doc: std::string::String = redis_conn.get(format!("slides_{}", &id)).unwrap();
         
         let parsed: Vec<Slides> = from_str(&doc).unwrap();
 
@@ -121,7 +135,7 @@ pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
             .depth_limit(2)
             .enumerate_arrays(true);
         let s = to_string_pretty(&proj_result, pretty).expect("Serialization failed");
-        let _: () = conn.set_ex(format!("slides_{}", &id), s, 60*60).unwrap();
+        let _: () = redis_conn.set_ex(format!("slides_{}", &id), s, 60*60).unwrap();
 
         Json(proj_result)
     }
@@ -129,20 +143,10 @@ pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
 
 #[tokio::main]
 #[get("/app?<title>&<version>")]
-pub async fn read_app_of_one(title: String, version: String) -> std::result::Result<std::string::String, S3Errors> {
-    dotenv::from_filename("rocket.env").ok();
-    let redis_url: String = var("REDIS_URL").unwrap();
-
-    let manager = RedisConnectionManager::new(format!("{}", redis_url)).unwrap();
-    let pool = r2d2::Pool::builder()
-        .build(manager)
-        .unwrap();
-        
-    let mut conn = pool.get().unwrap();
-
-    if conn.exists(format!("{}", title)).unwrap() {
+pub async fn read_app_of_one(mut redis_conn: Conn, title: String, version: String) -> std::result::Result<std::string::String, S3Errors> {
+    if redis_conn.exists(format!("{}", title)).unwrap() {
         print!("cached encryption");
-        let doc: std::string::String = conn.get(format!("{}", title)).unwrap();
+        let doc: std::string::String = redis_conn.get(format!("{}", title)).unwrap();
 
         Ok(doc)
     } else {
@@ -164,7 +168,7 @@ pub async fn read_app_of_one(title: String, version: String) -> std::result::Res
             Ok(buffer) => unzip_from_buff(buffer),
             Err(_) => panic!("Shoot me")
         };
-        let _: () = conn.set_ex(format!("{}", title), &encryption, 60*60)?;
+        let _: () = redis_conn.set_ex(format!("{}", title), &encryption, 60*60)?;
 
         Ok(encryption)
     }
