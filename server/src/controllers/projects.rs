@@ -8,14 +8,13 @@ use aws_smithy_http;
 use zip;
 use rocket::{get};
 use rocket_contrib::json::Json;
-use bytes::{Bytes};
 use ron::de::from_str;
 use ron::ser::{to_string_pretty, PrettyConfig};
 
-use crate::config::{db};
+use crate::config::db;
 use crate::models::{Project, Slides};
 
-use crate::mods::main::print_type_of;
+use crate::mods::main::{print_type_of, unzip_from_buff};
 
 extern crate dotenv;
 use std::env::var;
@@ -129,8 +128,8 @@ pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
 }
 
 #[tokio::main]
-#[get("/app?<title>&<version>&<project_type>")]
-pub async fn read_app_of_one(title: String, version: String, project_type: String) -> std::result::Result<std::string::String, S3Errors> {
+#[get("/app?<title>&<version>")]
+pub async fn read_app_of_one(title: String, version: String) -> std::result::Result<std::string::String, S3Errors> {
     dotenv::from_filename("rocket.env").ok();
     let redis_url: String = var("REDIS_URL").unwrap();
 
@@ -148,19 +147,10 @@ pub async fn read_app_of_one(title: String, version: String, project_type: Strin
         Ok(doc)
     } else {
         println!("not cached yet");
+
+        let client = db::aws_client().unwrap();
+
         let bucket_name: String = var("BUCKET_NAME").unwrap();
-        let access_key: String = var("ACCESS_KEY_ID").unwrap();
-        let secret_key: String = var("ACCESS_SECRET_KEY").unwrap();
-        let region: String = var("BUCKET_REGION").unwrap();
-
-        let cred = Credentials::new(access_key, secret_key, None, None, "loaded-from-custom-env");
-
-        let region = Region::new(region);
-        let conf_builder = config::Builder::new().region(region).credentials_provider(cred);
-        let conf = conf_builder.build();
-
-        let client = Client::from_conf(conf);
-
         let res = client
             .get_object()
             .bucket(bucket_name)
@@ -180,13 +170,3 @@ pub async fn read_app_of_one(title: String, version: String, project_type: Strin
     }
 }
 
-fn unzip_from_buff(buf: Bytes) -> std::string::String {
-    // For demonstration purposes we read from an empty buffer.
-    // Normally a File object would be used.
-    let reader = std::io::Cursor::new(buf);
-
-    let mut archive = zip::read::ZipArchive::new(reader).unwrap();
-    let file = archive.by_name("project.txt").unwrap();
-    
-    std::io::read_to_string(file).unwrap()
-}
