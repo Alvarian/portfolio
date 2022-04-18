@@ -9,6 +9,8 @@ use zip;
 use rocket::{get};
 use rocket_contrib::json::Json;
 use bytes::{Bytes};
+use ron::de::from_str;
+use ron::ser::{to_string_pretty, PrettyConfig};
 
 use crate::config::{db};
 use crate::models::{Project, Slides};
@@ -66,18 +68,41 @@ pub fn read_all() -> Json<Vec<Project>> {
 
 #[get("/slides?<id>")]
 pub fn read_slides_of_one(id: i32) -> Json<Vec<Slides>> {
-    let mut proj_result = Vec::new();
-    // main::print_type_of(&id);
-    for proj_row in db::db_init().query("SELECT * FROM public.slides WHERE \"projectId\" = $1", &[&id]).unwrap() {
-        proj_result.push(Slides {
-            id: proj_row.get(0),
-            image_url: proj_row.get(1),
-            description: proj_row.get(2),
-            project_id: proj_row.get(3)
-        });
-    }
+    dotenv::from_filename("rocket.env").ok();
+    let redis_url: String = var("REDIS_URL").unwrap();
 
-    Json(proj_result)
+    let manager = RedisConnectionManager::new(format!("{}", redis_url)).unwrap();
+    let pool = r2d2::Pool::builder()
+        .build(manager)
+        .unwrap();
+        
+    let mut conn = pool.get().unwrap();
+    let mut proj_result = Vec::new();
+
+    if conn.exists("slides").unwrap() {
+        let doc: std::string::String = conn.get("slides").unwrap();
+        
+        let parsed: Vec<Slides> = from_str(&doc).unwrap();
+
+        Json(parsed)
+    } else {
+        for proj_row in db::db_init().query("SELECT * FROM public.slides WHERE \"projectId\" = $1", &[&id]).unwrap() {
+            proj_result.push(Slides {
+                id: proj_row.get(0),
+                image_url: proj_row.get(1),
+                description: proj_row.get(2),
+                project_id: proj_row.get(3)
+            });
+        }
+        println!("not cached yet: {:?}", &proj_result);
+        let pretty = PrettyConfig::new()
+            .depth_limit(2)
+            .enumerate_arrays(true);
+        let s = to_string_pretty(&proj_result, pretty).expect("Serialization failed");
+        let _: () = conn.set_ex("slides", s, 60*60).unwrap();
+
+        Json(proj_result)
+    }
 }
 
 #[tokio::main]
@@ -90,11 +115,8 @@ pub async fn read_app_of_one(title: String, version: String, project_type: Strin
     let pool = r2d2::Pool::builder()
         .build(manager)
         .unwrap();
-    // throw away the result, just make sure it does not fail
+        
     let mut conn = pool.get().unwrap();
-    // read back the key and return it.  Because the return value
-    // from the function is a result for integer this will automatically
-    // convert into one.
 
     if conn.exists(format!("{}", title)).unwrap() {
         print!("cached encryption");
