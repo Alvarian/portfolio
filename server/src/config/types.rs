@@ -7,13 +7,7 @@ extern crate r2d2_redis;
 use r2d2_redis::{r2d2, redis, RedisConnectionManager};
 use r2d2::PooledConnection;
 
-extern crate r2d2_postgres;
-use r2d2_postgres::{postgres::NoTls, PostgresConnectionManager};
-
 use aws_sdk_s3::types;
-
-extern crate dhb_postgres_heroku;
-use dhb_postgres_heroku::HerokuPool;
 
 
 #[derive(Debug)]
@@ -59,31 +53,6 @@ impl Deref for RedisConn {
     }
 }
 impl DerefMut for RedisConn {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-
-
-pub struct PgConn(HerokuPool);
-impl<'a, 'r> FromRequest<'a, 'r> for PgConn {
-    type Error = ();
-
-    fn from_request(request: &'a Request<'r>) -> request::Outcome<PgConn, ()> {
-        let pool = request.guard::<State<dhb_postgres_heroku::Client>>()?;
-        match pool {
-            Ok(database) => Outcome::Success(PgConn(database)),
-            Err(_) => Outcome::Failure((Status::ServiceUnavailable, ())),
-        }
-    }
-}
-impl Deref for PgConn {
-    type Target = PooledConnection<RedisConnectionManager>;
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl DerefMut for PgConn {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
     }

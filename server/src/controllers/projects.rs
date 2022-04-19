@@ -17,7 +17,7 @@ use std::env::var;
 
 
 #[get("/")]
-pub fn read_all(mut redis_conn: db_types::RedisConn, pg_conn: db_types::PgConn) -> Json<Vec<Project>> {
+pub fn read_all(mut redis_conn: db_types::RedisConn) -> Json<Vec<Project>> {
     let mut proj_result = Vec::new();
 
     if redis_conn.exists("projects").unwrap() {
@@ -28,7 +28,7 @@ pub fn read_all(mut redis_conn: db_types::RedisConn, pg_conn: db_types::PgConn) 
 
         Json(parsed)
     } else {
-        for proj_row in pg_conn.query("SELECT * FROM public.projects", &[]).unwrap() {
+        for proj_row in db::pg_init().query("SELECT * FROM public.projects", &[]).unwrap() {
             proj_result.push(Project {
                 id: proj_row.get(0),
                 project_type: proj_row.get(1),
@@ -53,7 +53,7 @@ pub fn read_all(mut redis_conn: db_types::RedisConn, pg_conn: db_types::PgConn) 
 }
 
 #[get("/slides?<id>")]
-pub fn read_slides_of_one(mut redis_conn: db_types::Conn, id: i32) -> Json<Vec<Slides>> {
+pub fn read_slides_of_one(mut redis_conn: db_types::RedisConn, id: i32) -> Json<Vec<Slides>> {
     let mut proj_result = Vec::new();
 
     if redis_conn.exists(format!("slides_{}", &id)).unwrap() {
@@ -86,7 +86,7 @@ pub fn read_slides_of_one(mut redis_conn: db_types::Conn, id: i32) -> Json<Vec<S
 
 #[tokio::main]
 #[get("/app?<title>&<version>")]
-pub async fn read_app_of_one(mut redis_conn: db_types::Conn, title: String, version: String) -> std::result::Result<std::string::String, db_types::S3Errors> {
+pub async fn read_app_of_one(mut redis_conn: db_types::RedisConn, title: String, version: String) -> std::result::Result<std::string::String, db_types::S3Errors> {
     if redis_conn.exists(format!("{}", title)).unwrap() {
         print!("cached encryption");
         let doc: std::string::String = redis_conn.get(format!("{}", title)).unwrap();
