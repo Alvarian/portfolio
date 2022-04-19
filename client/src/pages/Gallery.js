@@ -25,14 +25,23 @@ function Gallery(props) {
     setContent(projectModalPayload);
   };
 
-  const handleButtonOverlay = (title, description, logic, url) => {
+  const handleButtonOverlay = (title, description, name, body) => {
     setSynopsis({
       title, 
       description, 
       type: {
-        logic, url
+        name, 
+        body
       }
     });
+  };
+
+  const displayProjectType = () => {
+    console.log(synopsis.type.name)
+    if (synopsis.type.name === "Website") {
+      return (<a href={synopsis.type.body} rel="noopener noreferrer" target="_blank">Visit the site!</a>);
+    }
+    return synopsis.type.name;
   };
 
   return (
@@ -51,14 +60,7 @@ function Gallery(props) {
                 <p className="article description">{synopsis.description}</p>
               </div>
               <div className="type">
-                {synopsis.type.logic ? 
-                  <p>{synopsis.type.logic.split('/')[4].charAt(0).toUpperCase() + synopsis.type.logic.split('/')[4].slice(1)}</p>
-                 :
-                  synopsis.type.url ?  
-                    <a href={synopsis.type.url} rel="noopener noreferrer" target="_blank">Visit the site!</a>
-                   :
-                    <p>Service</p>
-                }
+                {displayProjectType()}
               </div> 
               
               <div className="icons"></div>
@@ -72,7 +74,10 @@ function Gallery(props) {
                   <Project 
                     key={project.id} 
                     data={project} 
-                    gitData={props.gitData.filter(d => d.full_name === project.git_url.split("/").slice(project.git_url.split("/").length-2, project.git_url.split("/").length).join("/"))[0]} callbackForModal={modalContent} fillSynopsis={handleButtonOverlay} />           
+                    gitData={props.gitData.filter(d => d.full_name === project.repository.split("/").slice(project.repository.split("/").length-2, project.repository.split("/").length).join("/"))[0]} 
+                    callbackForModal={modalContent} 
+                    fillSynopsis={handleButtonOverlay}
+                  />           
                 ))}
               </div>
              : 

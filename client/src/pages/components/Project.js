@@ -10,12 +10,12 @@ function Project(props) {
 	const [isDisplayed, setDisplay] = useState({display: 'none'});
 	const [buttonPos, setPos] = useState({y: 0});
 	
-	const handleOpenLayoutAndFillSynop = (title, description, game_file, deployed_url) => {
+	const handleOpenLayoutAndFillSynop = (title, description, project_type, website=null) => {
 		setDisplay({display: 'flex'});
 		
 		setPos({y: 125});
 
-		props.fillSynopsis(title, description, game_file, deployed_url)
+		props.fillSynopsis(title, description, project_type, website)
 	};
 
 	const handleMouseLeave = () => {
@@ -30,40 +30,38 @@ function Project(props) {
 		>	
 			<div className="dropCard">
 				{width < 600 ?	
-					<div style={{position: "relative"}} 
-						onClick={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.game_file, project.deployed_url)}
+					<div 
+						style={{position: "relative"}} 
+						onClick={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.project_type, project.website)}
 					>
-						<div style={{backgroundImage: "url("+ project.icon_file +")"}} className="card"></div>
+						<div style={{backgroundImage: "url("+ project.icon +")"}} className="card"></div>
 						
 						<div className="article lay"
 							style={isDisplayed}
 							onClick={props.callbackForModal.bind(this, {
-								url: project.deployed_url,
+								url: project.website,
 								title: project.title, 
-								logic: project.game_file, 
-								gitData: props.gitData,
-								style: project.style_file,
-								slides: project.slides
+								logic: project.app, 
+								gitData: props.gitData
 							})
 						}>
 							<h2 className="clickOpen orbi">OPEN</h2>
 						</div>
 					</div>
 				 :
-				 	<div style={{position: "relative"}} 
-						onMouseEnter={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.game_file, project.deployed_url)}
+				 	<div 
+						style={{position: "relative"}} 
+						onMouseEnter={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.project_type, project.website)}
 					>
-						<div style={{backgroundImage: "url("+ project.icon_file +")"}} className="card"></div>
+						<div style={{backgroundImage: "url("+ project.icon +")"}} className="card"></div>
 						
 						<div className="article lay"
 							style={isDisplayed}
 							onClick={props.callbackForModal.bind(this, {
-								url: project.deployed_url,
+								url: project.website,
 								title: project.title, 
-								logic: project.game_file, 
+								logic: project.app, 
 								gitData: props.gitData,
-								style: project.style_file,
-								slides: project.slides
 							})
 						}>
 							<h2 className="clickOpen orbi">OPEN</h2>
