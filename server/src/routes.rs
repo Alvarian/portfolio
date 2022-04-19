@@ -9,6 +9,7 @@ extern crate dotenv;
 pub fn build() -> Rocket {
 	ignite()
 		.manage(db::redis_init())
+		.manage(db::pg_init())
 		.mount(
 			"/api/v1/projects", 
 			routes![

@@ -7,7 +7,13 @@ extern crate r2d2_redis;
 use r2d2_redis::{r2d2, redis, RedisConnectionManager};
 use r2d2::PooledConnection;
 
+extern crate r2d2_postgres;
+use r2d2_postgres::{postgres::NoTls, PostgresConnectionManager};
+
 use aws_sdk_s3::types;
+
+extern crate dhb_postgres_heroku;
+use dhb_postgres_heroku::HerokuPool;
 
 
 #[derive(Debug)]
@@ -22,38 +28,62 @@ impl From<redis::RedisError> for S3Errors {
         S3Errors::RedisErr(err)
     }
 }
-
 impl From<aws_smithy_http::byte_stream::Error> for S3Errors {
     fn from(err: aws_smithy_http::byte_stream::Error) -> Self {
         S3Errors::StreamErr(err)
     }
 }
-
 impl From<types::SdkError<aws_sdk_s3::error::GetObjectError>> for S3Errors {
     fn from(err: types::SdkError<aws_sdk_s3::error::GetObjectError>) -> Self {
         S3Errors::FutureErr(err)
     }
 }
 
-pub struct Conn(PooledConnection<RedisConnectionManager>);
-impl<'a, 'r> FromRequest<'a, 'r> for Conn {
+
+pub struct RedisConn(PooledConnection<RedisConnectionManager>);
+impl<'a, 'r> FromRequest<'a, 'r> for RedisConn {
     type Error = ();
 
-    fn from_request(request: &'a Request<'r>) -> request::Outcome<Conn, ()> {
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<RedisConn, ()> {
         let pool = request.guard::<State<r2d2::Pool<RedisConnectionManager>>>()?;
         match pool.get() {
-            Ok(database) => Outcome::Success(Conn(database)),
+            Ok(database) => Outcome::Success(RedisConn(database)),
             Err(_) => Outcome::Failure((Status::ServiceUnavailable, ())),
         }
     }
 }
-impl Deref for Conn {
+impl Deref for RedisConn {
     type Target = PooledConnection<RedisConnectionManager>;
     fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
-impl DerefMut for Conn {
+impl DerefMut for RedisConn {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+
+pub struct PgConn(HerokuPool);
+impl<'a, 'r> FromRequest<'a, 'r> for PgConn {
+    type Error = ();
+
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<PgConn, ()> {
+        let pool = request.guard::<State<dhb_postgres_heroku::Client>>()?;
+        match pool {
+            Ok(database) => Outcome::Success(PgConn(database)),
+            Err(_) => Outcome::Failure((Status::ServiceUnavailable, ())),
+        }
+    }
+}
+impl Deref for PgConn {
+    type Target = PooledConnection<RedisConnectionManager>;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+impl DerefMut for PgConn {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
     }
