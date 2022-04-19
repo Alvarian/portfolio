@@ -42,6 +42,7 @@ function Project(props) {
 								url: project.website,
 								title: project.title, 
 								version: project.version, 
+								projectType: project.project_type,
 								secretKey: project.secret_key,
 								gitData: props.gitData
 							})
@@ -64,6 +65,7 @@ function Project(props) {
 								title: project.title, 
 								version: project.version, 
 								secretKey: project.secret_key,
+								projectType: project.project_type,
 								gitData: props.gitData,
 							})
 						}>

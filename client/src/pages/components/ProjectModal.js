@@ -10,34 +10,89 @@ import { motion } from 'framer-motion';
 import '../../styles/slideShow.css';
 
 
-function ProjectModal(props) {
-	const status = useScript(props.content);
-	const id = props.content?.id;
-	const [slideIndex, setSlideIndex] = useState(0);
-	const [showCover, setCover] = useState(true);
-	const [gitLanguages, setGitLanguages] = useState([]);
-	const [slides, setSlides] = useState([]);
-	const [width] = useResize();
+function Slides({ id, slideIndex, setSlideIndex, writeLetters, slides, setSlides }) {
+	useEffect(() => {
+		if (!slides.length) {
+			console.log("??", slides)
+			fetch(`${process.env.REACT_APP_CONTENT_API_URL}/slides?id=${id}`)
+				.then(response => response.json())
+				.then(json => {
+					console.log(json)
+					setSlides(json);
+				})
+		} 
+	}, []);
+
+	const isSlideVisible = (index) => {
+		console.log(index, slideIndex)
+		if (index === slideIndex) {
+			return {display: "flex"};
+		} else {
+			return {display: "none"};
+		}
+	};
+
+	const plusSlides = n => {
+		if (slideIndex + n > slides.length - 1) {
+			setSlideIndex(0);
+			writeLetters(0);
+		} else if (slideIndex + n < 0) {
+			setSlideIndex(slides.length - 1);
+			writeLetters(slides.length - 1);
+		} else {
+			setSlideIndex(slideIndex + n);
+			writeLetters(slideIndex + n);
+		}
+	};
+
+	return (
+		<div className="slide-container">
+			{ slides.length && slides.map((slide, index) => (
+				<div key={index} className="slide-wrapper" style={isSlideVisible(index)}>
+					<div className="slide fade">
+						<div className="numbertext">{index+1} / {slides.length}</div>
+
+						<img src={`${process.env.REACT_APP_BUCKET_ROOT}/${slide.image_url}`} alt="shtup" />
+
+						<p className="text" onClick={plusSlides.bind(this, 1)}></p>
+					</div>
+				</div>
+			)) }
+		</div>
+	)
+}
+
+function ProjectApp({secretKey, title, version, projectType, status}) {
+	const [app, getApp] = useState("");
 
 	useEffect(() => {
-		const slides = document.getElementsByClassName("slide");
+		if (!app) {
+			fetch(`${process.env.REACT_APP_CONTENT_API_URL}/app?title=${title}&version=${version}&project_type=${projectType}`)
+				.then(response => response.text())
+				.then(text => {
+					console.log(text)
+					// getApp(text);
+				})
+		} 
+	}, []);
 
-		for (let i = 0; i < slides.length; i++) {
-			if (i === slideIndex) {
-				slides[i].style.display = "flex";
-			} else {
-				slides[i].style.display = "none";
-			}
-		}
+	return (
+		<div className="app">
+			{ status === "ready" && window.Game.start(document.querySelector('.app')) }
+		</div>
+	)
+}
+
+function ProjectModal(props) {
+	const status = useScript(props.content);
+	const [showCover, setCover] = useState(true);
+	const [gitLanguages, setGitLanguages] = useState([]);
+	const [width] = useResize();
+	const [slideIndex, setSlideIndex] = useState(0);
+	const [slides, setSlides] = useState([]);
+
+	useEffect(() => {	
 		if (props.content && !gitLanguages.length) {
-			if (!slides.length) {
-				console.log("why trigger?",slides)
-				fetch(`${process.env.REACT_APP_CONTENT_API_URL}/slides?id=${id}`)
-					.then(response => response.json())
-					.then(json => {
-						setSlides(json);
-					})
-			}
 			if (props.content.gitData) {
 				fetch(props.content.gitData.languages_url)
 					.then(response => response.json())
@@ -57,51 +112,6 @@ function ProjectModal(props) {
 			}
 		}
 	});
-	
-	const handleToggle = () => {
-		window.Game = null;
-
-		setSlideIndex(0);
-
-		setCover(true);
-
-		setGitLanguages([]);
-
-		props.clear(null);
-	};
-
-	const writeLetters = index => {
-		if (!slides[index]) return;
-		
-		const description = slides[index].description;
-		let curr = 0;
-		let elem = document.getElementsByClassName('text')[index];
-		elem.innerHTML = "";
-
-		function write() {
-			elem.textContent += description.charAt(curr);
-			curr++;
-			if (curr < description.length) {
-				window.setTimeout(write, 20);
-			} else {
-				elem.innerHTML += "<span class='blink'> <i class='fas fa-dragon'></i></span>";
-			}
-		}
-		write();
-	};
-
-	const plusSlides = n => {
-		if (slideIndex + n > slides.length - 1) {
-			setSlideIndex(0);
-			writeLetters(0);
-		} else if (slideIndex + n < 0) {
-			setSlideIndex(slides.length - 1);
-			writeLetters(slides.length - 1);
-		} else {
-			setSlideIndex(slideIndex + n);
-			writeLetters(slideIndex + n);
-		}
-	};
 
 	const getDate = string => {
 		const [month, day, year] = new Date(string).toLocaleDateString("en-US").split("/");
@@ -126,6 +136,38 @@ function ProjectModal(props) {
 		}
 
 		return arr.map(g => g.x);
+	};
+
+	const writeLetters = index => {
+		if (!slides[index]) return;
+		
+		const description = slides[index].description;
+		let curr = 0;
+		let elem = document.getElementsByClassName('text')[index];
+		elem.innerHTML = "";
+
+		function write() {
+			elem.textContent += description.charAt(curr);
+			curr++;
+			if (curr < description.length) {
+				window.setTimeout(write, 20);
+			} else {
+				elem.innerHTML += "<span class='blink'> <i class='fas fa-dragon'></i></span>";
+			}
+		}
+		write();
+	};
+
+	const handleToggle = () => {
+		window.Game = null;
+
+		setSlideIndex(0);
+
+		setCover(true);
+
+		setGitLanguages([]);
+
+		props.clear(null);
 	};
 
 	const HOptions = {
@@ -182,6 +224,8 @@ function ProjectModal(props) {
 	  ],
 	};
 
+
+
 	return props.content ? (
 		<div id="modal">
 			<div className="modal-content">
@@ -231,27 +275,30 @@ function ProjectModal(props) {
 					</motion.div>
 
 					{/*App loads here*/}
-					{ props.content.logic ?
-						<div className="app">
-							{ status === "ready" && window.Game.start(document.querySelector('.app')) }
-						</div>
-					 :
-					  props.content.url ?
+					{ 
+						props.content.projectType === "Application" &&
+						<ProjectApp 
+							secretKey={props.content.secretKey} 
+							title={props.content.title} 
+							version={props.content.version} 
+							projectType={props.content.projectType}
+							status={status}
+						/>
+					}
+					{
+					  props.content.projectType === "Website" &&
 						<iframe title="jsx-a11y/iframe-has-title" src={ props.content.url } height="100%" width="100%" />
-					 :
-						<div className="slide-container">
-							{ slides.map((slide, index) => (
-								<div key={index} className="slide-wrapper">
-									<div className="slide fade">
-										<div className="numbertext">{index+1} / {slides.length}</div>
-
-										<img src={`${process.env.REACT_APP_BUCKET_ROOT}/${slide.image_url}`} alt="shtup" />
-
-										<p className="text" onClick={plusSlides.bind(this, 1)}></p>
-									</div>
-								</div>
-							)) }
-						</div>
+					}
+					{ 
+						props.content.projectType === "Presentation" &&	
+						<Slides 
+							id={props.content.id} 
+							slideIndex={slideIndex} 
+							setSlideIndex={setSlideIndex} 
+							writeLetters={writeLetters} 
+							slides={slides} 
+							setSlides={setSlides} 
+						/>
 					}
 				</div>
 			</div>
