@@ -58,9 +58,8 @@ function Gallery(props) {
                 
                 <p className="article description">{synopsis.description}</p>
               </div>
-              <div className="type">
-                {displayProjectType()}
-              </div> 
+
+              <div className="type">{displayProjectType()}</div> 
               
               <div className="icons"></div>
             </div>

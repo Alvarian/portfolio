@@ -12,11 +12,12 @@ import '../../styles/slideShow.css';
 
 function ProjectModal(props) {
 	const status = useScript(props.content);
+	const id = props.content?.id;
 	const [slideIndex, setSlideIndex] = useState(0);
 	const [showCover, setCover] = useState(true);
 	const [gitLanguages, setGitLanguages] = useState([]);
+	const [slides, setSlides] = useState([]);
 	const [width] = useResize();
-
 
 	useEffect(() => {
 		const slides = document.getElementsByClassName("slide");
@@ -28,8 +29,15 @@ function ProjectModal(props) {
 				slides[i].style.display = "none";
 			}
 		}
-
 		if (props.content && !gitLanguages.length) {
+			if (!slides.length) {
+				console.log("why trigger?",slides)
+				fetch(`${process.env.REACT_APP_CONTENT_API_URL}/slides?id=${id}`)
+					.then(response => response.json())
+					.then(json => {
+						setSlides(json);
+					})
+			}
 			if (props.content.gitData) {
 				fetch(props.content.gitData.languages_url)
 					.then(response => response.json())
@@ -49,7 +57,7 @@ function ProjectModal(props) {
 			}
 		}
 	});
-
+	
 	const handleToggle = () => {
 		window.Game = null;
 
@@ -63,9 +71,9 @@ function ProjectModal(props) {
 	};
 
 	const writeLetters = index => {
-		if (!props.content.slides[index]) return;
+		if (!slides[index]) return;
 		
-		const description = props.content.slides[index].description;
+		const description = slides[index].description;
 		let curr = 0;
 		let elem = document.getElementsByClassName('text')[index];
 		elem.innerHTML = "";
@@ -83,12 +91,12 @@ function ProjectModal(props) {
 	};
 
 	const plusSlides = n => {
-		if (slideIndex + n > props.content.slides.length - 1) {
+		if (slideIndex + n > slides.length - 1) {
 			setSlideIndex(0);
 			writeLetters(0);
 		} else if (slideIndex + n < 0) {
-			setSlideIndex(props.content.slides.length - 1);
-			writeLetters(props.content.slides.length - 1);
+			setSlideIndex(slides.length - 1);
+			writeLetters(slides.length - 1);
 		} else {
 			setSlideIndex(slideIndex + n);
 			writeLetters(slideIndex + n);
@@ -226,20 +234,18 @@ function ProjectModal(props) {
 					{ props.content.logic ?
 						<div className="app">
 							{ status === "ready" && window.Game.start(document.querySelector('.app')) }
-
-							{ props.content.style && <link rel="stylesheet" type="text/css" href={props.content.style} /> }
 						</div>
 					 :
 					  props.content.url ?
 						<iframe title="jsx-a11y/iframe-has-title" src={ props.content.url } height="100%" width="100%" />
 					 :
 						<div className="slide-container">
-							{ props.content.slides.map((slide, index) => (
+							{ slides.map((slide, index) => (
 								<div key={index} className="slide-wrapper">
 									<div className="slide fade">
-										<div className="numbertext">{index+1} / {props.content.slides.length}</div>
+										<div className="numbertext">{index+1} / {slides.length}</div>
 
-										<img src={slide.image_url} alt="shtup" />
+										<img src={`${process.env.REACT_APP_BUCKET_ROOT}/${slide.image_url}`} alt="shtup" />
 
 										<p className="text" onClick={plusSlides.bind(this, 1)}></p>
 									</div>

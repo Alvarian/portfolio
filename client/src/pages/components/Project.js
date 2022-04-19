@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 
 function Project(props) {
 	const project = props.data;
-
 	const [width] = useResize();
 	const [isDisplayed, setDisplay] = useState({display: 'none'});
 	const [buttonPos, setPos] = useState({y: 0});
@@ -39,9 +38,11 @@ function Project(props) {
 						<div className="article lay"
 							style={isDisplayed}
 							onClick={props.callbackForModal.bind(this, {
+								id: project.id,
 								url: project.website,
 								title: project.title, 
-								logic: project.app, 
+								version: project.version, 
+								secretKey: project.secret_key,
 								gitData: props.gitData
 							})
 						}>
@@ -51,16 +52,18 @@ function Project(props) {
 				 :
 				 	<div 
 						style={{position: "relative"}} 
-						onMouseEnter={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.project_type, project.website)}
+						onMouseOver={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.project_type, project.website)}
 					>
 						<div style={{backgroundImage: "url("+ project.icon +")"}} className="card"></div>
 						
 						<div className="article lay"
 							style={isDisplayed}
 							onClick={props.callbackForModal.bind(this, {
+								id: project.id,
 								url: project.website,
 								title: project.title, 
-								logic: project.app, 
+								version: project.version, 
+								secretKey: project.secret_key,
 								gitData: props.gitData,
 							})
 						}>
