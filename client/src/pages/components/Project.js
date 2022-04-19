@@ -71,7 +71,7 @@ function Project(props) {
 
 				<motion.a 
 					rel="noopener noreferrer" className="gitBTN" target="_blank"
-					href={ project.git_url }
+					href={ project.repository }
 					animate={buttonPos}
 					transition={{ ease: "easeOut", duration: 1 }}
 				>

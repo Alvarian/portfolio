@@ -37,7 +37,6 @@ function Gallery(props) {
   };
 
   const displayProjectType = () => {
-    console.log(synopsis.type.name)
     if (synopsis.type.name === "Website") {
       return (<a href={synopsis.type.body} rel="noopener noreferrer" target="_blank">Visit the site!</a>);
     }
