@@ -16,7 +16,7 @@ extern crate dotenv;
 use std::env::var;
 
 
-#[get("/")]
+#[get("/projects")]
 pub fn read_all(mut redis_conn: db_types::RedisConn) -> Json<Vec<Project>> {
     let mut proj_result = Vec::new();
 
@@ -54,7 +54,7 @@ pub fn read_all(mut redis_conn: db_types::RedisConn) -> Json<Vec<Project>> {
     }
 }
 
-#[get("/slides?<id>")]
+#[get("/projects/slides?<id>")]
 pub fn read_slides_of_one(mut redis_conn: db_types::RedisConn, id: i32) -> Json<Vec<Slides>> {
     let mut proj_result = Vec::new();
 
@@ -87,7 +87,7 @@ pub fn read_slides_of_one(mut redis_conn: db_types::RedisConn, id: i32) -> Json<
 }
 
 #[tokio::main]
-#[get("/app?<title>&<version>")]
+#[get("/projects/app?<title>&<version>")]
 pub async fn read_app_of_one(mut redis_conn: db_types::RedisConn, title: String, version: String) -> std::result::Result<std::string::String, db_types::S3Errors> {
     if redis_conn.exists(format!("{}", title)).unwrap() {
         print!("cached encryption");

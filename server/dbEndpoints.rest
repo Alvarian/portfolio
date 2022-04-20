@@ -6,3 +6,12 @@ GET http://localhost:8000/api/v1/projects/slides?id=1
 
 GET http://localhost:8000/api/v1/projects/app?title=Mystic8&version=v3&project_type=Application
 ###
+
+POST http://localhost:8000/api/v1/contact
+content-type: application/json
+
+{
+    "from": "fsociety88@ecorp.com",
+    "msg": "pwnd"
+}
+###
