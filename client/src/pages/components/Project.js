@@ -44,7 +44,9 @@ function Project(props) {
 								version: project.version, 
 								projectType: project.project_type,
 								secretKey: project.secret_key,
-								gitData: props.gitData
+								gitData: props.gitData,
+								createdAt: project.createdAt,
+								updatedAt: project.updatedAt,
 							})
 						}>
 							<h2 className="clickOpen orbi">OPEN</h2>
@@ -67,6 +69,8 @@ function Project(props) {
 								secretKey: project.secret_key,
 								projectType: project.project_type,
 								gitData: props.gitData,
+								createdAt: project.created_at,
+								updatedAt: project.updated_at,
 							})
 						}>
 							<h2 className="clickOpen orbi">OPEN</h2>

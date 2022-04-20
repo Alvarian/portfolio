@@ -12,6 +12,8 @@ pub struct Project {
     pub repository: String,
     pub icon: String,
     pub secret_key: Option<String>,
+    pub created_at: std::time::SystemTime,
+    pub updated_at: Option<std::time::SystemTime>,
     pub title: String,
     pub version: Option<String>
 }

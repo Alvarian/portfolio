@@ -24,7 +24,6 @@ function Slides({ id, slideIndex, setSlideIndex, writeLetters, slides, setSlides
 	}, []);
 
 	const isSlideVisible = (index) => {
-		console.log(index, slideIndex)
 		if (index === slideIndex) {
 			return {display: "flex"};
 		} else {
@@ -169,6 +168,16 @@ function ProjectModal(props) {
 		props.clear(null);
 	};
 
+	const handleTime = (epochOptions) => {
+		if (!epochOptions) return "N/A";
+		const date = new Date(0);
+		date.setUTCSeconds(epochOptions.secs_since_epoch);
+		
+		const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]; 
+		let month = months[date.getUTCMonth()];
+		return `${month} ${date.getDate()}, ${date.getFullYear()}`;
+	};
+
 	const HOptions = {
 	  title: {
 	  	display: true,
@@ -223,8 +232,6 @@ function ProjectModal(props) {
 	  ],
 	};
 
-
-
 	return props.content ? (
 		<div id="modal">
 			<div className="modal-content">
@@ -251,8 +258,10 @@ function ProjectModal(props) {
 						<div>
 							<h1 className="chart-title">{props.content.title}</h1>
 
-							Created at: {(props.content.gitData) ? getDate(props.content.gitData.created_at) : "N/A"} <br />
-							Last Update: {(props.content.gitData) ? getDate(props.content.gitData.updated_at) : "N/A"}
+							{/* Created at: {(props.content.gitData) ? getDate(props.content.gitData.created_at) : "N/A"} <br />
+							Last Update: {(props.content.gitData) ? getDate(props.content.gitData.updated_at) : "N/A"} */}
+							Created at: {handleTime(props.content.createdAt)} <br />
+							Last Update: {handleTime(props.content.updatedAt)}
 						</div>
 
 						<div className="chart-details">

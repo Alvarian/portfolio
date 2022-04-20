@@ -37,6 +37,8 @@ pub fn read_all(mut redis_conn: db_types::RedisConn) -> Json<Vec<Project>> {
                 repository: proj_row.get(5),
                 icon: proj_row.get(6),
                 secret_key: proj_row.get(7),
+                created_at: proj_row.get(8),
+                updated_at: proj_row.get(9),
                 title: proj_row.get(10),
                 version: proj_row.get(11),
             });
