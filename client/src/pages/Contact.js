@@ -19,10 +19,16 @@ function Contact() {
 				return false;
 			}
 		}
-
-		axios.post(process.env.REACT_APP_CONTACT_API_URL, contactFieldValues)
-			.then(res => res)
-			.catch(err => console.log(err));
+		
+		axios.post(process.env.REACT_APP_CONTACT_API_URL, contactFieldValues, {
+			headers: {
+			  // Overwrite Axios's automatically set Content-Type
+			  'Content-Type': 'application/json'
+			}, 
+			crossDomain: true 
+		})
+		.then(res => res)
+		.catch(err => console.log(err));
 
 		setBool(!isSubmitted);
 	};

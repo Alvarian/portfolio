@@ -3,9 +3,9 @@ import React from 'react';
 
 function ContactForm(props) {
 	const formValues = {
-		guestName: '',
-		guestEmail: '',
-		guestInqury: ''
+		name: '',
+		email: '',
+		message: ''
 	};
 
 	return (
@@ -13,9 +13,9 @@ function ContactForm(props) {
 			<h1 className="orbi">Contact</h1>
 
 			<form name="contact" className="contactForm" onSubmit={props.HandleSubmitAndToggle(formValues)} data-netlify="true">
-				<input onChange={ e => formValues.guestName = e.target.value } className="orbi" style={{fontSize: "22pt",  color: "white", backgroundColor: "rgba(0,0,0,0.6)"}} name="name" type="text" placeholder="Your name" />
-				<input onChange={ e => formValues.guestEmail = e.target.value } className="orbi" style={{fontSize: "22pt",  color: "white", backgroundColor: "rgba(0,0,0,0.6)"}} name="email" type="email" placeholder="Your email" />
-				<textarea onChange={ e => formValues.guestInqury = e.target.value } className="orbi" style={{ color: "white", backgroundColor: "rgba(0,0,0,0.6)"}} name="message" id="" cols="30" rows="10" placeholder="Your request"></textarea>
+				<input onChange={ e => formValues.name = e.target.value } className="orbi" style={{fontSize: "22pt",  color: "white", backgroundColor: "rgba(0,0,0,0.6)"}} name="name" type="text" placeholder="Your name" />
+				<input onChange={ e => formValues.email = e.target.value } className="orbi" style={{fontSize: "22pt",  color: "white", backgroundColor: "rgba(0,0,0,0.6)"}} name="email" type="email" placeholder="Your email" />
+				<textarea onChange={ e => formValues.message = e.target.value } className="orbi" style={{ color: "white", backgroundColor: "rgba(0,0,0,0.6)"}} name="message" id="" cols="30" rows="10" placeholder="Your request"></textarea>
 				<input className="orbi" style={{fontSize: "22pt",  color: "white", backgroundColor: "rgba(0,0,0,0.5)"}} type="submit" value="Submit" />
 			</form>
 		</div>

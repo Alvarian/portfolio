@@ -21,7 +21,7 @@ pub fn main(user_input: Json<Mail>) -> () {
     let mail_username: String = var("MAIL_USERNAME").unwrap();
     let mail_password: String = var("MAIL_PASSWORD").unwrap();
     let mail_server: String = var("MAIL_SERVER").unwrap();
-
+    println!("{:?}", user_input);
     let email = Message::builder()
         .from(mail_username.parse().unwrap())
         .reply_to(user_input.email.parse().unwrap())
