@@ -7,7 +7,7 @@ mod controllers;
 mod models;
 mod mods;
 
-use rocket::http::Method::{Get}; // 1
+use rocket::http::Method::{Get, Post}; // 1
 use rocket_cors::{
     AllowedHeaders, AllowedOrigins, // 2.
     Cors, CorsOptions // 3.
@@ -29,7 +29,7 @@ fn make_cors() -> Cors {
 
     CorsOptions { // 5.
         allowed_origins,
-        allowed_methods: vec![Get].into_iter().map(From::from).collect(), // 1.
+        allowed_methods: vec![Get, Post].into_iter().map(From::from).collect(), // 1.
         allowed_headers: AllowedHeaders::some(&[
             "Authorization",
             "Accept",

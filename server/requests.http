@@ -1,0 +1,2 @@
+curl -X POST -H "Content-Type: application/json" -d '{"name": "El", "email": "fsociety88@ecorp.com","message": "pwnd"}' http://localhost:8000/api/v1/contact
+
