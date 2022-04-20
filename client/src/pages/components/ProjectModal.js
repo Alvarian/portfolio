@@ -62,29 +62,28 @@ function Slides({ id, slideIndex, setSlideIndex, writeLetters, slides, setSlides
 	)
 }
 
-function ProjectApp({secretKey, title, version, projectType, status}) {
-	const [app, getApp] = useState("");
+function ProjectApp({secretKey, title, version, projectType}) {
+	const [app, getApp] = useState();
 
 	useEffect(() => {
 		if (!app) {
 			fetch(`${process.env.REACT_APP_CONTENT_API_URL}/app?title=${title}&version=${version}&project_type=${projectType}`)
 				.then(response => response.text())
-				.then(text => {
-					console.log(text)
-					// getApp(text);
+				.then(encryption => {
+					Window.libs.decryptAndEval(secretKey, encryption);
+
+					const app = document.getElementById("appContainer");
+					Window.games[title](app);
 				})
+				.catch(err => console.log(err));
 		} 
 	}, []);
 
-	return (
-		<div className="app">
-			{ status === "ready" && window.Game.start(document.querySelector('.app')) }
-		</div>
-	)
+	return <div id="appContainer"></div>
 }
 
 function ProjectModal(props) {
-	const status = useScript(props.content);
+	// const status = useScript(props.content);
 	const [showCover, setCover] = useState(true);
 	const [gitLanguages, setGitLanguages] = useState([]);
 	const [width] = useResize();
@@ -282,7 +281,7 @@ function ProjectModal(props) {
 							title={props.content.title} 
 							version={props.content.version} 
 							projectType={props.content.projectType}
-							status={status}
+							// status={status}
 						/>
 					}
 					{

@@ -29,5 +29,17 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <div id="root"></div>
+
+    <script>
+      Window.games = {};
+      Window.libs = {};
+
+      function heyMan() {
+        console.log("sup")
+      }
+      Window.libs.heyMan = heyMan;
+    </script>
+    <script src="%PUBLIC_URL%/lib/AESdecrypt.bundle.js"></script>
+    <script src="%PUBLIC_URL%/lib/throttleAndDebounce.bundle.js"></script>
   </body>
 </html>
