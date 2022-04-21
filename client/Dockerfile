@@ -2,19 +2,18 @@
 FROM node:13.12.0-alpine
 
 # set working directory
-WORKDIR /
-
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /node_modules/.bin:$PATH
+WORKDIR /usr/src/client
 
 # install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install --silent
-RUN npm install react-scripts@3.4.1 -g --silent
+COPY ./public ./public
+COPY ./src ./src
+COPY ./package.json ./
 
-# add app
-COPY . ./
+RUN npm install 
+RUN npm install -g serve
 
+EXPOSE 3000
+
+RUN npm run build
 # start app
-CMD ["npm", "start"]
+CMD serve -s build

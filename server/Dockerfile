@@ -1,6 +1,6 @@
 FROM rustlang/rust:nightly
 
-WORKDIR /usr/src
+WORKDIR /usr/src/server
 
 COPY ./Cargo.* ./
 COPY ./Rocket.toml ./
