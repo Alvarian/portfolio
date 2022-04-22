@@ -10,7 +10,10 @@ use ron::ser::{to_string_pretty, PrettyConfig};
 
 use crate::config::{db, types as db_types};
 use crate::models::{Project, Slides};
-use crate::mods::main::{print_type_of, unzip_from_buff};
+use crate::mods::main::{
+    // print_type_of, 
+    unzip_from_buff
+};
 
 extern crate dotenv;
 use std::env::var;

@@ -13,6 +13,7 @@ pub fn pg_init() -> dhb_postgres_heroku::Client {
     let database_url: String = var("HEROKU_POSTGRESQL_IVORY_URL").unwrap();
     
     let client = get_client(&database_url);
+    
     client
 }
 

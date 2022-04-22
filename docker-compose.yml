@@ -8,8 +8,8 @@ services:
       - "3000:3000"
     networks:
       - webnet
-    env_file:
-      - "./client/.env"
+    # env_file:
+    #   - "./client/.env"
     depends_on:
       - server
   server:
@@ -23,14 +23,5 @@ services:
       - webnet  
     env_file: 
       - "./server/rocket.env"
-  # nginx:
-  #   image: nginx
-  #   ports:
-  #     - "80:80"
-  #   networks:
-  #     - webnet
-  #   depends_on:
-  #     - gateway
-  #     - panel
 networks:
   webnet:
