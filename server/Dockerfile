@@ -5,7 +5,7 @@ WORKDIR /usr/src/server
 COPY ./Cargo.* ./
 COPY ./Rocket.toml ./
 COPY ./src ./src
-# COPY ./rocket.env ./
+COPY ./rocket.env ./
 
 RUN cargo build --release
 
