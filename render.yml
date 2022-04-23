@@ -21,7 +21,7 @@ services:
       - "8000:8000"
     networks:
       - webnet  
-    env_file: 
-      - "./server/rocket.env"
+    # env_file: 
+    #   - "./server/rocket.env"
 networks:
   webnet:
