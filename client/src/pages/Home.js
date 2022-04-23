@@ -36,14 +36,17 @@ function Home() {
 	const [numOfSolved, setNumOfSolved] = useState(0);
 
 	useEffect(() => {
-		fetch(process.env.REACT_APP_CORS_API_URL+"https://www.codewars.com/api/v1/users/Alvarian_")
+		fetch("https://www.codewars.com/api/v1/users/Alvarian_")
 			.then(response => response.json())
 			.then(json => setNumOfSolved(json.codeChallenges.totalCompleted))
 			.then(() => {
+				console.log(process.env.REACT_APP_CONTENT_API_URL)
 				fetch(process.env.REACT_APP_CONTENT_API_URL)
 					.then(response => response.json())
 					.then(json => setNumOfProjs(json.length))
-			});
+					.catch(err => console.log(err))
+			})
+			.catch(err => console.log(err));
 	}, []);
 
 	return (

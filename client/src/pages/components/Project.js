@@ -5,17 +5,16 @@ import { motion } from 'framer-motion';
 
 function Project(props) {
 	const project = props.data;
-
 	const [width] = useResize();
 	const [isDisplayed, setDisplay] = useState({display: 'none'});
 	const [buttonPos, setPos] = useState({y: 0});
 	
-	const handleOpenLayoutAndFillSynop = (title, description, game_file, deployed_url) => {
+	const handleOpenLayoutAndFillSynop = (title, description, project_type, website=null) => {
 		setDisplay({display: 'flex'});
 		
 		setPos({y: 125});
 
-		props.fillSynopsis(title, description, game_file, deployed_url)
+		props.fillSynopsis(title, description, project_type, website)
 	};
 
 	const handleMouseLeave = () => {
@@ -30,40 +29,48 @@ function Project(props) {
 		>	
 			<div className="dropCard">
 				{width < 600 ?	
-					<div style={{position: "relative"}} 
-						onClick={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.game_file, project.deployed_url)}
+					<div 
+						style={{position: "relative"}} 
+						onClick={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.project_type, project.website)}
 					>
-						<div style={{backgroundImage: "url("+ project.icon_file +")"}} className="card"></div>
+						<div style={{backgroundImage: "url("+ project.icon +")"}} className="card"></div>
 						
 						<div className="article lay"
 							style={isDisplayed}
 							onClick={props.callbackForModal.bind(this, {
-								url: project.deployed_url,
+								id: project.id,
+								url: project.website,
 								title: project.title, 
-								logic: project.game_file, 
+								version: project.version, 
+								projectType: project.project_type,
+								secretKey: project.secret_key,
 								gitData: props.gitData,
-								style: project.style_file,
-								slides: project.slides
+								createdAt: project.createdAt,
+								updatedAt: project.updatedAt,
 							})
 						}>
 							<h2 className="clickOpen orbi">OPEN</h2>
 						</div>
 					</div>
 				 :
-				 	<div style={{position: "relative"}} 
-						onMouseEnter={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.game_file, project.deployed_url)}
+				 	<div 
+						style={{position: "relative"}} 
+						onMouseOver={handleOpenLayoutAndFillSynop.bind(this, project.title, project.description, project.project_type, project.website)}
 					>
-						<div style={{backgroundImage: "url("+ project.icon_file +")"}} className="card"></div>
+						<div style={{backgroundImage: "url("+ project.icon +")"}} className="card"></div>
 						
 						<div className="article lay"
 							style={isDisplayed}
 							onClick={props.callbackForModal.bind(this, {
-								url: project.deployed_url,
+								id: project.id,
+								url: project.website,
 								title: project.title, 
-								logic: project.game_file, 
+								version: project.version, 
+								secretKey: project.secret_key,
+								projectType: project.project_type,
 								gitData: props.gitData,
-								style: project.style_file,
-								slides: project.slides
+								createdAt: project.created_at,
+								updatedAt: project.updated_at,
 							})
 						}>
 							<h2 className="clickOpen orbi">OPEN</h2>
@@ -73,7 +80,7 @@ function Project(props) {
 
 				<motion.a 
 					rel="noopener noreferrer" className="gitBTN" target="_blank"
-					href={ project.git_url }
+					href={ project.repository }
 					animate={buttonPos}
 					transition={{ ease: "easeOut", duration: 1 }}
 				>

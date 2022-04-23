@@ -40,7 +40,8 @@ build/Release
 build/
 
 # Dependency directories
-target/
+server/target/*
+# !server/target/release/
 node_modules/
 jspm_packages/
 config/sql/
