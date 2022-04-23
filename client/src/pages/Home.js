@@ -40,7 +40,6 @@ function Home() {
 			.then(response => response.json())
 			.then(json => setNumOfSolved(json.codeChallenges.totalCompleted))
 			.then(() => {
-				console.log(process.env.REACT_APP_CONTENT_API_URL)
 				fetch(process.env.REACT_APP_CONTENT_API_URL)
 					.then(response => response.json())
 					.then(json => setNumOfProjs(json.length))
