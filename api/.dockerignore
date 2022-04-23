@@ -1,5 +1,0 @@
-.git
-.gitignore
-README.md
-./aws_api/Dockerfile
-./aws_api/node_modules
