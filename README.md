@@ -1,4 +1,4 @@
-# (Portfolio V2)[https://alvarian-portfolio-v2.netlify.app/]
+# [Portfolio V2](https://alvarian-portfolio-v2.netlify.app/)
 react.js, rocket.rs
 
 ## Deploy to Heroku
