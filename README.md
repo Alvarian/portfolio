@@ -1,41 +1,34 @@
-# portfolio2
-react.js, rocket.rs
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Deploy to Heroku
-git subtree push --prefix path/to/app-subdir heroku master
+## Getting Started
 
-## Deploy using docker-compose
-docker-compose up at root
+First, run the development server:
 
-## Environmental Variables
-### Client
-REACT_APP_CONTENT_API_URL= URL to /api/v1/projects
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-REACT_APP_BUCKET_ROOT= Base URL name pointing to AWS bucket root
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-REACT_APP_CONTACT_API_URL= URL to /api/v1/contact
+You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-### Server
-MAIL_SERVER= Mailing server used for the rust lettre library
+[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-MAIL_USERNAME= Email used to receive contact payload
+The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-MAIL_PASSWORD= Create app password through service. For example: [Gmail](https://support.google.com/accounts/answer/185833?hl=en)
+## Learn More
 
-PORTFOLIO_URL= URL of client to be whitelisted into cors
+To learn more about Next.js, take a look at the following resources:
 
-HEROKU_POSTGRESQL_IVORY_URL= Cloud or local URL based connection parameter to init postgres into app
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-REDIS_URL= Cloud or local URL based connection parameter to init redis into app
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-BUCKET_ROOT= Base URL name pointing to AWS bucket root
+## Deploy on Vercel
 
-ACCESS_SECRET_KEY= Generated AWS Secret Key required to connect to AWS client
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-ACCESS_KEY_ID= Generated AWS Access Key Id required to connect to AWS client
-
-BUCKET_NAME= Name of bucket for portfolio projects
-
-BUCKET_REGION= Region provided by your AWS bucket on creation, required to connect to AWS client
-
-
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
