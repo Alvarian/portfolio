@@ -43,6 +43,7 @@ build/
 server/target/*
 # !server/target/release/
 node_modules/
+client/package-lock.json
 jspm_packages/
 config/sql/
 /.pnp
