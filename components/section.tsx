@@ -1,8 +1,13 @@
 const Section: React.FC<any> = ({
-  children
+  children,
+  bgImageName
 }) => {
+  const image = {
+    backgroundImage: "url(./images/" + bgImageName + ")",
+  }
+
   return (
-    <section>{children}</section>
+    <section className="flex h-96 w-full items-center justify-center border-t bg-no-repeat bg-cover bg-center bg-fixed relative" style={image}>{children}</section>
   )
 }
 
