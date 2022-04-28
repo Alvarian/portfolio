@@ -1,7 +1,11 @@
 type Nullable<T> = T | null;
 
 export interface Content {
-  title: string,
-  content: React.FC<any>,
+  alt: string,
+  // content: Nullable<{
+  //   element: React.FC<any>,
+  //   hasFocus: boolean
+  // }>,
+  content: Nullable<React.FC<any>>
   bgImageName: string
 };
