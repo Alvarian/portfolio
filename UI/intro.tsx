@@ -1,6 +1,10 @@
 const Intro: React.FC<any> = () => {
+  const styles = {
+    width: "inherit",
+  }
+
   return (
-    <h1>Description</h1>
+    <div className="m-auto" style={styles}>Description</div>
   )
 }
 

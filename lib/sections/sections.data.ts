@@ -5,13 +5,14 @@ import { Content } from 'lib/sections/sections.types'
 
 export const sectionData: Array<Content> = [
   {
-    title: "About",
-    content: Intro,
+    alt: "about",
+    content: null,
+    // content: Intro,
     bgImageName: "img_class-min.jpg"
   },
   {
-    title: "Knowledge",
+    alt: "knowledge",
     content: Badges,
     bgImageName: "img_clock1-min.jpg"
-  },
+  }
 ];
