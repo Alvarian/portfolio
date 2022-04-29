@@ -47,8 +47,16 @@ const Home: NextPage = () => {
     return sectionList;
   }
 
+  const styles = {
+    css: {},
+    tailwind: {
+      main: `flex flex-col items-center text-white scroll-smooth`,
+      content: `flex w-full flex-1 flex-col items-center text-center`
+    }
+  }
+
   return (
-    <div className="flex flex-col items-center text-white scroll-smooth">
+    <div className={styles.tailwind.main}>
       <Head>
         <title>Ivan Alvarez</title>
         <link rel="icon" href="/images/favicon-16x16.png" />
@@ -56,7 +64,7 @@ const Home: NextPage = () => {
 
       <Navbar handleRenderLinks={handleRenderLinks} />
 
-      <main className="flex w-full flex-1 flex-col items-center text-center">{handleSectionRendering()}</main>
+      <main className={styles.tailwind.content}>{handleSectionRendering()}</main>
 
       <Footer handleRenderLinks={handleRenderLinks} />
     </div>

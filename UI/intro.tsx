@@ -1,10 +1,17 @@
 const Intro: React.FC<any> = () => {
   const styles = {
-    width: "inherit",
+    css: {
+      main: {
+        width: "inherit",
+      }
+    },
+    tailwind: {
+      main: `m-auto`
+    }
   }
 
   return (
-    <div className="m-auto" style={styles}>Description</div>
+    <div className={styles.tailwind.main} style={styles.css.main}>Description</div>
   )
 }
 

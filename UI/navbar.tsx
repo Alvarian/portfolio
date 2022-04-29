@@ -10,6 +10,7 @@ const Navbar: React.FC<any> = ({
     tailwind: {
       main: `navbar h-8 bg-black absolute z-10 p-10`,
       header: `btn btn-ghost normal-case text-4xl`,
+      content: `menu menu-horizontal p-0`
     }
   }
 
@@ -19,7 +20,7 @@ const Navbar: React.FC<any> = ({
         <a className={styles.tailwind.header}>Ivan Alvarez</a>
       </div>
       <div className="flex-none">
-        <ul className="menu menu-horizontal p-0">
+        <ul className={styles.tailwind.content}>
           {handleRenderLinks()}
         </ul>
       </div>
