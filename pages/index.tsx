@@ -7,12 +7,18 @@ import Section from 'components/section'
 import Border from 'components/border'
 import Navbar from 'UI/navbar'
 import Footer from 'UI/footer'
+import Link from 'next/link'
 import { Content } from 'lib/sections/sections.types'
 
 
 const Home: NextPage = () => {
-  const handleSectionRendering = () => {
+  const handleRenderLinks = () => {
+    return sectionData.map((section: Content, index: number) => {
+      return (<Link href={"#"+section.alt} key={index}><li><a className="text-2xl round-lg m-2 btn btn-ghost normal-case text-center">{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link>)
+    })
+  }
 
+  const handleSectionRendering = () => {
     let sectionList = [];
     for (const i in sectionData) {
       if (parseInt(i) % 2 !== 0) {
@@ -48,13 +54,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/images/favicon-16x16.png" />
       </Head>
 
-      <Navbar />
+      <Navbar handleRenderLinks={handleRenderLinks} />
 
-      <main className="flex w-full flex-1 flex-col items-center text-center">
-        {handleSectionRendering()}
-      </main>
+      <main className="flex w-full flex-1 flex-col items-center text-center">{handleSectionRendering()}</main>
 
-      <Footer />
+      <Footer handleRenderLinks={handleRenderLinks} />
     </div>
   )
 }
