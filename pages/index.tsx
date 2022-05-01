@@ -1,25 +1,17 @@
-import React from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import { sectionData } from 'lib/sections/sections.data'
+
 import Section from 'components/section'
 import Border from 'components/border'
-import Navbar from 'UI/navbar'
 import Footer from 'UI/footer'
-import Link from 'next/link'
+
 import { Content } from 'lib/sections/sections.types'
+import { sectionData } from 'lib/sections/sections.data'
 
 
 const Home: NextPage = () => {
-  const handleRenderLinks = () => {
-    return sectionData.map((section: Content, index: number) => {
-      return (<Link href={"#"+section.alt} key={index}><li><a className="text-2xl round-lg m-2 btn btn-ghost normal-case text-center">{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link>)
-    })
-  }
-
   const handleSectionRendering = () => {
-    let sectionList = [];
+    let sectionList = []
     for (const i in sectionData) {
       if (parseInt(i) % 2 !== 0) {
         sectionList.push(<Border
@@ -32,7 +24,7 @@ const Home: NextPage = () => {
       const section: Content = sectionData[i]
       sectionList.push(<Section
         key={i}
-        Content={section.content}
+        content={section.content}
         bgImageName={section.bgImageName}
         alt={section.alt}
       />)
@@ -62,11 +54,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/images/favicon-16x16.png" />
       </Head>
 
-      <Navbar handleRenderLinks={handleRenderLinks} />
-
       <main className={styles.tailwind.content}>{handleSectionRendering()}</main>
 
-      <Footer handleRenderLinks={handleRenderLinks} />
+      <Footer />
     </div>
   )
 }
