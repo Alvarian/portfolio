@@ -1,6 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 
+import Section from 'components/section'
+
 
 const Footer: React.FC<any> = ({
   handleRenderLinks
@@ -16,8 +18,8 @@ const Footer: React.FC<any> = ({
       main: `footer footer-center p-28 h-screen relative w-full`,
       background: `bg-black bg-no-repeat bg-cover bg-center bg-fixed h-full w-full -z-10 absolute`,
       content: {
-        main: `bg-black/50 h-4/5 w-4/5 flex justify-between flex-col items-center`,
-        nav: `navbar h-4/5 w-4/5`,
+        main: `bg-black/50 rounded-lg hover:bg-black h-4/5 w-5/6 flex justify-between flex-col items-center`,
+        nav: `navbar h-4/5 w-5/6 flex flex-row justify-around`,
         buttons: {
           main: `flex flex-col justify-center w-full items-center pb-8`,
           links: `hover:invert bg-white flex items-center justify-center h-20 w-20 m-3 rounded-full`
@@ -28,15 +30,13 @@ const Footer: React.FC<any> = ({
 
   return (
     <footer className={styles.tailwind.main}>
-      <div className={styles.tailwind.background} style={styles.css.background}></div>
-
       <div className={styles.tailwind.content.main}>
         <div className={styles.tailwind.content.nav}>
           <div className="flex-1">
-            <Link href="/"><a className="btn btn-ghost normal-case text-4xl">Ivan Alvarez</a></Link>
+            <Link href="/"><a className="btn btn-ghost normal-case text-5xl">Ivan Alvarez</a></Link>
           </div>
 
-          <div className="menu flex menu-vertical p-0">{handleRenderLinks()}</div>
+          <div className="menu flex menu-vertical p-0 w-3/6">{handleRenderLinks("footer")}</div>
         </div>
 
         <div className={styles.tailwind.content.buttons.main}>
@@ -52,4 +52,14 @@ const Footer: React.FC<any> = ({
   )
 }
 
-export default Footer
+const FooterSection: React.FC<any> = () => {
+  return <Section
+    key="last"
+    content={{body: Footer, isFull: true}}
+    bgImageName="library-min.jpg"
+    alt="footer"
+  />
+}
+
+
+export default FooterSection
