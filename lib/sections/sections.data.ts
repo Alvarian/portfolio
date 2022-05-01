@@ -1,4 +1,4 @@
-import Intro from 'UI/intro'
+import Header from '@UI/header'
 import Badges from 'UI/badges'
 
 import { Content } from 'lib/sections/sections.types'
@@ -6,13 +6,21 @@ import { Content } from 'lib/sections/sections.types'
 export const sectionData: Array<Content> = [
   {
     alt: "about",
-    content: null,
-    // content: Intro,
+    // content: null,
+    content: {
+      body: Header,
+      isFull: true
+    },
+    type: "default",
     bgImageName: "img_class-min.jpg"
   },
   {
     alt: "knowledge",
-    content: Badges,
+    content: {
+      body: Badges,
+      isFull: false
+    },
+    type: "default",
     bgImageName: "img_clock1-min.jpg"
   }
 ];
