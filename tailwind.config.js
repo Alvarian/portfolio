@@ -5,7 +5,15 @@ module.exports = {
     './UI/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        '128': '32rem',
+        'inherit': 'inherit'
+      },
+      height: {
+        'inherit': 'inherit'
+      }
+    },
   },
   plugins: [
     require('daisyui'),
