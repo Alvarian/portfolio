@@ -26,6 +26,7 @@ const Home: NextPage = () => {
         key={i}
         content={section.content}
         bgImageName={section.bgImageName}
+        keyIcon={section.keyIcon}
         alt={section.alt}
       />)
     }
@@ -40,9 +41,8 @@ const Home: NextPage = () => {
   }
 
   const styles = {
-    css: {},
     tailwind: {
-      main: `flex flex-col items-center text-white scroll-smooth`,
+      main: `flex flex-col items-center text-white`,
       content: `flex w-full flex-1 flex-col items-center text-center`
     }
   }
@@ -54,7 +54,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/images/favicon-16x16.png" />
       </Head>
 
-      <main className={styles.tailwind.content}>{handleSectionRendering()}</main>
+      <main className={styles.tailwind.content}>
+        {handleSectionRendering()}
+      </main>
 
       <Footer />
     </div>

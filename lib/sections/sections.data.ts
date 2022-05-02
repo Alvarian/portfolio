@@ -12,6 +12,7 @@ export const sectionData: Array<Content> = [
       isFull: true
     },
     type: "default",
+    keyIcon: "mainFace-min.jpg",
     bgImageName: "img_class-min.jpg"
   },
   {
@@ -21,6 +22,7 @@ export const sectionData: Array<Content> = [
       isFull: false
     },
     type: "default",
+    keyIcon: "",
     bgImageName: "img_clock1-min.jpg"
   }
 ];

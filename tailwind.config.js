@@ -12,6 +12,9 @@ module.exports = {
       },
       height: {
         'inherit': 'inherit'
+      },
+      top: {
+        '34': '8.5rem'
       }
     },
   },

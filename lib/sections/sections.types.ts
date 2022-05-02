@@ -7,5 +7,6 @@ export interface Content {
     isFull: boolean
   }>,
   type: string,
+  keyIcon: string,
   bgImageName: string
 };
