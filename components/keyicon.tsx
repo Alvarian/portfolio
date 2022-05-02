@@ -9,7 +9,7 @@ const KeyIcon: React.FC<any> = ({
   icon
 }) => {
   return (
-    <div className="fixed rounded-full z-1">
+    <div className="rounded-full z-1">
       <Image 
         src={`/images/mainFace-min.jpg`} 
         // src={`/images/${sectionData[position].keyIcon}`} 

@@ -1,7 +1,10 @@
 import Link from 'next/link'
 
-import { Content } from 'lib/sections/sections.types'
+import { Content, defaultVariants } from 'lib/sections/sections.types'
 import { sectionData } from 'lib/sections/sections.data'
+import Underline from "components/underline"
+
+import { motion } from 'framer-motion'
 
 
 const Section: React.FC<any> = ({
@@ -27,16 +30,27 @@ const Section: React.FC<any> = ({
       }
     })()
 
+    let queDuration = 4;
     for (const index in sectionData) {
       const section: Content = sectionData[index]
 
       switch (section.type) {
         case "outsourced": 
-          outsourcedLinks.push(<Link href={"#"+section.alt} key={index}><li><a className={fontSize?.link}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link>)
+          outsourcedLinks.push(<motion.div
+            initial="hidden"
+            animate="visible"
+            variants={defaultVariants.fallUp(++queDuration)}
+            key={index}
+          ><Link href={"#"+section.alt}><li><a className={fontSize?.link}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link></motion.div>)
 
           break
         default:
-          defaultLinks.push(<Link href={"#"+section.alt} key={index}><li><a className={fontSize?.link}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link>)
+          defaultLinks.push(<motion.div
+            initial="hidden"
+            animate="visible"
+            variants={defaultVariants.fallUp(++queDuration)}
+            key={index}
+          ><Link href={"#"+section.alt}><li><a className={fontSize?.link}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link></motion.div>)
 
           break
       }
@@ -47,7 +61,7 @@ const Section: React.FC<any> = ({
         {defaultLinks.length ? <div>
           <h1 className={fontSize?.header}>Sections</h1>
 
-          <div className="rounded-lg h-1 w-full round-lg bg-white mt-2"></div>
+          <Underline />
 
           {defaultLinks}
         </div> : ""}
@@ -55,7 +69,7 @@ const Section: React.FC<any> = ({
         {outsourcedLinks.length ? <div>
           <h1 className={fontSize?.header}>Outsourced</h1>
 
-          <div className="rounded-lg h-1 w-full round-lg bg-white mt-2"></div>
+          <Underline />
 
           {outsourcedLinks}
         </div> : ""}
