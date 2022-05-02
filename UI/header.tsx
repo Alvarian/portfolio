@@ -1,16 +1,13 @@
 import Image from "next/image"
 
+import KeyIcon from "components/keyicon"
+
 
 const Header: React.FC<any> = ({
-  handleRenderLinks
+  handleRenderLinks,
+  icon
 }) => {
   const styles = {
-    css: {
-      background: {
-        backgroundImage: "url(./images/img_class-min.jpg)",
-        filter: `blur(3px)`
-      }
-    },
     tailwind: {
       main: `m-auto relative h-full relative w-full`,
       background: `bg-black bg-no-repeat bg-cover bg-center bg-fixed h-full w-full -z-10 absolute`,
@@ -18,7 +15,7 @@ const Header: React.FC<any> = ({
         main: `absolute top-0 left-0 h-full w-full flex items-center justify-around`,
         profile: `w-128 h-5/6 flex flex-col justify-around items-center pt-10`,
         buttons: {
-          main: `flex flex-col justify-center w-full items-center pb-8`,
+          main: `z-10 flex flex-col justify-center w-full items-center pb-8`,
           links: `hover:invert bg-white flex items-center justify-center h-20 w-20 m-3 rounded-full`
         }
       }
@@ -33,15 +30,20 @@ const Header: React.FC<any> = ({
 
         <div className={styles.tailwind.content.main}>
           <div className={styles.tailwind.content.profile}>
-            <Image 
-              src="/images/mainFace-min.jpg" 
+            {/* <Image 
+              src={`/images/${keyIcon}`} 
               alt="Picture of the author"
               width={300}
               height={300}
               style={{borderRadius: "100%"}}
-            />
-            <h1 className="normal-case text-4xl">Ivan Alvarez</h1>
-            <p className="normal-case text-xl">Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. And most times they're friends, like you and me! I should've known way back when... You know why, David? Because of the kids. They called me Mr Glass.</p>
+            /> */}
+
+            <div className="w-80 h-80 bg-black rounded-full relative flex justify-center items-center">
+              <KeyIcon icon={icon} />
+            </div>
+
+            <h1 className="z-10 normal-case text-4xl">Ivan Alvarez</h1>
+            <p className="z-10 normal-case text-xl">Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. And most times they're friends, like you and me! I should've known way back when... You know why, David? Because of the kids. They called me Mr Glass.</p>
 
             <div className={styles.tailwind.content.buttons.main}>
               <div className="rounded-lg h-1 w-11/12 round-lg bg-white m-2"></div>

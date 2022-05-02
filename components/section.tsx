@@ -7,12 +7,13 @@ import { sectionData } from 'lib/sections/sections.data'
 const Section: React.FC<any> = ({
   content,
   bgImageName,
+  keyIcon,
   alt,
 }) => {
   const handleRenderLinks = (fontType: string) => {
     let outsourcedLinks = []
     let defaultLinks = []
-
+    
     const fontSize = (() => {
       switch (fontType) {
         case "footer": return {
@@ -81,7 +82,7 @@ const Section: React.FC<any> = ({
       <div className={styles.tailwind.background} style={styles.css.background}></div>
 
       {content.body ? 
-        <div className={styles.tailwind.content}><content.body handleRenderLinks={handleRenderLinks} /></div>
+        <div className={styles.tailwind.content}><content.body icon={keyIcon} handleRenderLinks={handleRenderLinks} /></div>
          : 
         <h1>{alt}</h1>
       }
