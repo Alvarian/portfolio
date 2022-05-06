@@ -103,7 +103,7 @@ const Section: React.FC<any> = ({
   }
   
   return (
-    <section className={styles.tailwind.main} id={alt} ref={parseInt(position) === 0 && setRef.current ? setRef : null}>
+    <section className={styles.tailwind.main} id={alt} ref={setRef}>
       <div className={styles.tailwind.background} style={styles.css.background}></div>
 
       {content.body ? 

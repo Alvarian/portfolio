@@ -1,14 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-// const { gsap } = require("gsap/dist/gsap");
-// const { ScrollTrigger } = require("gsap/dist/ScrollTrigger");
-import {
-  gsap
-} from "gsap"
-import {
-  ScrollTrigger
-} from "gsap/dist/ScrollTrigger"
 
 import Section from 'components/section'
 import Border from 'components/border'
@@ -20,52 +12,27 @@ import { sectionData } from 'lib/sections/sections.data'
 
 
 const Home: NextPage = () => {
-  const beginning = useRef(null)
+  const beginning = useRef<any>(null)
+
+  const [visible, setVisible] = useState(false);
+
+  const handleScroll = () => {
+// console.log(beginning.current.scrollHeight >= prevScrollPos, last.current.scrollHeight >= prevScrollPos)
+
+    // find current scroll position
+    const currentScrollPos = window.pageYOffset;
+    console.log("lift",document.querySelector("#footer").offsetTop <= currentScrollPos, "drop", beginning.current.offsetTop <= currentScrollPos)
+
+    // set state based on location info (explained in more detail below)
+    // setVisible((prevScrollPos > currentScrollPos && prevScrollPos - currentScrollPos > 70) || currentScrollPos < 10);
+    // setVisible();
+  }
 
   useEffect(() => {
-    function animateFrom(elem: any, direction: any | null) {
-      direction = direction || 1;
-      var x = 0,
-          y = direction * 100;
-      if(elem.classList.contains("gs_reveal_fromLeft")) {
-        x = -100;
-        y = 0;
-      } else if (elem.classList.contains("gs_reveal_fromRight")) {
-        x = 100;
-        y = 0;
-      }
-      elem.style.transform = "translate(" + x + "px, " + y + "px)";
-      elem.style.opacity = "0";
-      gsap.fromTo(elem, {x: x, y: y, autoAlpha: 0}, {
-        duration: 1.25, 
-        x: 0,
-        y: 0, 
-        autoAlpha: 1, 
-        ease: "expo", 
-        overwrite: "auto"
-      });
-    }
+    window.addEventListener('scroll', handleScroll);
 
-    function hide(elem: any) {
-      gsap.set(elem, {autoAlpha: 0});
-    }
-
-    gsap.registerPlugin(ScrollTrigger);
-console.log(beginning.current)
-  
-    // gsap.to("#knowledge", {rotation: 360, duration: 5, ease: "elastic"})
-    gsap.from("#knowledge", {
-      duration: 1.5, y: 0, delay: 2,
-      scrollTrigger: {
-        markers: true,
-        trigger: "#knowledge",
-        once: false,
-        // start: "top bottom",
-        // end: "top top",
-        scrub: true,
-      },
-    });
-  }, [])
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [visible, handleScroll])
 
   const handleSectionRendering = () => {
     let sectionList = []
@@ -82,7 +49,7 @@ console.log(beginning.current)
       sectionList.push(<Section
         key={i}
         position={i}
-        setRef={beginning}
+        setRef={parseInt(i) === 1 ? beginning : null}
         content={section.content}
         bgImageName={section.bgImageName}
         keyIcon={section.keyIcon}
@@ -117,7 +84,7 @@ console.log(beginning.current)
       </Head>
 
       <main className={styles.tailwind.content}>
-        <Navbar />
+        <Navbar visible={visible} />
 
         {handleSectionRendering()}
       </main>

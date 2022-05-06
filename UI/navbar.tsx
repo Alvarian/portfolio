@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import { sectionData } from 'lib/sections/sections.data'
@@ -6,7 +7,9 @@ import { Content } from 'lib/sections/sections.types'
 import { useResize } from 'hooks/'
 
 
-const Navbar: React.FC<any> = () => {
+const Navbar: React.FC<any> = ({
+  visible
+}) => {
   const [width] = useResize();
 
   const styles = {
@@ -14,7 +17,7 @@ const Navbar: React.FC<any> = () => {
       minWidth: '600px'
     },
     tailwind: {
-      main: `navbar h-8 bg-black absolute z-10 p-10`,
+      main: `navbar bg-black h-28 z-40 fixed left-0 ${visible ? "block top-0" : "none -top-28"}`,
       header: `btn btn-ghost normal-case text-4xl`,
       background: `bg-black bg-no-repeat bg-cover bg-center bg-fixed h-full w-full -z-10 absolute`,
       content: {
@@ -29,7 +32,7 @@ const Navbar: React.FC<any> = () => {
   }
 
   return (
-    <div className="navbar bg-black h-28 z-40 fixed -top-28 left-0" style={styles.css} id="dropingNavbar">
+    <div className={styles.tailwind.main} style={styles.css} id="droppingNavbar">
       <div className="navbar-start">
         {width > 800 ? 
           <ul className="menu menu-horizontal text-xl shadow bg-black">
