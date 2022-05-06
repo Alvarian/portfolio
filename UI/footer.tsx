@@ -9,7 +9,9 @@ import { motion } from "framer-motion"
 
 
 const Footer: React.FC<any> = ({
-  handleRenderLinks
+  handleRenderLinks,
+  position,
+  setRef
 }) => {
   const styles = {
     css: {
@@ -31,7 +33,7 @@ const Footer: React.FC<any> = ({
       }
     }
   }
-
+  
   return (
     <footer className={styles.tailwind.main} id="footer">
       <div className={styles.tailwind.content.main}>
