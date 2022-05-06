@@ -3,6 +3,9 @@ import Image from "next/image"
 import KeyIcon from "components/keyicon"
 import Underline from "components/underline"
 
+import { motion } from "framer-motion"
+import { defaultVariants } from "lib/sections/sections.types"
+
 
 const Header: React.FC<any> = ({
   handleRenderLinks,
@@ -36,16 +39,32 @@ const Header: React.FC<any> = ({
               <KeyIcon icon={icon} />
             </div>
 
-            <h1 className="z-10 normal-case text-4xl pb-10">Ivan Alvarez</h1>
-            <p className="z-10 normal-case text-xl">Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. And most times they're friends, like you and me! I should've known way back when... You know why, David? Because of the kids. They called me Mr Glass.</p>
+            <motion.h1 className="z-10 normal-case text-4xl p-5"
+              initial="hidden"
+              whileInView="visible"
+              variants={defaultVariants.fallUp(1)}
+            >Ivan Alvarez</motion.h1>
+
+            <motion.p className="z-10 normal-case text-xl"
+              initial="hidden"
+              whileInView="visible"
+              variants={defaultVariants.fallUp(2)}            
+            >Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. And most times they're friends, like you and me! I should've known way back when... You know why, David? Because of the kids. They called me Mr Glass.</motion.p>
 
             <div className={styles.tailwind.content.buttons.main}>
-              {/* <div className="rounded-lg h-1 w-11/12 round-lg bg-white m-2"></div> */}
-              <Underline />
+              <Underline width="100%" />
 
               <div className="flex flex-row">
-                <a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={45} height={45} src="/icons/github.svg" /></a>
-                <a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={30} height={30} src="/icons/linkedin.svg" /></a>
+                <motion.a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"
+                  initial="hidden"
+                  whileInView="visible"
+                  variants={defaultVariants.fallLeft(5)}
+                ><Image width={45} height={45} src="/icons/github.svg" /></motion.a>
+                <motion.a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"
+                  initial="hidden"
+                  whileInView="visible"
+                  variants={defaultVariants.fallLeft(6)}
+                ><Image width={30} height={30} src="/icons/linkedin.svg" /></motion.a>
               </div>
             </div>
           </div>

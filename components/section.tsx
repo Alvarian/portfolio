@@ -8,8 +8,10 @@ import { motion } from 'framer-motion'
 
 
 const Section: React.FC<any> = ({
+  position,
   content,
   bgImageName,
+  setRef,
   keyIcon,
   alt,
 }) => {
@@ -30,7 +32,7 @@ const Section: React.FC<any> = ({
       }
     })()
 
-    let queDuration = 4;
+    let queDuration = 5;
     for (const index in sectionData) {
       const section: Content = sectionData[index]
 
@@ -38,7 +40,7 @@ const Section: React.FC<any> = ({
         case "outsourced": 
           outsourcedLinks.push(<motion.div
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
             variants={defaultVariants.fallUp(++queDuration)}
             key={index}
           ><Link href={"#"+section.alt}><li><a className={fontSize?.link}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link></motion.div>)
@@ -47,7 +49,7 @@ const Section: React.FC<any> = ({
         default:
           defaultLinks.push(<motion.div
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
             variants={defaultVariants.fallUp(++queDuration)}
             key={index}
           ><Link href={"#"+section.alt}><li><a className={fontSize?.link}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link></motion.div>)
@@ -58,18 +60,26 @@ const Section: React.FC<any> = ({
 
     return (
       <div className="flex flex-row justify-around w-full">
-        {defaultLinks.length ? <div>
-          <h1 className={fontSize?.header}>Sections</h1>
+        {defaultLinks.length ? <div className={styles.tailwind.nav}>
+          <motion.h1 className={fontSize?.header}
+            initial="hidden"
+            whileInView="visible"
+            variants={defaultVariants.fallUp(1)}
+          >Sections</motion.h1>
 
-          <Underline />
+          <Underline width="35%" />
 
           {defaultLinks}
         </div> : ""}
 
-        {outsourcedLinks.length ? <div>
-          <h1 className={fontSize?.header}>Outsourced</h1>
+        {outsourcedLinks.length ? <div className={styles.tailwind.nav}>
+          <motion.h1 className={fontSize?.header}
+            initial="hidden"
+            whileInView="visible"
+            variants={defaultVariants.fallUp(1)}
+          >Outsourced</motion.h1>
 
-          <Underline />
+          <Underline width="35%" />
 
           {outsourcedLinks}
         </div> : ""}
@@ -88,11 +98,12 @@ const Section: React.FC<any> = ({
       main: `flex justify-center h-screen w-full items-center relative`,
       background: `bg-no-repeat bg-cover bg-center bg-fixed absolute w-full h-full -z-10`,
       content: `flex justify-center ${content.isFull ? "h-full w-full" : "h-2/3 w-2/3 rounded-3xl"} items-center`,
+      nav: `flex flex-col items-center`
     }
   }
-
+  
   return (
-    <section className={styles.tailwind.main} id={alt}>
+    <section className={styles.tailwind.main} id={alt} ref={parseInt(position) === 0 && setRef.current ? setRef : null}>
       <div className={styles.tailwind.background} style={styles.css.background}></div>
 
       {content.body ? 

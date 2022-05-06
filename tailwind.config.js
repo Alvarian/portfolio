@@ -15,6 +15,9 @@ module.exports = {
       },
       top: {
         '34': '8.5rem'
+      },
+      minWidth: {
+        'mobile': '600px'
       }
     },
   },

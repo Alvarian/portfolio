@@ -2,6 +2,10 @@ import Image from "next/image"
 import Link from "next/link"
 
 import Section from 'components/section'
+import Underline from "components/underline"
+import { defaultVariants } from 'lib/sections/sections.types'
+
+import { motion } from "framer-motion"
 
 
 const Footer: React.FC<any> = ({
@@ -29,7 +33,7 @@ const Footer: React.FC<any> = ({
   }
 
   return (
-    <footer className={styles.tailwind.main}>
+    <footer className={styles.tailwind.main} id="footer">
       <div className={styles.tailwind.content.main}>
         <div className={styles.tailwind.content.nav}>
           <div className="flex-1">
@@ -40,11 +44,20 @@ const Footer: React.FC<any> = ({
         </div>
 
         <div className={styles.tailwind.content.buttons.main}>
-          <div className="rounded-lg h-1 w-4/5 round-lg bg-white m-2"></div>
+          <Underline width="80%" />
 
           <div className="flex flex-row">
-            <a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={45} height={45} src="/icons/github.svg" /></a>
-            <a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={30} height={30} src="/icons/linkedin.svg" /></a>
+            <motion.a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"
+              initial="hidden"
+              whileInView="visible"
+              variants={defaultVariants.fallLeft(5)}
+            ><Image width={45} height={45} src="/icons/github.svg" /></motion.a>
+            
+            <motion.a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"
+              initial="hidden"
+              whileInView="visible"
+              variants={defaultVariants.fallLeft(6)}
+            ><Image width={30} height={30} src="/icons/linkedin.svg" /></motion.a>
           </div>
         </div>
       </div>
