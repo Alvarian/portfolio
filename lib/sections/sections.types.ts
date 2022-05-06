@@ -12,33 +12,35 @@ export interface Content {
 }
 
 export const defaultVariants = { 
-  fallLeft: (duration: number) => {
+  fallLeft: (delay: number) => {
     return {
       hidden: {
         opacity: 0,
-        x: "100vw",
+        x: "8vw",
       },
       visible: {
         opacity: 1,
         x: 0,
-        transition: { 
-          duration,
+        transition: {
+          delay, 
+          duration: 3,
           ease: "easeInOut",
         }
       }
     }
   },
-  fallUp: (duration: number) => {
+  fallUp: (delay: number) => {
     return {
       hidden: {
         opacity: 0,
-        y: "100vh",
+        y: "8vh",
       },
       visible: {
         opacity: 1,
         y: 0,
-        transition: { 
-          duration,
+        transition: {
+          delay, 
+          duration: 3,
           ease: "easeInOut",
         }
       }
@@ -47,19 +49,20 @@ export const defaultVariants = {
 }
 
 export const svgVariant = {
-  flip: (duration: number) => {
+  flip: (delay: number) => {
     return {
       hidden: { rotate: -180 },
       visible: { 
         rotate: 0,
-        transition: { duration }
+        transition: {
+          delay, duration: 3 }
       },
     }
   }
 }
 
 export const pathVariant = {
-  draw: (duration: number) => {
+  draw: (delay: number) => {
     return {
       hidden: {
         opacity: 0,
@@ -68,8 +71,9 @@ export const pathVariant = {
       visible: {
         opacity: 1,
         pathLength: 1,
-        transition: { 
-          duration,
+        transition: {
+          delay, 
+          duration: 3,
           ease: "easeInOut",
         }
       }
