@@ -3,15 +3,13 @@ import Link from "next/link"
 
 import Section from 'components/section'
 import Underline from "components/underline"
-import { defaultVariants } from 'lib/sections/sections.types'
+import { defaultVariants } from 'lib/sections/sections.data'
 
 import { motion } from "framer-motion"
 
 
 const Footer: React.FC<any> = ({
-  handleRenderLinks,
-  position,
-  setRef
+  handleRenderLinks
 }) => {
   const styles = {
     css: {

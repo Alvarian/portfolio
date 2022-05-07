@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import { sectionData } from 'lib/sections/sections.data'
-import { Content, defaultVariants } from 'lib/sections/sections.types'
+import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 
 import { useResize } from 'hooks/'
 import Link from 'next/link'
@@ -40,10 +38,10 @@ const Navbar: React.FC<any> = ({
       }
     }
   }
-console.log(visible)
+  
   return (
     <motion.div className={styles.tailwind.main} style={styles.css} id="droppingNavbar"
-      variants={defaultVariants.dropDown()}
+      variants={defaultVariants.dropDown(1)}
       animate={visible ? 'lift' : 'drop'}
     >
       <div className="navbar-start pl-10">
