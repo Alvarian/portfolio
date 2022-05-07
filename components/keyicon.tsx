@@ -6,6 +6,7 @@ import { sectionData } from 'lib/sections/sections.data'
 
 const KeyIcon: React.FC<any> = ({
   position,
+  size,
   icon
 }) => {
   return (
@@ -14,8 +15,8 @@ const KeyIcon: React.FC<any> = ({
         src={`/images/mainFace-min.jpg`} 
         // src={`/images/${sectionData[position].keyIcon}`} 
         alt="Picture of the author"
-        width={300}
-        height={300}
+        width={size}
+        height={size}
         style={{borderRadius: "100%"}}
       />
     </div>

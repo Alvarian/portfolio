@@ -10,6 +10,7 @@ import { motion } from 'framer-motion'
 const Section: React.FC<any> = ({
   content,
   bgImageName,
+  width,
   setRef,
   keyIcon,
   alt,
@@ -66,7 +67,7 @@ const Section: React.FC<any> = ({
             variants={defaultVariants.fallUp(1)}
           >Sections</motion.h1>
 
-          <Underline width="35%" />
+          <Underline />
 
           {defaultLinks}
         </div> : ""}
@@ -78,7 +79,7 @@ const Section: React.FC<any> = ({
             variants={defaultVariants.fallUp(1)}
           >Outsourced</motion.h1>
 
-          <Underline width="35%" />
+          <Underline />
 
           {outsourcedLinks}
         </div> : ""}
@@ -106,7 +107,7 @@ const Section: React.FC<any> = ({
       <div className={styles.tailwind.background} style={styles.css.background}></div>
 
       {content.body ? 
-        <div className={styles.tailwind.content}><content.body icon={keyIcon} handleRenderLinks={handleRenderLinks} /></div>
+        <div className={styles.tailwind.content}><content.body icon={keyIcon} width={width} handleRenderLinks={handleRenderLinks} /></div>
          : 
         <h1>{alt}</h1>
       }
