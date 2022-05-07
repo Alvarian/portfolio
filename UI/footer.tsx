@@ -2,60 +2,115 @@ import Image from "next/image"
 import Link from "next/link"
 
 import Section from 'components/section'
+import Underline from "components/underline"
+import { defaultVariants } from 'lib/sections/sections.data'
+
+import { motion } from "framer-motion"
 
 
 const Footer: React.FC<any> = ({
-  handleRenderLinks
-}) => {
-  const styles = {
-    css: {
-      background: {
-        backgroundImage: "url(./images/library-min.jpg)",
-        filter: `blur(3px)`
+  handleRenderLinks,
+  width
+}) => {  
+  const bio = (reponsiveType: string) => {
+    const styles = reponsiveType === "mobile" ? {
+      tailwind: {
+        content: {
+          nav: `navbar h-4/5 w-full flex flex-row justify-around`,
+          name: `hidden`
+        }
       }
-    },
-    tailwind: {
-      main: `footer footer-center p-28 h-screen relative w-full`,
-      background: `bg-black bg-no-repeat bg-cover bg-center bg-fixed h-full w-full -z-10 absolute`,
-      content: {
-        main: `bg-black/50 rounded-lg hover:bg-black h-4/5 w-5/6 flex justify-between flex-col items-center`,
-        nav: `navbar h-4/5 w-5/6 flex flex-row justify-around`,
-        buttons: {
-          main: `flex flex-col justify-center w-full items-center pb-8`,
-          links: `hover:invert bg-white flex items-center justify-center h-20 w-20 m-3 rounded-full`
+    } : {
+      tailwind: {
+        content: {
+          main: `bg-black/50 rounded-lg hover:bg-black h-4/5 w-5/6 flex justify-between flex-col items-center`,
+          nav: `navbar h-4/5 w-5/6 flex flex-row justify-around`,
+          name: `flex-1`
         }
       }
     }
+
+    return (
+      <div className={styles.tailwind.content.nav}>
+        <div className={styles.tailwind.content.name}>
+          <Link href="/"><a className="btn btn-ghost normal-case text-5xl">Ivan Alvarez</a></Link>
+        </div>
+
+        <div className="menu flex menu-vertical p-0 w-3/6">{handleRenderLinks("footer")}</div>
+      </div>
+    )
+  }
+
+  const directory = (reponsiveType: string) => {
+    const styles = reponsiveType === "mobile" ? {
+      tailwind: {
+        content: {
+          buttons: {
+            main: `flex flex-col justify-center w-full items-center pb-8`,
+            links: `hover:invert bg-white flex items-center justify-center h-14 w-14 m-3 rounded-full`
+          }
+        }
+      }
+    } : {
+      tailwind: {
+        content: {
+          main: `bg-black/50 rounded-lg hover:bg-black h-4/5 w-5/6 flex justify-between flex-col items-center`,
+          nav: `navbar h-4/5 w-5/6 flex flex-row justify-around`,
+          buttons: {
+            main: `flex flex-col justify-center w-full items-center pb-8`,
+            links: `hover:invert bg-white flex items-center justify-center h-20 w-20 m-3 rounded-full`
+          }
+        }
+      }
+    }
+
+    return (
+      <div className={styles.tailwind.content.buttons.main}>
+        <Underline width="80%" />
+
+        <div className="flex flex-row">
+          <motion.a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"
+            initial="hidden"
+            whileInView="visible"
+            variants={defaultVariants.fallLeft(5)}
+          ><Image width={45} height={45} src="/icons/github.svg" /></motion.a>
+          
+          <motion.a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"
+            initial="hidden"
+            whileInView="visible"
+            variants={defaultVariants.fallLeft(6)}
+          ><Image width={30} height={30} src="/icons/linkedin.svg" /></motion.a>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <footer className={styles.tailwind.main}>
-      <div className={styles.tailwind.content.main}>
-        <div className={styles.tailwind.content.nav}>
-          <div className="flex-1">
-            <Link href="/"><a className="btn btn-ghost normal-case text-5xl">Ivan Alvarez</a></Link>
-          </div>
+    <footer className="footer footer-center h-screen relative w-full" id="footer">
+      {width < 950 ?
+        <div className="bg-black/50 h-4/5 w-full flex justify-between flex-col items-center">
+          {bio("mobile")}
 
-          <div className="menu flex menu-vertical p-0 w-3/6">{handleRenderLinks("footer")}</div>
+          {directory("mobile")}
         </div>
+        :
+        <div className="bg-black/50 rounded-lg hover:bg-black h-4/5 w-5/6 flex justify-between flex-col items-center">
+          {bio("default")}
 
-        <div className={styles.tailwind.content.buttons.main}>
-          <div className="rounded-lg h-1 w-4/5 round-lg bg-white m-2"></div>
-
-          <div className="flex flex-row">
-            <a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={45} height={45} src="/icons/github.svg" /></a>
-            <a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={30} height={30} src="/icons/linkedin.svg" /></a>
-          </div>
+          {directory("default")}
         </div>
-      </div>
+      }
     </footer>
   )
 }
 
-const FooterSection: React.FC<any> = () => {
+const FooterSection: React.FC<any> = ({
+  width
+}) => {
   return <Section
     key="last"
     content={{body: Footer, isFull: true}}
+    width={width}
     bgImageName="library-min.jpg"
     alt="footer"
   />

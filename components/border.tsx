@@ -3,7 +3,7 @@ const Border: React.FC<any> = ({
     color
 }) => {
     const styles = {
-        tailwind: `${thickness} ${color} w-full`
+        tailwind: `${thickness} ${color} w-full z-20`
     }
     return (
         <div className={styles.tailwind}></div>
