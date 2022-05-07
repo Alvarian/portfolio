@@ -17,15 +17,11 @@ const Home: NextPage = () => {
   const [visible, setVisible] = useState(false);
 
   const handleScroll = () => {
-// console.log(beginning.current.scrollHeight >= prevScrollPos, last.current.scrollHeight >= prevScrollPos)
-
     // find current scroll position
-    const currentScrollPos = window.pageYOffset;
-    console.log("lift",document.querySelector("#footer").offsetTop <= currentScrollPos, "drop", beginning.current.offsetTop <= currentScrollPos)
+    const currentScrollPos = window.pageYOffset
 
     // set state based on location info (explained in more detail below)
-    // setVisible((prevScrollPos > currentScrollPos && prevScrollPos - currentScrollPos > 70) || currentScrollPos < 10);
-    // setVisible();
+    setVisible(beginning.current.offsetTop <= currentScrollPos && document.querySelector("#footer")?.offsetTop > currentScrollPos)
   }
 
   useEffect(() => {

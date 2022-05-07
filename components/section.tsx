@@ -8,7 +8,6 @@ import { motion } from 'framer-motion'
 
 
 const Section: React.FC<any> = ({
-  position,
   content,
   bgImageName,
   setRef,
