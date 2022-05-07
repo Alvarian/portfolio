@@ -21,7 +21,7 @@ const Home: NextPage = () => {
     const currentScrollPos = window.pageYOffset
 
     // set state based on location info (explained in more detail below)
-    setVisible(beginning.current.offsetTop <= currentScrollPos && document.querySelector("#footer")?.offsetTop > currentScrollPos)
+    setVisible(beginning.current.offsetTop-50 <= currentScrollPos && document.querySelector("#footer")?.offsetTop-150 > currentScrollPos)
   }
 
   useEffect(() => {
