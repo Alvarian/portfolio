@@ -5,6 +5,7 @@ import { sectionData } from 'lib/sections/sections.data'
 import { Content } from 'lib/sections/sections.types'
 
 import { useResize } from 'hooks/'
+import Link from 'next/link'
 
 
 const Navbar: React.FC<any> = ({
@@ -12,12 +13,20 @@ const Navbar: React.FC<any> = ({
 }) => {
   const [width] = useResize();
 
+  const handleRenderLinks = () => {
+    return sectionData.map((section, index) => (
+      <li className="text-white" key={index}>
+        <Link href={"#"+section.alt}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</Link>
+      </li>
+    ))
+  }
+
   const styles = {
     css: {
       minWidth: '600px'
     },
     tailwind: {
-      main: `navbar bg-black h-28 z-40 fixed left-0 ${visible ? "block top-0" : "none -top-28"}`,
+      main: `navbar bg-black z-40 fixed left-0 ${visible ? "top-0" : "-top-28"}`,
       header: `btn btn-ghost normal-case text-4xl`,
       background: `bg-black bg-no-repeat bg-cover bg-center bg-fixed h-full w-full -z-10 absolute`,
       content: {
@@ -36,39 +45,35 @@ const Navbar: React.FC<any> = ({
       <div className="navbar-start">
         {width > 800 ? 
           <ul className="menu menu-horizontal text-xl shadow bg-black">
-            <li><a>Homepage</a></li>
-            <li><a>Portfolio</a></li>
-            <li><a>About</a></li>
+            {handleRenderLinks()}
           </ul>
           :
           <div className="dropdown pl-10">
-            <label tabIndex={0} className="btn btn-ghost btn-circle hover:invert text-base-100">
+            <label tabIndex={0} className="btn btn-ghost btn-circle hover:invert text-white">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M4 6h16M4 12h16M4 18h7" /></svg>
             </label>
 
             <ul className="menu menu-compact dropdown-content rounded-box mt-7 text-2xl shadow bg-black">
-              <li><a>Homepage</a></li>
-              <li><a>Portfolio</a></li>
-              <li><a>About</a></li>
+              {handleRenderLinks()}
             </ul>
           </div>
         }
       </div>
 
       <div className="navbar-center">
-        <a className="btn btn-ghost normal-case text-4xl">Ivan Alvarez</a>
+        <a href="/" className="btn btn-ghost normal-case text-4xl">Ivan Alvarez</a>
       </div>
 
       <div className="navbar-end">
         {width > 800 ?
-          <>
-            <a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={45} height={45} src="/icons/github.svg" /></a>
+          <ul className="menu menu-horizontal shadow bg-black">
+            <li><a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={45} height={45} src="/icons/github.svg" /></a></li>
             
-            <a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={30} height={30} src="/icons/linkedin.svg" /></a>
-          </>
+            <li><a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={30} height={30} src="/icons/linkedin.svg" /></a></li>
+          </ul>
           :
           <div className="dropdown dropdown-end pr-10">
-            <label tabIndex={0} className="btn btn-ghost btn-circle bg-base-100 hover:invert">
+            <label tabIndex={0} className="btn btn-ghost btn-circle bg-white hover:invert">
               <Image width={40} height={40} src="/icons/social-media.svg" />
             </label>
 
