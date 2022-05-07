@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import { sectionData } from 'lib/sections/sections.data'
-import { Content } from 'lib/sections/sections.types'
+import { Content, defaultVariants } from 'lib/sections/sections.types'
 
 import { useResize } from 'hooks/'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 
 const Navbar: React.FC<any> = ({
@@ -26,7 +27,7 @@ const Navbar: React.FC<any> = ({
       minWidth: '600px'
     },
     tailwind: {
-      main: `navbar bg-black z-40 fixed left-0 ${visible ? "top-0" : "-top-28"}`,
+      main: `navbar bg-black z-40 fixed left-0`,
       header: `btn btn-ghost normal-case text-4xl`,
       background: `bg-black bg-no-repeat bg-cover bg-center bg-fixed h-full w-full -z-10 absolute`,
       content: {
@@ -39,10 +40,13 @@ const Navbar: React.FC<any> = ({
       }
     }
   }
-
+console.log(visible)
   return (
-    <div className={styles.tailwind.main} style={styles.css} id="droppingNavbar">
-      <div className="navbar-start">
+    <motion.div className={styles.tailwind.main} style={styles.css} id="droppingNavbar"
+      variants={defaultVariants.dropDown()}
+      animate={visible ? 'lift' : 'drop'}
+    >
+      <div className="navbar-start pl-10">
         {width > 800 ? 
           <ul className="menu menu-horizontal text-xl shadow bg-black">
             {handleRenderLinks()}
@@ -66,7 +70,7 @@ const Navbar: React.FC<any> = ({
 
       <div className="navbar-end">
         {width > 800 ?
-          <ul className="menu menu-horizontal shadow bg-black">
+          <ul className="menu menu-horizontal shadow bg-black pr-10">
             <li><a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={45} height={45} src="/icons/github.svg" /></a></li>
             
             <li><a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={30} height={30} src="/icons/linkedin.svg" /></a></li>
@@ -85,7 +89,7 @@ const Navbar: React.FC<any> = ({
           </div>
         }
       </div>
-    </div>
+    </motion.div>
   )
 }
 
