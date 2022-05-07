@@ -4,7 +4,7 @@ import KeyIcon from "components/keyicon"
 import Underline from "components/underline"
 
 import { motion } from "framer-motion"
-import { defaultVariants } from "lib/sections/sections.types"
+import { defaultVariants } from "lib/sections/sections.data"
 
 
 const Header: React.FC<any> = ({

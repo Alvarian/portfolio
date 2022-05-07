@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
-import { Content, defaultVariants } from 'lib/sections/sections.types'
-import { sectionData } from 'lib/sections/sections.data'
+import { Content } from 'lib/sections/sections.types'
+import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 import Underline from "components/underline"
 
 import { motion } from 'framer-motion'

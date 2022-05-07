@@ -1,4 +1,4 @@
-import { pathVariant } from "lib/sections/sections.types"
+import { pathVariant } from "lib/sections/sections.data"
 
 import { motion } from 'framer-motion';
 
