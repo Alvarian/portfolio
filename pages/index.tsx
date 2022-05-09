@@ -35,15 +35,6 @@ const Home: NextPage = () => {
   const handleSectionRendering = () => {
     let sectionList = []
     for (const i in sectionData) {
-      if (parseInt(i) % 2 !== 0) {
-        sectionList.push(<Border
-          key={`${i}_border`}
-          width={width}
-          thickness="h-40"
-          color="bg-black"
-        />)
-      }
-
       const section: Content = sectionData[i]
       sectionList.push(<Section
         key={i}
@@ -54,14 +45,14 @@ const Home: NextPage = () => {
         keyIcon={section.keyIcon}
         alt={section.alt}
       />)
-    }
 
-    sectionList.push(<Border
-      key="last"
-      width={width}
-      thickness="h-40"
-      color="bg-black"
-    />)
+      sectionList.push(<Border
+        key={`${i}_border`}
+        width={width}
+        thickness="h-40"
+        color="bg-black"
+      />)
+    }
 
     return sectionList;
   }
