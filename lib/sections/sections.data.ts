@@ -1,5 +1,6 @@
-import Header from '@UI/header'
-import Badges from 'UI/badges'
+import Header from 'UI/header'
+import Badges from '@UI/Badges/badges'
+import Stats from 'UI/Stats'
 
 import { Content } from 'lib/sections/sections.types'
 
@@ -14,6 +15,17 @@ export const sectionData: Array<Content> = [
     type: "default",
     keyIcon: "mainFace-min.jpg",
     bgImageName: "img_class-min.jpg"
+  },
+  {
+    alt: "stats",
+    // content: null,
+    content: {
+      body: Stats,
+      isFull: true
+    },
+    type: "default",
+    keyIcon: "",
+    bgImageName: "img_bridge3-min.jpg"
   },
   {
     alt: "knowledge",
