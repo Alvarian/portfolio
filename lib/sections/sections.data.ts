@@ -1,5 +1,5 @@
 import Header from 'UI/header'
-import Badges from '@UI/Badges/badges'
+import Badges from 'UI/Badges'
 import Stats from 'UI/Stats'
 
 import { Content } from 'lib/sections/sections.types'
@@ -21,7 +21,7 @@ export const sectionData: Array<Content> = [
     // content: null,
     content: {
       body: Stats,
-      isFull: true
+      isFull: false
     },
     type: "default",
     keyIcon: "",

@@ -10,3 +10,7 @@ export interface Content {
   keyIcon: string,
   bgImageName: string
 }
+
+export type dataOptions = {
+  [key: string]: any
+}

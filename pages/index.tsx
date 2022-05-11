@@ -8,14 +8,15 @@ import Footer from 'UI/footer'
 import Navbar from 'UI/navbar'
 import { useResize } from 'hooks/'
 
-import { Content } from 'lib/sections/sections.types'
+import { Content, dataOptions } from 'lib/sections/sections.types'
 import { sectionData } from 'lib/sections/sections.data'
 
 
-const Home: NextPage = () => {
+const Home: NextPage = (props) => {
   const beginning = useRef<any>(null)
   const [width] = useResize();
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
+  const propData: dataOptions = props
 
   const handleScroll = () => {
     // find current scroll position
@@ -36,8 +37,10 @@ const Home: NextPage = () => {
     let sectionList = []
     for (const i in sectionData) {
       const section: Content = sectionData[i]
+      
       sectionList.push(<Section
         key={i}
+        serverProps={propData['data'][section.alt]}
         width={width}
         setRef={parseInt(i) === 1 ? beginning : null}
         content={section.content}
@@ -53,7 +56,7 @@ const Home: NextPage = () => {
         color="bg-black"
       />)
     }
-
+    
     return sectionList;
   }
 
@@ -66,7 +69,7 @@ const Home: NextPage = () => {
       content: `flex w-full flex-1 flex-col items-center text-center`
     }
   }
-
+  
   return (
     <div className={styles.tailwind.main}>
       <Head>
@@ -83,6 +86,55 @@ const Home: NextPage = () => {
       <Footer width={width} />
     </div>
   )
+}
+
+Home.getInitialProps = async function() {
+  // Here i want to access the projectID sent from the previous page
+  let overallStatsPayload: Record<string, any> = {}
+  const userResponse = await fetch("https://www.codewars.com/api/v1/users/Alvarian_")
+  const userData = await userResponse.json()
+  const challangesResponse = await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")
+  const challangesData = await challangesResponse.json()
+  
+  overallStatsPayload.leaderBoardScore = userData.leaderboardPosition
+  overallStatsPayload.totalCompleted = challangesData.totalItems
+  overallStatsPayload.languagesTotal = (() => {
+    let languages: Record<string, number> = {}
+
+    for (let challenge of challangesData.data) {
+      for (let lang of challenge.completedLanguages) {
+        if (!languages[lang]) {
+          languages[lang] = 1
+        } else {
+          languages[lang]++
+        }
+      }
+    }
+
+    return languages
+  })()
+
+  let mostRecentPayload: Record<string, any> = {}
+  const recentChallengeResponse = await fetch(`https://www.codewars.com/api/v1/code-challenges/${challangesData.data[0].id}`)
+  const recentChallengeData = await recentChallengeResponse.json()
+  
+  mostRecentPayload.title = recentChallengeData.name
+  mostRecentPayload.attemptedTotal = recentChallengeData.totalAttempts
+  mostRecentPayload.completedTotal = recentChallengeData.totalCompleted
+  mostRecentPayload.url = recentChallengeData.url
+  mostRecentPayload.problem = recentChallengeData.description
+  mostRecentPayload.tags = recentChallengeData.tags
+  mostRecentPayload.completionDate = challangesData.data[0].completedAt
+  mostRecentPayload.languagesUsed = challangesData.data[0].completedLanguages
+
+  return {
+    data: {
+      stats: {
+        overallStatsPayload,
+        mostRecentPayload
+      }
+    },
+  }
 }
 
 export default Home
