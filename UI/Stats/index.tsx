@@ -1,6 +1,27 @@
-const index: React.FC<any> = () => {
+import MostRecent from "./MostRecent"
+import Overall from "./Overall"
+import Arrow from "components/arrow"
+
+
+const index: React.FC<any> = ({ data }) => {
+  const { overallStatsPayload, mostRecentPayload } = data
+
   return (
-    <h1>Stats</h1>
+    <div>
+      <Overall 
+        payload={overallStatsPayload}
+      />
+
+      <MostRecent 
+        payload={mostRecentPayload}
+      />
+      
+      <Arrow 
+        direction="right"
+        size={50}
+        // handler={}
+      />
+    </div>
   )
 } 
 
