@@ -1,4 +1,12 @@
-const MostRecent: React.FC<any> = ({ payload }) => {
+import Arrow from "@components/arrow"
+import { AnimatePresence, motion } from "framer-motion"
+import { slider } from "./varients"
+
+const MostRecent: React.FC<any> = ({ 
+    payload, 
+    setPage,
+    setVisible
+}) => {
     const {
         title,
         attemptedTotal,
@@ -29,7 +37,23 @@ const MostRecent: React.FC<any> = ({ payload }) => {
     }
 
     return (
-        <div>
+        <motion.div
+            id="recent"
+            initial="enter"
+            animate="center"
+            exit="exit"
+            variants={slider}
+            custom={1}
+            transition={{
+                x: {
+                    type: "spring",
+                    stiffness: 800,
+                    damping: 100,
+                    duration: 0.1
+                },
+                opacity: { duration: 0.6 }
+            }}
+        >
             <h2>Most Recent Solution</h2>
 
             <div>
@@ -44,7 +68,14 @@ const MostRecent: React.FC<any> = ({ payload }) => {
             </div>
 
             <div className="tabs">{renderTags()}</div>
-        </div>
+
+            <Arrow 
+                direction="left"
+                size={50}
+                content="Overall Challenges"
+                handler={setVisible}
+            />
+        </motion.div>
     )
 }
 

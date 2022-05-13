@@ -6,20 +6,33 @@ import { dataOptions } from 'lib/sections/sections.types'
 const Arrow: React.FC<any> = ({
     size,
     direction,
+    content,
     handler
 }) => {
     const mappedDirections: dataOptions = {
-        left: "270",
-        right: "90",
-        down: "180"
+        left: {
+            arrow: "270",
+            position: "flex-row-reverse"
+        },
+        right: {
+            arrow: "90",
+            position: ""
+        },
+        // down: "180"
     }
 
     const styles = {
-        transform: `rotate(${mappedDirections[direction]}deg)`
+        main: `flex items-center justify-center w-full ${mappedDirections[direction].position}`,
+        img: {transform: `rotate(${mappedDirections[direction].arrow}deg)`},
+        content: `text-2xl text-center`
     }
 
     return (
-        <Image style={styles} width={size} height={size} src="/icons/up-arrow-svgrepo-com.svg" />
+        <button className={styles.main} onClick={() => handler()}>
+            <span className={styles.content}>{content}</span>
+                
+            <Image style={styles.img} width={size} height={size} src="/icons/up-arrow-svgrepo-com.svg" />
+        </button>
     )
 }
 

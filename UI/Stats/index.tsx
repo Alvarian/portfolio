@@ -1,33 +1,40 @@
+import SlideShow from "components/slideshow";
+import { useState } from "react"
 import MostRecent from "./MostRecent"
 import Overall from "./Overall"
-import Arrow from "components/arrow"
 
 
 const index: React.FC<any> = ({ data }) => {
+  const [[page, direction], setPage] = useState([0, 0]);
+  const [isVisible, setVisible] = useState(true)
+
   const { overallStatsPayload, mostRecentPayload } = data
 
+  const handleVisible = () => {
+    // setVisible({
+    //   overall: !isVisible.overall,
+    //   recent: !isVisible.recent
+    // })
+    setVisible(!isVisible)
+  }
+  
   return (
-    <div>
-      <Overall 
+    <SlideShow>
+      {isVisible ? <Overall 
+        key="overall"
         payload={overallStatsPayload}
+        setPage={setPage}
+        setVisible={handleVisible}
       />
-
+        :
       <MostRecent 
+        key="recent"
         payload={mostRecentPayload}
-      />
-      
-      <Arrow 
-        direction="right"
-        size={50}
-        // handler={}
-      />
-    </div>
+        setPage={setPage}
+        setVisible={handleVisible}
+      />}
+    </SlideShow>
   )
 } 
-
-// API CALLS
-// https://www.codewars.com/kata/55466989aeecab5aac00003e/solutions/javascript
-// 55466989aeecab5aac00003e
-// https://www.codewars.com/api/v1/code-challenges/55466989aeecab5aac00003e
 
 export default index
