@@ -2,12 +2,15 @@ import { AnimatePresence } from "framer-motion";
 
 
 const SlideShow: React.FC<any> = ({
-    children
+    children,
+    styles
 }) => {
     return (
-        <AnimatePresence exitBeforeEnter>
-            {children}
-        </AnimatePresence>
+        <div className={styles.tailwind.main}>
+            <AnimatePresence exitBeforeEnter>
+                {children}
+            </AnimatePresence>
+        </div>
     )
 }
 

@@ -18,8 +18,16 @@ const index: React.FC<any> = ({ data }) => {
     setVisible(!isVisible)
   }
   
+  const styles = {
+    tailwind: {
+      main: `w-full h-full`
+    }
+  }
+
   return (
-    <SlideShow>
+    <SlideShow
+      styles={styles}
+    >
       {isVisible ? <Overall 
         key="overall"
         payload={overallStatsPayload}
