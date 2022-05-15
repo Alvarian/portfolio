@@ -39,6 +39,7 @@ const MostRecent: React.FC<any> = ({
     return (
         <motion.div
             id="recent"
+            className="bg-gradient-to-l from-black h-full"
             initial="enter"
             animate="center"
             exit="exit"
@@ -49,14 +50,14 @@ const MostRecent: React.FC<any> = ({
                     type: "spring",
                     stiffness: 800,
                     damping: 100,
-                    duration: 0.1
+                    duration: 0.4
                 },
                 opacity: { duration: 0.6 }
             }}
         >
             <h2>Most Recent Solution</h2>
 
-            <div>
+            <div className="bg-gradient-to-l from-amber-200">
                 <div>
                     <p>Name: <span>{title}</span></p>
                     <p>Completion Rate: <span>{Math.round((completedTotal / attemptedTotal) * 1000) / 10}%</span></p>
