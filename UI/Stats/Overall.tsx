@@ -1,14 +1,16 @@
+import React, { useEffect, useState } from "react"
+import Image from "next/image";
+
 import { motion } from "framer-motion"
 import {Chart, ArcElement, Tooltip} from 'chart.js'
 Chart.register(ArcElement, Tooltip);
+import { Doughnut } from 'react-chartjs-2';
+import CountUp from 'react-countup';
 
 import { slider } from "./varients"
-
-import React, { useEffect, useState } from "react"
 import { dataOptions } from 'lib/sections/sections.types'
-import Arrow from "components/arrow"
-import Trophy from "components/trophy"
-import { Doughnut } from 'react-chartjs-2';
+import { overallMenuData } from "./icons.data"
+import Icon from "components/icon"
 
 
 const Overall: React.FC<any> = ({ 
@@ -111,9 +113,27 @@ const Overall: React.FC<any> = ({
                     opacity: { duration: 0.4 }
                 }}
             >
-                <div className="flex items-center justify-center"><span className="text-3xl text-center">Rank:</span><Trophy size={100} content={roundThousandsOrGetDefault(leaderBoardScore)} /></div>
-                <div>Challenges Completed <span>{totalCompleted}</span></div>
-                <h2 className="pl-10 text-left text-4xl">Overall</h2>
+                <h2 className="p-10 text-left text-3xl font-bold">Overall Stats (codewars)</h2>
+
+                <div className="flex justify-around items-center">
+                    {overallMenuData({
+                        Rank: roundThousandsOrGetDefault(leaderBoardScore),
+                        Completed: <CountUp duration={4} end={totalCompleted} /> 
+                    }).map((item: any) => (
+                        <div className="flex items-center justify-center" key={item.name}>
+                            <span className="text-2xl">{item.name}: </span>
+
+                            <Icon 
+                                size={item.size}
+                                kind={item.kind}
+                                src={item.src}
+                                position={item.position}
+                                content={item.content}
+                                custom={item.custom}
+                            />
+                        </div>
+                    ))}
+                </div>
 
                 <div className="bg-gradient-to-r from-amber-200 flex justify-around py-10">
                     <ul id="ratioStats">{ratioStatsList()}</ul>
@@ -122,11 +142,21 @@ const Overall: React.FC<any> = ({
                 </div>
             </motion.div>
 
-            <Arrow 
-                direction="right"
-                size={50}
+            <Icon 
+                key="overall arrow"
+                position="right"
+                src="/icons/up-arrow-svgrepo-com.svg"
+                size="lg"
                 content="Most Recent Challenge"
-                handler={setVisible}
+                kind={{
+                    type: "button",
+                    content: setVisible
+                }}
+                custom={{
+                    parent: "",
+                    img: "rotate-90",
+                    content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
+                }}
             />
         </div>
     )

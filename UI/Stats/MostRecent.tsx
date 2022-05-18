@@ -1,10 +1,10 @@
-import Arrow from "@components/arrow"
+import Icon from "components/icon"
 import { AnimatePresence, motion } from "framer-motion"
 import { slider } from "./varients"
 
+
 const MostRecent: React.FC<any> = ({ 
     payload, 
-    setPage,
     setVisible
 }) => {
     const {
@@ -70,11 +70,21 @@ const MostRecent: React.FC<any> = ({
 
             <div className="tabs">{renderTags()}</div>
 
-            <Arrow 
-                direction="left"
-                size={50}
+            <Icon 
+                key="overall arrow"
+                position="left"
+                src="/icons/up-arrow-svgrepo-com.svg"
+                size="lg"
                 content="Overall Challenges"
-                handler={setVisible}
+                kind={{
+                    type: "button",
+                    content: setVisible
+                }}
+                custom={{
+                    parent: "",
+                    img: "-rotate-90",
+                    content: "text-2xl text-center bg-gradient-to-r from-yellow-300 p-3 h-12"
+                }}
             />
         </motion.div>
     )
