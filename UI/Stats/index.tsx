@@ -11,10 +11,6 @@ const index: React.FC<any> = ({ data }) => {
   const { overallStatsPayload, mostRecentPayload } = data
 
   const handleVisible = () => {
-    // setVisible({
-    //   overall: !isVisible.overall,
-    //   recent: !isVisible.recent
-    // })
     setVisible(!isVisible)
   }
   

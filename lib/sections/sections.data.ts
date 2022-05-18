@@ -39,6 +39,31 @@ export const sectionData: Array<Content> = [
   }
 ]
 
+export const localMockData = {
+  data: {
+    stats: {
+      overallStatsPayload: {
+        leaderBoardScore: "230000",
+        totalCompleted: 32,
+        languagesTotal: {
+          javascript: 10,
+          rust: 5
+        }
+      },
+      mostRecentPayload: {
+        title: "Count ducks",
+        attemptedTotal: 100000,
+        completedTotal: 20000,
+        url: "www.lorem.com",
+        problem: "lorem",
+        tags: ["science", "math"],
+        completionData: "May 10th",
+        languagesUsed: ["javascript", "rust"]
+      }
+    }
+  }
+}
+
 export const defaultVariants = { 
   dropDown: (duration: number) => {
     return {
