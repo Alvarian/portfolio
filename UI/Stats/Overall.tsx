@@ -94,7 +94,7 @@ const Overall: React.FC<any> = ({
     }
     
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full">
             <motion.div
                 id="overall"
                 className="bg-gradient-to-r rounded-lg from-black h-full flex flex-col justify-center pt-10"
@@ -141,23 +141,6 @@ const Overall: React.FC<any> = ({
                     <div id="ratioGraph">{renderDonut()}</div>
                 </div>
             </motion.div>
-
-            <Icon 
-                key="overall arrow"
-                position="right"
-                src="/icons/up-arrow-svgrepo-com.svg"
-                size="lg"
-                content="Most Recent Challenge"
-                kind={{
-                    type: "button",
-                    content: setVisible
-                }}
-                custom={{
-                    parent: "",
-                    img: "rotate-90",
-                    content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
-                }}
-            />
         </div>
     )
 }

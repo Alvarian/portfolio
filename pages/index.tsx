@@ -16,8 +16,8 @@ const Home: NextPage = (props) => {
   const beginning = useRef<any>(null)
   const [width] = useResize();
   const [visible, setVisible] = useState(false)
-  const propData: dataOptions = localMockData
-  // const propData: dataOptions = props
+  // const propData: dataOptions = localMockData
+  const propData: dataOptions = props
   
   const handleScroll = () => {
     // find current scroll position
@@ -29,9 +29,9 @@ const Home: NextPage = (props) => {
   }
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll)
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [visible, handleScroll])
 
   const handleSectionRendering = () => {
@@ -124,7 +124,6 @@ Home.getInitialProps = async function() {
     mostRecentPayload.attemptedTotal = recentChallengeData.totalAttempts
     mostRecentPayload.completedTotal = recentChallengeData.totalCompleted
     mostRecentPayload.url = recentChallengeData.url
-    mostRecentPayload.problem = recentChallengeData.description
     mostRecentPayload.tags = recentChallengeData.tags
     mostRecentPayload.completionDate = challangesData.data[0].completedAt
     mostRecentPayload.languagesUsed = challangesData.data[0].completedLanguages
