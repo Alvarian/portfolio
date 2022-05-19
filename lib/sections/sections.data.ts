@@ -51,7 +51,7 @@ export const localMockData = {
         }
       },
       mostRecentPayload: {
-        title: "Count ducks",
+        title: "Rectangle into Squares",
         attemptedTotal: 100000,
         completedTotal: 20000,
         url: "www.lorem.com",
