@@ -12,8 +12,7 @@ const Section: React.FC<any> = ({
   bgImageName,
   width,
   setRef,
-  setAdmissions,
-  scrollMethods,
+  isSectionPermitted,
   serverProps,
   keyIcon,
   alt,
@@ -127,6 +126,7 @@ const Section: React.FC<any> = ({
             icon={keyIcon} 
             width={width} 
             alt={alt}
+            isSectionPermitted={isSectionPermitted}
             handleRenderLinks={handleRenderLinks} 
           />
         </div>

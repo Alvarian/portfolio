@@ -15,6 +15,7 @@ import Icon from "components/icon"
 
 const Overall: React.FC<any> = ({ 
     payload, 
+    isSectionPermitted
 }) => {
     const {     
         leaderBoardScore,
@@ -27,10 +28,8 @@ const Overall: React.FC<any> = ({
         colors: [],
         ratios: []
     })
-
+    
     useEffect(() => {
-        // scrollMethods && scrollMethods.push(renderDonut) && setPermissions(scrollMethods)
-
         const languageValues: Record<string, any> = {
             titles: [],
             colors: [],
@@ -95,12 +94,12 @@ const Overall: React.FC<any> = ({
     }
 
     return (
-        <div className="flex flex-col h-full">
-            <motion.div
+        <div className="flex flex-col h-full min-h-[624px]">
+            {isSectionPermitted && <motion.div
                 id="overall"
                 className="bg-gradient-to-r rounded-lg from-black h-full flex flex-col justify-center pt-10"
                 initial="enter"
-                whileInView={"center"}
+                animate="center"
                 exit="exit"
                 variants={slider}
                 custom={-1}
@@ -139,11 +138,11 @@ const Overall: React.FC<any> = ({
                 <div className="bg-gradient-to-r from-amber-200 flex justify-around py-10">
                     <ul id="ratioStats">{ratioStatsList()}</ul>
 
-                    <div id="ratioGraph">{renderDonut()}</div>
+                    <div id="ratioGraph" className="min-h-[300px] min-w-[300px]">{isSectionPermitted && renderDonut()}</div>
                 </div>
-            </motion.div>
+            </motion.div>}
         </div>
-    )
+    ) 
 }
 
 export default Overall
