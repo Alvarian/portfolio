@@ -8,6 +8,7 @@ import Overall from "./Overall"
 
 const index: React.FC<any> = ({ 
   data,
+  isSectionPermitted
 }) => {
   const [isVisible, setVisible] = useState(true)
 
@@ -48,6 +49,7 @@ const index: React.FC<any> = ({
       {isVisible ? <Overall 
         key="overall"
         payload={overallStatsPayload}
+        isSectionPermitted={isSectionPermitted}
       />
         :
       <MostRecent 

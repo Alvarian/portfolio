@@ -44,14 +44,24 @@ const Home: NextPage = (props) => {
           break
   
         default:
-          // console.log(key, scrollMethodAdmissions[key].position > currentScrollPos && scrollMethodAdmissions[key].position+100 < currentScrollPos)
+          const isSectionPermitted = scrollMethodAdmissions[key].position-400 <= currentScrollPos && scrollMethodAdmissions[key].position+800 >= currentScrollPos
+          console.log(key, isSectionPermitted, scrollMethodAdmissions[key].position-400 <= currentScrollPos, scrollMethodAdmissions[key].position+800 >= currentScrollPos, !scrollMethodAdmissions[key].isPermitted)
+          if (isSectionPermitted && !scrollMethodAdmissions[key].isPermitted) {
+            scrollMethodAdmissions[key].isPermitted = isSectionPermitted
+            
+            setAdmissions({...scrollMethodAdmissions})
+          } else if (!isSectionPermitted && scrollMethodAdmissions[key].isPermitted) {
+            scrollMethodAdmissions[key].isPermitted = isSectionPermitted
+            
+            setAdmissions({...scrollMethodAdmissions})
+          }
+
           break
       }
     }
   }
   
   useEffect(() => {
-    console.log("rerender")
     if (!Object.keys(scrollMethodAdmissions).length) {
       const currentScrollPos = window.pageYOffset
 
@@ -68,7 +78,7 @@ const Home: NextPage = (props) => {
         
         admissions[section.alt] = { 
           position: element && element.offsetTop, 
-          isPermitted: element && beginning.current.offsetTop-50 <= currentScrollPos && element.offsetTop-150 > currentScrollPos 
+          isPermitted: element && element.offsetTop-400 <= currentScrollPos && element.offsetTop+800 >= currentScrollPos 
         }
       }
 
@@ -93,8 +103,7 @@ const Home: NextPage = (props) => {
         width={width}
         setRef={parseInt(i) === 1 ? beginning : null}
         content={section.content}
-        setAdmissions={setAdmissions}
-        scrollMethods={scrollMethodAdmissions}
+        isSectionPermitted={scrollMethodAdmissions[section.alt]?.isPermitted}
         bgImageName={section.bgImageName}
         keyIcon={section.keyIcon}
         alt={section.alt}
