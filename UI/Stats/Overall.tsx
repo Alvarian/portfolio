@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Image from "next/image";
 
-import { motion } from "framer-motion"
+import { motion, useAnimationFrame } from "framer-motion"
 import {Chart, ArcElement, Tooltip} from 'chart.js'
 Chart.register(ArcElement, Tooltip);
 import { Doughnut } from 'react-chartjs-2';
@@ -15,7 +15,6 @@ import Icon from "components/icon"
 
 const Overall: React.FC<any> = ({ 
     payload, 
-    setVisible
 }) => {
     const {     
         leaderBoardScore,
@@ -30,6 +29,8 @@ const Overall: React.FC<any> = ({
     })
 
     useEffect(() => {
+        // scrollMethods && scrollMethods.push(renderDonut) && setPermissions(scrollMethods)
+
         const languageValues: Record<string, any> = {
             titles: [],
             colors: [],
@@ -92,14 +93,14 @@ const Overall: React.FC<any> = ({
             <Doughnut data={data} />
         )
     }
-    
+
     return (
         <div className="flex flex-col h-full">
             <motion.div
                 id="overall"
                 className="bg-gradient-to-r rounded-lg from-black h-full flex flex-col justify-center pt-10"
                 initial="enter"
-                whileInView="center"
+                whileInView={"center"}
                 exit="exit"
                 variants={slider}
                 custom={-1}

@@ -6,7 +6,9 @@ import MostRecent from "./MostRecent"
 import Overall from "./Overall"
 
 
-const index: React.FC<any> = ({ data }) => {
+const index: React.FC<any> = ({ 
+  data,
+}) => {
   const [isVisible, setVisible] = useState(true)
 
   const { overallStatsPayload, mostRecentPayload } = data

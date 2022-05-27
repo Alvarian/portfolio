@@ -45,8 +45,8 @@ const MostRecent: React.FC<any> = ({
                 snippet: `${currentSnippet === snippet.language ? "flex" : "hidden"} h-5/6 font-sans font-bold w-full bg-slate-800 text-lime-600 p-5 whitespace-pre-wrap text-left text-lg overflow-scroll`
             }
 
-            languageTabs.push(<button className={styles.button} onClick={() => setSnippet(language)}>{language.toLocaleUpperCase()}</button>)
-            languageSnippets.push(<div className={styles.snippet}>{snippet.solution}</div>)
+            languageTabs.push(<button key={snippet.language+"_tab"} className={styles.button} onClick={() => setSnippet(language)}>{language.toLocaleUpperCase()}</button>)
+            languageSnippets.push(<div key={snippet.language+"_snip"} className={styles.snippet}>{snippet.solution}</div>)
         }
 
         return (

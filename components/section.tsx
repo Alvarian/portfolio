@@ -12,6 +12,8 @@ const Section: React.FC<any> = ({
   bgImageName,
   width,
   setRef,
+  setAdmissions,
+  scrollMethods,
   serverProps,
   keyIcon,
   alt,
@@ -119,7 +121,15 @@ const Section: React.FC<any> = ({
       <div className={styles.tailwind.background} style={styles.css.background}></div>
 
       {content.body ? 
-        <div className={styles.tailwind.content}><content.body data={serverProps} icon={keyIcon} width={width} handleRenderLinks={handleRenderLinks} /></div>
+        <div className={styles.tailwind.content}>
+          <content.body 
+            data={serverProps} 
+            icon={keyIcon} 
+            width={width} 
+            alt={alt}
+            handleRenderLinks={handleRenderLinks} 
+          />
+        </div>
          : 
         <h1>{alt}</h1>
       }
