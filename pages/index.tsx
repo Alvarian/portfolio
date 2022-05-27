@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useReducer, useRef, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
@@ -10,29 +10,77 @@ import { useResize } from 'hooks/'
 
 import { Content, dataOptions } from 'lib/sections/sections.types'
 import { sectionData, localMockData } from 'lib/sections/sections.data'
+import { rateLimiters } from 'lib/sections/sections.methods'
 
 
 const Home: NextPage = (props) => {
   const beginning = useRef<any>(null)
-  const [width] = useResize();
-  const [visible, setVisible] = useState(false)
-  // const propData: dataOptions = localMockData
-  const propData: dataOptions = props
-  
+  const [width] = useResize()
+  const [scrollMethodAdmissions, setAdmissions] = useState<any>({})
+
+  const propData: dataOptions = localMockData
+  // const propData: dataOptions = props
+
   const handleScroll = () => {
     // find current scroll position
     const currentScrollPos = window.pageYOffset
 
     const footer = document.querySelector("#footer") as HTMLElement | null
-    // set state based on location info (explained in more detail below)
-    footer && setVisible(beginning.current.offsetTop-50 <= currentScrollPos && footer.offsetTop-150 > currentScrollPos)
+    const isNavbarPermitted = footer && beginning.current.offsetTop-50 <= currentScrollPos && footer.offsetTop-150 > currentScrollPos
+
+    for (let key in scrollMethodAdmissions) {
+      switch (key) {
+        case "navbar":
+          if (isNavbarPermitted && !scrollMethodAdmissions[key].isPermitted) {
+            scrollMethodAdmissions[key].isPermitted = isNavbarPermitted
+            
+            setAdmissions({...scrollMethodAdmissions})
+          } else if (!isNavbarPermitted && scrollMethodAdmissions[key].isPermitted) {
+            scrollMethodAdmissions[key].isPermitted = isNavbarPermitted
+            
+            setAdmissions({...scrollMethodAdmissions})
+          }
+
+          break
+  
+        default:
+          // console.log(key, scrollMethodAdmissions[key].position > currentScrollPos && scrollMethodAdmissions[key].position+100 < currentScrollPos)
+          break
+      }
+    }
   }
-
+  
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
+    console.log("rerender")
+    if (!Object.keys(scrollMethodAdmissions).length) {
+      const currentScrollPos = window.pageYOffset
 
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [visible, handleScroll])
+      let admissions: dataOptions = {}
+
+      const footer = document.querySelector("#footer") as HTMLElement | null
+      admissions['navbar'] = {
+        position: footer && footer.offsetTop,
+        isPermitted: footer && beginning.current.offsetTop-50 <= currentScrollPos && footer.offsetTop-150 > currentScrollPos
+      }
+  
+      for (let section of sectionData) {
+        const element = document.querySelector(`#${section.alt}`) as HTMLElement | null
+        
+        admissions[section.alt] = { 
+          position: element && element.offsetTop, 
+          isPermitted: element && beginning.current.offsetTop-50 <= currentScrollPos && element.offsetTop-150 > currentScrollPos 
+        }
+      }
+
+      setAdmissions(admissions)
+    }
+
+    const throttledHandler = rateLimiters.throttle(300, handleScroll)
+    
+    window.addEventListener('scroll', throttledHandler)
+
+    return () => window.removeEventListener('scroll', throttledHandler)
+  }, [scrollMethodAdmissions, handleScroll])
 
   const handleSectionRendering = () => {
     let sectionList = []
@@ -45,6 +93,8 @@ const Home: NextPage = (props) => {
         width={width}
         setRef={parseInt(i) === 1 ? beginning : null}
         content={section.content}
+        setAdmissions={setAdmissions}
+        scrollMethods={scrollMethodAdmissions}
         bgImageName={section.bgImageName}
         keyIcon={section.keyIcon}
         alt={section.alt}
@@ -79,7 +129,7 @@ const Home: NextPage = (props) => {
       </Head>
 
       <main className={styles.tailwind.content}>
-        <Navbar visible={visible} width={width} />
+        <Navbar navVisible={scrollMethodAdmissions['navbar']?.isPermitted || false} width={width} />
 
         {handleSectionRendering()}
       </main>
@@ -119,7 +169,7 @@ Home.getInitialProps = async function() {
     let mostRecentPayload: Record<string, any> = {}
     const recentChallengeResponse = await fetch(`https://www.codewars.com/api/v1/code-challenges/${challangesData.data[0].id}`)
     const recentChallengeData = await recentChallengeResponse.json()
-    
+      
     mostRecentPayload.title = recentChallengeData.name
     mostRecentPayload.attemptedTotal = recentChallengeData.totalAttempts
     mostRecentPayload.completedTotal = recentChallengeData.totalCompleted
@@ -142,3 +192,5 @@ Home.getInitialProps = async function() {
 }
 
 export default Home
+
+

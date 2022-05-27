@@ -57,7 +57,7 @@ export const localMockData = {
         url: "www.lorem.com",
         problem: "lorem",
         tags: ["science", "math"],
-        completionData: "May 10th",
+        completionData: "1634682265",
         languagesUsed: ["javascript", "rust"]
       }
     }
