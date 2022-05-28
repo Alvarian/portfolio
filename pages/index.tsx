@@ -44,8 +44,8 @@ const Home: NextPage = (props) => {
           break
   
         default:
-          const isSectionPermitted = scrollMethodAdmissions[key].position-400 <= currentScrollPos && scrollMethodAdmissions[key].position+800 >= currentScrollPos
-          console.log(key, isSectionPermitted, scrollMethodAdmissions[key].position-400 <= currentScrollPos, scrollMethodAdmissions[key].position+800 >= currentScrollPos, !scrollMethodAdmissions[key].isPermitted)
+          const isSectionPermitted = scrollMethodAdmissions[key].position-600 < currentScrollPos && scrollMethodAdmissions[key].position+500 > currentScrollPos
+          
           if (isSectionPermitted && !scrollMethodAdmissions[key].isPermitted) {
             scrollMethodAdmissions[key].isPermitted = isSectionPermitted
             
@@ -78,24 +78,25 @@ const Home: NextPage = (props) => {
         
         admissions[section.alt] = { 
           position: element && element.offsetTop, 
-          isPermitted: element && element.offsetTop-400 <= currentScrollPos && element.offsetTop+800 >= currentScrollPos 
+          isPermitted: element && element.offsetTop-600 < currentScrollPos && element.offsetTop+500 > currentScrollPos 
         }
       }
 
       setAdmissions(admissions)
-    }
-
-    const throttledHandler = rateLimiters.throttle(300, handleScroll)
+    } else {
+      const throttledHandler = rateLimiters.throttle(300, handleScroll)
     
-    window.addEventListener('scroll', throttledHandler)
-
-    return () => window.removeEventListener('scroll', throttledHandler)
+      window.addEventListener('scroll', throttledHandler)
+  
+      return () => window.removeEventListener('scroll', throttledHandler)
+    }
   }, [scrollMethodAdmissions, handleScroll])
 
   const handleSectionRendering = () => {
     let sectionList = []
     for (const i in sectionData) {
       const section: Content = sectionData[i]
+      const nextSection: Content = sectionData[parseInt(i)+1]
       
       sectionList.push(<Section
         key={i}
@@ -111,6 +112,11 @@ const Home: NextPage = (props) => {
 
       sectionList.push(<Border
         key={`${i}_border`}
+        slotFields={{
+          first: {name: section.alt, admissions: scrollMethodAdmissions[section.alt]},
+          last: {name: nextSection?.alt || "Outro", admissions: scrollMethodAdmissions[nextSection?.alt]},
+          index: i
+        }}
         width={width}
         thickness="h-40"
         color="bg-black"
