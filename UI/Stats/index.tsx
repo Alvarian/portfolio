@@ -44,7 +44,7 @@ const index: React.FC<any> = ({
 
   return (
     <SlideShow
-      styles={styles}
+      styles={styles.tailwind.main}
     >
       {isVisible ? <Overall 
         key="overall"

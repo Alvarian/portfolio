@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 
 import Section from 'components/section'
-import Border from 'components/border'
+import Border from 'UI/Border'
 import Footer from 'UI/footer'
 import Navbar from 'UI/navbar'
 import { useResize } from 'hooks/'
@@ -96,7 +96,6 @@ const Home: NextPage = (props) => {
     let sectionList = []
     for (const i in sectionData) {
       const section: Content = sectionData[i]
-      const nextSection: Content = sectionData[parseInt(i)+1]
       
       sectionList.push(<Section
         key={i}
@@ -110,13 +109,16 @@ const Home: NextPage = (props) => {
         alt={section.alt}
       />)
 
+      const nextSection: Content = sectionData[parseInt(i)+1]
+      const prevSection: Content = sectionData[parseInt(i)-1]
+      // console.log(i, !nextNextSection?.alt && !nextSection?.alt && "blank" || "Outro")
       sectionList.push(<Border
         key={`${i}_border`}
-        slotFields={{
-          first: {name: section.alt, admissions: scrollMethodAdmissions[section.alt]},
-          last: {name: nextSection?.alt || "Outro", admissions: scrollMethodAdmissions[nextSection?.alt]},
-          index: i
-        }}
+        slotFields={[
+          {name: prevSection?.alt || "", admissions: scrollMethodAdmissions[prevSection?.alt]},
+          {name: section.alt, admissions: scrollMethodAdmissions[section.alt]},
+          {name: nextSection?.alt || "Outro", admissions: scrollMethodAdmissions[nextSection?.alt]},
+        ]}
         width={width}
         thickness="h-40"
         color="bg-black"
