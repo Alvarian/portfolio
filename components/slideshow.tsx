@@ -6,7 +6,7 @@ const SlideShow: React.FC<any> = ({
     styles
 }) => {
     return (
-        <div className={styles.tailwind.main}>
+        <div className={styles}>
             <AnimatePresence exitBeforeEnter>
                 {children}
             </AnimatePresence>
