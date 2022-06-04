@@ -1,5 +1,4 @@
 import { motion } from "framer-motion"
-import SlideShow from "components/slideshow"
 import { slider } from "./varients"
 
 
@@ -8,17 +7,24 @@ const Border: React.FC<any> = ({
 }) => {
     const isVisible: boolean = slotFields[1].admissions?.isPermitted 
 
+    const determineSlot4 = () => {
+        if (slotFields[3].name) return slotFields[3].name
+
+        if (slotFields[2].name === "Outro") return ""
+
+        return "Outro"
+    }
+
     const wheel = [
         slotFields[0],
         slotFields[1],
         slotFields[2],
-        {name: (slotFields[2].name === "Outro") ? "" : "Outro"},
-        {name: ""},
+        {name: determineSlot4()},
         {name: ""},
         {name: ""},
     ]
     
-    const target = isVisible ? 6 : 5
+    const target = isVisible ? wheel.length-1 : wheel.length-2
 
     const borderPositionInWheel = (idx: number) => -idx * (360 / wheel.length);
     
