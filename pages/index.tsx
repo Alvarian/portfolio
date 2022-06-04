@@ -22,8 +22,14 @@ const Home: NextPage = (props) => {
   const propData: dataOptions = localMockData
   // const propData: dataOptions = props
 
-  const handleAutoRoutingOnScroll = () => {
-    console.log("hii")
+  const handleAutoRoutingOnScroll = (list: any) => {
+    for (let key in list) {
+      if (list[key].isPermitted) {
+        window.scrollTo(0, list[key].position)
+
+        break
+      }
+    }
   }
 
   const handlePermissionsOnScroll = () => {
@@ -65,9 +71,6 @@ const Home: NextPage = (props) => {
       }
     }
   }
-  const debouncedHandler = rateLimiters.debounce(1000, handleAutoRoutingOnScroll)
-
-  const throttledHandler = rateLimiters.throttle(300, handlePermissionsOnScroll)
 
   useEffect(() => {
     if (!Object.keys(scrollMethodAdmissions).length) {
@@ -92,6 +95,11 @@ const Home: NextPage = (props) => {
 
       setAdmissions(admissions)
     } else if (!areEventsLoaded) {
+      const navbarlessAdmissionsList = {...scrollMethodAdmissions}
+      delete navbarlessAdmissionsList.navbar
+      const debouncedHandler = rateLimiters.debounce(5000, handleAutoRoutingOnScroll.bind(this, navbarlessAdmissionsList))
+      const throttledHandler = rateLimiters.throttle(300, handlePermissionsOnScroll)
+
       window.addEventListener('scroll', debouncedHandler)
       window.addEventListener('scroll', throttledHandler)
       
