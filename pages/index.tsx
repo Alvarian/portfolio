@@ -17,20 +17,25 @@ const Home: NextPage = (props) => {
   const beginning = useRef<any>(null)
   const [width] = useResize()
   const [scrollMethodAdmissions, setAdmissions] = useState<any>({})
+  const [areEventsLoaded, setAreLoaded] = useState<any>(false)
 
   const propData: dataOptions = localMockData
   // const propData: dataOptions = props
 
-  const handleScroll = () => {
+  const handleAutoRoutingOnScroll = () => {
+    console.log("hii")
+  }
+
+  const handlePermissionsOnScroll = () => {
     // find current scroll position
     const currentScrollPos = window.pageYOffset
-
-    const footer = document.querySelector("#footer") as HTMLElement | null
-    const isNavbarPermitted = footer && beginning.current.offsetTop-50 <= currentScrollPos && footer.offsetTop-150 > currentScrollPos
 
     for (let key in scrollMethodAdmissions) {
       switch (key) {
         case "navbar":
+          const footer = document.querySelector("#footer") as HTMLElement | null
+          const isNavbarPermitted = footer && beginning.current.offsetTop-50 <= currentScrollPos && footer.offsetTop-150 > currentScrollPos
+      
           if (isNavbarPermitted && !scrollMethodAdmissions[key].isPermitted) {
             scrollMethodAdmissions[key].isPermitted = isNavbarPermitted
             
@@ -60,7 +65,10 @@ const Home: NextPage = (props) => {
       }
     }
   }
-  
+  const debouncedHandler = rateLimiters.debounce(1000, handleAutoRoutingOnScroll)
+
+  const throttledHandler = rateLimiters.throttle(300, handlePermissionsOnScroll)
+
   useEffect(() => {
     if (!Object.keys(scrollMethodAdmissions).length) {
       const currentScrollPos = window.pageYOffset
@@ -83,14 +91,13 @@ const Home: NextPage = (props) => {
       }
 
       setAdmissions(admissions)
-    } else {
-      const throttledHandler = rateLimiters.throttle(300, handleScroll)
-    
+    } else if (!areEventsLoaded) {
+      window.addEventListener('scroll', debouncedHandler)
       window.addEventListener('scroll', throttledHandler)
-  
-      return () => window.removeEventListener('scroll', throttledHandler)
+      
+      setAreLoaded(!areEventsLoaded)
     }
-  }, [scrollMethodAdmissions, handleScroll])
+  }, [scrollMethodAdmissions, handlePermissionsOnScroll, handleAutoRoutingOnScroll])
 
   const handleSectionRendering = () => {
     let sectionList = []
@@ -109,15 +116,17 @@ const Home: NextPage = (props) => {
         alt={section.alt}
       />)
 
+      const nextNextSection: Content = sectionData[parseInt(i)+2]
       const nextSection: Content = sectionData[parseInt(i)+1]
       const prevSection: Content = sectionData[parseInt(i)-1]
-      // console.log(i, !nextNextSection?.alt && !nextSection?.alt && "blank" || "Outro")
+      
       sectionList.push(<Border
         key={`${i}_border`}
         slotFields={[
           {name: prevSection?.alt || "", admissions: scrollMethodAdmissions[prevSection?.alt]},
           {name: section.alt, admissions: scrollMethodAdmissions[section.alt]},
           {name: nextSection?.alt || "Outro", admissions: scrollMethodAdmissions[nextSection?.alt]},
+          {name: nextNextSection?.alt, admissions: scrollMethodAdmissions[nextNextSection?.alt]},
         ]}
         width={width}
         thickness="h-40"
