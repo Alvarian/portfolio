@@ -1,22 +1,74 @@
-const index: React.FC<any> = () => {
-  return (
-    <div>
-      <h1>Badges</h1>
+import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
+import { cloudBadges, localBadges } from "./mock.data"
+import styles from "./styles.module.css"
 
-      <blockquote className="badgr-badge" style={{ fontFamily: "Helvetica, Roboto, &quot;Segoe UI&quot;, Calibri, sans-serif;" }}>
-        <a href="https://api.badgr.io/public/assertions/bmDzG5jlQ0233Vm5uX7osA?identity__email=alvarivan88%40gmail.com"><img src="https://images.credly.com/images/4dd00b35-94ff-48f3-9c75-7f438c72a3f9/6b8ce00dd356436eaac22f9efcfde552-01.png" width="120px" height="120px" /></a><p className="badgr-badge-name" style={{hyphens: "auto", overflowWrap: "break-word", wordWrap: "break-word", margin: "0", fontSize: "16px", fontWeight: "600", fontStyle: "normal", fontStretch: "normal", lineHeight: "1.25", letterSpacing: "normal", textAlign: "left", color: "#05012c"}}>JavaScript - Advanced</p>
-        
-        <p className="badgr-badge-date" style={{margin: "0", fontSize: "12px", fontStyle: "normal", fontStretch: "normal", lineHeight: "1.67", letterSpacing: "normal", textAlign: "left", color: "#555555"}}>
-          <strong style={{fontSize: "12px", fontWeight: "bold", fontStyle: "normal", fontStretch: "normal", lineHeight: "1.67", letterSpacing: "normal", textAlign: "left", color: "#000"}}>Awarded: </strong>Jun 5, 2022
-        </p>
+
+const index: React.FC<any> = () => {
+  const [isBadgeHovered, toggleBadgeSize] = useState(false)
+
+  const handleHoverBadge = () => {
+    toggleBadgeSize(!isBadgeHovered)
+  }
+
+  const {hexagon, image} = {
+    hexagon: isBadgeHovered ? "300px" : "220px",
+    image: isBadgeHovered ? "200px" : "150px"
+  }
+
+  return (
+    <div className="h-full w-full flex items-center justify-end">
+      <div id={styles['crawl-container']}>
+        <motion.div id={styles['crawl']}
+          initial={{
+            x: "-100%",
+            rotateY: 106,
+          }}
+          whileInView={{
+            rotateY: 0,
+            transition: {
+              delay: 1,
+              duration: 2,
+              // type: "spring",
+              // stiffness: 800,
+              // damping: 100,
+            }
+          }}
+        >
+          <div id={styles['crawlGuard']}></div>
           
-        <p style={{margin: "16px 0", padding: "0"}}>
-          <a className="badgr-badge-verify" target="_blank" href="https://badgecheck.io?url=https%3A%2F%2Fapi.badgr.io%2Fpublic%2Fassertions%2FbmDzG5jlQ0233Vm5uX7osA%3Fidentity__email%3Dalvarivan88%2540gmail.com&amp;identity__email=alvarivan88%40gmail.com" style={{boxSizing: "content-box", display: "flex", alignItems: "center", justifyContent: "center", margin: "0", fontSize: "14px", fontWeight: "bold", width: "48px", height: "16px", borderRadius: "4px", border: "solid 1px black", textDecoration: "none", padding: "6px 16px, margin: 16px 0", color: "black"}}>VERIFY</a>
-        </p>
-        
-        <script async={true} src="https://badgr.com/assets/widgets.bundle.js"></script>
-      </blockquote>
-    </div>
+          <div>
+            {cloudBadges.map((badge: any, index: number) => (
+              <div key={index} className="relative flex justify-center items-center" 
+                style={{height: `${hexagon}`, width: `${hexagon}`}}
+                
+              >
+                {/* <img src="./icons/badge.png" height="100%" width="100%" className="absolute -z-10 top-0 left-0" /> */}
+
+                <motion.a 
+                  className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
+                  id={styles['icons']} 
+                  // style={{transform: `rotateX(${badge.rotations.horizontal}deg) rotateY(${badge.rotations.vertical}deg)`}}
+                  href={badge.evidence}
+                  initial={{
+                    rotateX: badge.rotations.horizontal,
+                    rotateY: badge.rotations.vertical
+                  }}
+                  whileHover={{
+                    scale: 1.5,
+                    rotateX: 0,
+                    rotateY: 0,
+                    // boxShadow: "10px 5px 5px red"
+                  }}
+                >
+                  <img src={badge.image} width={image} height={image} />
+                </motion.a>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>                
+    </div>  
   )
 }
 
