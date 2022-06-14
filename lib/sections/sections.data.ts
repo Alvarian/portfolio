@@ -31,7 +31,7 @@ export const sectionData: Array<Content> = [
     alt: "knowledge",
     content: {
       body: Badges,
-      isFull: false
+      isFull: true
     },
     type: "default",
     keyIcon: "",

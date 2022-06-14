@@ -1,0 +1,43 @@
+#crawl-container {
+    position: relative;
+    height: 60%;
+    width: 400px;
+    margin-top: 60px;
+    border: 1px solid blue;
+    perspective: 4000px;
+    background-color: blue;
+}
+
+#crawlGuard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid black;
+    width: 30px;
+    height: 100%;
+    background: rgba(100,100,100,0.5); 
+    transform-style: preserve-3d;
+    transform-origin: 100%;
+    transform: translateX(-100%) rotateY(80deg);
+      /* backface-visibility: hidden; */
+    background-color: red;  
+    z-index: 10;
+}
+
+#crawl {
+    padding: 30px;
+    position: absolute;
+    border: 1px solid black;
+    width: 220%;
+    height: 100%;
+    background: rgba(100,100,100,0.5); 
+    transform-style: preserve-3d;
+    transform-origin: 100%;
+    backface-visibility: hidden;
+    background-color: gray;
+    perspective: 400px;
+}
+  
+#icons {
+    border-style: outset;
+}
