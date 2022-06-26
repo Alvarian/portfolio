@@ -157,6 +157,7 @@ const Home: NextPage = (props) => {
   
   return (
     <div className={styles.tailwind.main}>
+      <script src="https://unpkg.com/freezeframe/dist/freezeframe.min.js"></script>
       <Head>
         <title id="title">Ivan Alvarez</title>
         <link rel="icon" href="/images/favicon-16x16.png" />
