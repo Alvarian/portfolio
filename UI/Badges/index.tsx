@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { getFilesFromDir } from "lib/sections/sections.methods"
 import { useState, useEffect } from "react"
 import { cloudBadges, localBadges } from "./mock.data"
 import styles from "./styles.module.css"
@@ -9,26 +10,18 @@ const index: React.FC<any> = ({
 }) => {
   const [isBadgeHovered, toggleBadgeSize] = useState(false)
   const [coatPhase, setCoatPhase] = useState("start")
-  const badgeRevealTime = 1.35
+  const badgeRevealTime = 1.5
 
-
-  useEffect(() => {
-
-    if (coatPhase === "start") {
-      setCoatPhase("run")
-    }
-  
+  useEffect(() => { 
     if (isSectionPermitted) {
-      console.log("??", coatPhase)
-  
-  
-  
+      if (coatPhase === "start") {
+        setCoatPhase("run")
+      }
+      
       setTimeout(() => {setCoatPhase("end")}, badgeRevealTime*1000)
     } else {
       setCoatPhase("start")
-  
     }
-
   })
 
   const handleHoverBadge = () => {
@@ -36,12 +29,11 @@ const index: React.FC<any> = ({
   }
   
   const {hexagon, image} = {
-    hexagon: isBadgeHovered ? "300px" : "220px",
-    image: isBadgeHovered ? "200px" : "150px"
+    hexagon: isBadgeHovered ? "300px" : "150px",
+    image: isBadgeHovered ? "200px" : "130px"
   }
 
   const renderBadgeCoatImg = () => {
-    console.log(coatPhase, isSectionPermitted)
     switch (coatPhase) {
       case "start":
         return (<img src="./images/coat-start.gif" alt="coat" id={styles['badgeCoat']} />)
@@ -60,13 +52,13 @@ const index: React.FC<any> = ({
         {isSectionPermitted && <motion.div id={styles['crawl']}
           initial={{
             x: "-100%",
-            rotateY: 106,
+            rotateY: 120,
           }}
           animate={{
             rotateY: 0,
             transition: {
-              delay: 0.162,
-              duration: badgeRevealTime,
+              delay: 0.26,
+              duration: badgeRevealTime-0.2,
               // type: "spring",
               // stiffness: 800,
               // damping: 100,
@@ -75,8 +67,8 @@ const index: React.FC<any> = ({
         >
           <div id={styles['crawlGuard']}></div>
           
-          <div>
-            {cloudBadges.map((badge: any, index: number) => (
+          <div className="h-full w-full grid grid-cols-3 grid-rows-5">
+            {cloudBadges.map((badge: any, index: number) => badge.name ? (
               <div key={index} className="relative flex justify-end items-center" 
                 style={{height: `${hexagon}`, width: `${hexagon}`}}
               >
@@ -93,12 +85,15 @@ const index: React.FC<any> = ({
                     scale: 1.5,
                     rotateX: 0,
                     rotateY: 0,
+                    zIndex: 10
                     // boxShadow: "10px 5px 5px red"
                   }}
                 >
                   <img src={badge.image} width={image} height={image} />
                 </motion.a>
               </div>
+            ) : (
+              <div key={index}></div>
             ))}
           </div>
         </motion.div>}

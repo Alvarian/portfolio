@@ -10,7 +10,7 @@ import { useResize } from 'hooks/'
 
 import { Content, dataOptions } from 'lib/sections/sections.types'
 import { sectionData, localMockData } from 'lib/sections/sections.data'
-import { rateLimiters } from 'lib/sections/sections.methods'
+import { rateLimiters, getFilesFromDir } from 'lib/sections/sections.methods'
 
 
 const Home: NextPage = (props) => {
@@ -176,6 +176,8 @@ const Home: NextPage = (props) => {
 
 Home.getInitialProps = async function() {
   // Here i want to access the projectID sent from the previous page
+  const gifFrames = getFilesFromDir("/images/badgeCoat")
+  console.log(gifFrames)
   try {
     let overallStatsPayload: Record<string, any> = {}
     const userResponse = await fetch("https://www.codewars.com/api/v1/users/Alvarian_")
