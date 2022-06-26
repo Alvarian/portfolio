@@ -3,7 +3,7 @@
     height: 100%;
     width: 550px;
     margin-top: 60px;
-    perspective: 1500px;
+    perspective: 4000px;
     /* background-color: blue; */
 }
 
@@ -24,7 +24,7 @@
 }
 
 #crawl {
-    padding: 30px;
+    /* padding: 30px; */
     position: absolute;
     border: 1px solid black;
     width: 400px;

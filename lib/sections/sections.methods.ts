@@ -1,4 +1,6 @@
-import * as _ from "lodash";
+import * as _ from "lodash"
+import { dataOptions } from "./sections.types"
+import fs from "fs"
 
 
 export const reducers = {
@@ -17,4 +19,19 @@ export const reducers = {
 export const rateLimiters = {
   throttle: (rate: number, callback: any) => _.throttle(callback, rate),
   debounce: (rate: number, callback: any) => _.debounce(callback, rate)
+}
+
+export const getFilesFromDir = function (directory: string) {
+  let payload: dataOptions = {}
+
+  fs.readdir("/images/badgeCoat", (err, files) => {
+    if (err) throw err
+
+    payload.length = files.length
+    files.forEach(file => {
+      console.log(file)
+    })
+  })
+
+  return payload
 }
