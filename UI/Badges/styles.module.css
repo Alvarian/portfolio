@@ -1,11 +1,10 @@
 #crawl-container {
     position: relative;
-    height: 60%;
-    width: 400px;
+    height: 100%;
+    width: 550px;
     margin-top: 60px;
-    border: 1px solid blue;
-    perspective: 4000px;
-    background-color: blue;
+    perspective: 1500px;
+    /* background-color: blue; */
 }
 
 #crawlGuard {
@@ -28,16 +27,25 @@
     padding: 30px;
     position: absolute;
     border: 1px solid black;
-    width: 220%;
+    width: 400px;
     height: 100%;
-    background: rgba(100,100,100,0.5); 
+    /* background: rgba(100,100,100,0.5);  */
     transform-style: preserve-3d;
     transform-origin: 100%;
     backface-visibility: hidden;
-    background-color: gray;
+    /* background-color: gray; */
     perspective: 400px;
 }
   
 #icons {
     border-style: outset;
+}
+
+#badgeCoat {
+    height: 150%;
+    z-index: -10;
+    top: -25px;
+    min-width: 1700px;
+    filter: grayscale(100%);
+    position: absolute;
 }
