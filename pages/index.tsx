@@ -111,7 +111,7 @@ const Home: NextPage = (props) => {
     let sectionList = []
     for (const i in sectionData) {
       const section: Content = sectionData[i]
-      
+
       sectionList.push(<Section
         key={i}
         serverProps={propData['data'][section.alt]}
@@ -176,14 +176,13 @@ const Home: NextPage = (props) => {
 
 Home.getInitialProps = async function() {
   // Here i want to access the projectID sent from the previous page
-  const gifFrames = getFilesFromDir("/images/badgeCoat")
-  console.log(gifFrames)
   try {
     let overallStatsPayload: Record<string, any> = {}
     const userResponse = await fetch("https://www.codewars.com/api/v1/users/Alvarian_")
     const userData = await userResponse.json()
     const challangesResponse = await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")
     const challangesData = await challangesResponse.json()
+    const gifFrames = await getFilesFromDir()
     
     overallStatsPayload.leaderBoardScore = userData.leaderboardPosition
     overallStatsPayload.totalCompleted = challangesData.totalItems
@@ -215,14 +214,19 @@ Home.getInitialProps = async function() {
     mostRecentPayload.completionDate = challangesData.data[0].completedAt
     mostRecentPayload.languagesUsed = challangesData.data[0].completedLanguages
 
-    return {
+    const payload = {
       data: {
         stats: {
           overallStatsPayload,
-          mostRecentPayload
+          mostRecentPayload,
+        },
+        knowledge: {
+          gifFrames
         }
       },
     }
+    
+    return payload
   } catch (err) {
     return {err}
   }

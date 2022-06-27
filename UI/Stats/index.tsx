@@ -11,7 +11,7 @@ const index: React.FC<any> = ({
   isSectionPermitted
 }) => {
   const [isVisible, setVisible] = useState(true)
-
+  
   const { overallStatsPayload, mostRecentPayload } = data
 
   const handleVisible = () => {
