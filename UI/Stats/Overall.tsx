@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react"
-import Image from "next/image";
+import React, { useEffect, useState } from "react"
 
-import { motion, useAnimationFrame } from "framer-motion"
+import { motion } from "framer-motion"
 import {Chart, ArcElement, Tooltip} from 'chart.js'
 Chart.register(ArcElement, Tooltip);
 import { Doughnut } from 'react-chartjs-2';

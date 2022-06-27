@@ -21,17 +21,9 @@ export const rateLimiters = {
   debounce: (rate: number, callback: any) => _.debounce(callback, rate)
 }
 
-export const getFilesFromDir = function (directory: string) {
-  let payload: dataOptions = {}
-
-  fs.readdir("/images/badgeCoat", (err, files) => {
-    if (err) throw err
-
-    payload.length = files.length
-    files.forEach(file => {
-      console.log(file)
-    })
-  })
+export const getFilesFromDir = async function () {
+  const response = await fetch("http://localhost:3000/api/readFiles")
+  const payload = await response.json()
 
   return payload
 }

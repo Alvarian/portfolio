@@ -11,25 +11,18 @@
     position: absolute;
     top: 0;
     left: 0;
-    border: 1px solid black;
-    width: 30px;
+    width: 80px;
     height: 100%;
-    background: rgba(100,100,100,0.5); 
     transform-style: preserve-3d;
     transform-origin: 100%;
-    transform: translateX(-100%) rotateY(80deg);
-      /* backface-visibility: hidden; */
-    background-color: red;  
-    z-index: 10;
+    transform: translateX(-100%) rotateY(90deg);
+    z-index: 99;
 }
 
 #crawl {
-    /* padding: 30px; */
     position: absolute;
-    border: 1px solid black;
     width: 400px;
     height: 100%;
-    /* background: rgba(100,100,100,0.5);  */
     transform-style: preserve-3d;
     transform-origin: 100%;
     backface-visibility: hidden;
@@ -45,7 +38,8 @@
     height: 150%;
     z-index: -10;
     top: -25px;
-    min-width: 1700px;
+    min-width: 1640px;
+    max-width: 1640px;
     filter: grayscale(100%);
     position: absolute;
 }
