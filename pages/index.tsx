@@ -71,7 +71,7 @@ const Home: NextPage = (props) => {
       }
     }
   }
-
+  
   useEffect(() => {
     if (!Object.keys(scrollMethodAdmissions).length) {
       const currentScrollPos = window.pageYOffset
@@ -97,11 +97,9 @@ const Home: NextPage = (props) => {
     } else if (!areEventsLoaded) {
       const navbarlessAdmissionsList = {...scrollMethodAdmissions}
       delete navbarlessAdmissionsList.navbar
-      const debouncedHandler = rateLimiters.debounce(5000, handleAutoRoutingOnScroll.bind(this, navbarlessAdmissionsList))
-      const throttledHandler = rateLimiters.throttle(300, handlePermissionsOnScroll)
 
-      window.addEventListener('scroll', debouncedHandler)
-      window.addEventListener('scroll', throttledHandler)
+      window.addEventListener('scroll', rateLimiters.debounce(5000, handleAutoRoutingOnScroll.bind(this, navbarlessAdmissionsList)))
+      window.addEventListener('scroll', rateLimiters.throttle(300, handlePermissionsOnScroll))
       
       setAreLoaded(!areEventsLoaded)
     }
@@ -157,7 +155,6 @@ const Home: NextPage = (props) => {
   
   return (
     <div className={styles.tailwind.main}>
-      <script src="https://unpkg.com/freezeframe/dist/freezeframe.min.js"></script>
       <Head>
         <title id="title">Ivan Alvarez</title>
         <link rel="icon" href="/images/favicon-16x16.png" />
