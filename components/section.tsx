@@ -13,6 +13,7 @@ const Section: React.FC<any> = ({
   width,
   setRef,
   isSectionPermitted,
+  pageWidth,
   serverProps,
   keyIcon,
   alt,
@@ -99,7 +100,7 @@ const Section: React.FC<any> = ({
       </div>
     )
   }
-
+  
   const styles = {
     css: {
       background: {
@@ -127,6 +128,7 @@ const Section: React.FC<any> = ({
             width={width} 
             alt={alt}
             isSectionPermitted={isSectionPermitted}
+            pageWidth={pageWidth}
             handleRenderLinks={handleRenderLinks} 
           />
         </div>

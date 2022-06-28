@@ -1,3 +1,4 @@
+import { rateLimiters } from 'lib/sections/sections.methods';
 import { useLayoutEffect, useState } from 'react';
 
 
@@ -9,7 +10,7 @@ export const useResize = () => {
       setSize([window.innerWidth, window.innerHeight]);
     }
   
-    window.addEventListener('resize', updateSize);
+    window.addEventListener('resize', rateLimiters.throttle(300, rateLimiters.debounce(300, updateSize)))
     
     updateSize();
     
