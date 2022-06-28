@@ -111,6 +111,64 @@ export const localMockData = {
         '/images/badgeCoat/frame_045_delay-0.03s.gif',
         '/images/badgeCoat/frame_046_delay-0.04s.gif',
         '/images/badgeCoat/frame_047_delay-0.03s.gif'
+      ],
+      badges: [
+        {
+          "name": "Javascript - Advanced",
+          "issuedOn": "2022-06-05T04:06:47Z",
+          "image": "/images/mockBadge.png",
+          "evidence": "#",
+          "issuedBy": "credily",
+        },
+        {
+          "name": "Javascript - Advanced",
+          "issuedOn": "2022-06-05T04:06:47Z",
+          "image": "/images/mockBadge.png",
+          "evidence": "#",
+          "issuedBy": "credily",
+        },
+        {
+          "name": "Javascript - Advanced",
+          "issuedOn": "2022-06-05T04:06:47Z",
+          "image": "/images/mockBadge.png",
+          "evidence": "#",
+          "issuedBy": "credily",
+        },
+        {
+          "name": "Javascript - Advanced",
+          "issuedOn": "2022-06-05T04:06:47Z",
+          "image": "/images/mockBadge.png",
+          "evidence": "#",
+          "issuedBy": "credily",
+        },
+        {
+          "name": "Javascript - Advanced",
+          "issuedOn": "2022-06-05T04:06:47Z",
+          "image": "/images/mockBadge.png",
+          "evidence": "#",
+          "issuedBy": "credily",
+        },
+        {
+          "name": "Javascript - Advanced",
+          "issuedOn": "2022-06-05T04:06:47Z",
+          "image": "/images/mockBadge.png",
+          "evidence": "#",
+          "issuedBy": "credily",
+        },
+        {
+          "name": "Javascript - Advanced",
+          "issuedOn": "2022-06-05T04:06:47Z",
+          "image": "/images/mockBadge.png",
+          "evidence": "#",
+          "issuedBy": "credily",
+        },
+        {
+          "name": "Javascript - Advanced",
+          "issuedOn": "2022-06-05T04:06:47Z",
+          "image": "/images/mockBadge.png",
+          "evidence": "#",
+          "issuedBy": "credily",
+        },
       ]
     }
   }
