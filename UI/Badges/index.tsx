@@ -1,37 +1,27 @@
 import { motion } from "framer-motion"
-
 import { useState, useEffect } from "react"
-import { cloudBadges, localBadges } from "./mock.data"
-import styles from "./styles.module.css"
 
 
 const index: React.FC<any> = ({
   isSectionPermitted,
   data
 }) => {
-  const [isBadgeHovered, toggleBadgeSize] = useState(false)
-  const { gifFrames } = data
+  const { gifFrames, badges } = data
   const [coatPhase, setCoatPhase] = useState("start")
   const [coatProperties, setProperties] = useState({length: 0, sources: []})
   const [frames, incrementFrame] = useState(0)
-  const [finalAngle, decrementAngle] = useState(120)
-  const badgeRevealTime = 1.5
   let runFrames: any
   
   useEffect(() => { 
-    console.log("phase", coatPhase, isSectionPermitted)
-
     if (isSectionPermitted) {
       if (coatPhase === "start") {
         if (!coatProperties.length) {
-          console.log("coat set")
           setProperties({
             length: gifFrames.length,
             sources: gifFrames
           })
         }
-        console.log("coat running")
-
+        
         setCoatPhase("run")
       }
 
@@ -44,88 +34,161 @@ const index: React.FC<any> = ({
         }
         
         counter++
-        decrementAngle((oldAngle) => oldAngle - (120 / 46))
         incrementFrame((oldCount) => oldCount + 1)
       }, 30)
       
       return () => clearInterval(runFrames)
     } else {
-      console.log("out of focus")
       clearInterval(runFrames)
-      decrementAngle(120)
+
       incrementFrame(0)
+      
       setCoatPhase("start")
     }
   }, [isSectionPermitted])
 
-  const handleHoverBadge = () => {
-    toggleBadgeSize(!isBadgeHovered)
+  const renderBadges = () => {
+    const slots = new Array(15)
+    const templateList: any[] = []
+    for (let _ of slots) {
+      templateList.push({})
+    }
+
+    const selectedSlots = [
+      {
+        slotPos: 6, 
+        rotations: {
+          horizontal: -15,
+          vertical: -10
+        }
+      }, {
+        slotPos: 7,
+        rotations: {
+          horizontal: 50,
+          vertical: 30
+        }
+      }, {
+        slotPos: 9,
+        rotations: {
+          horizontal: 30,
+          vertical: 30
+        }
+      }, {
+        slotPos: 10,
+        rotations: {
+          horizontal: 0,
+          vertical: 0
+        }
+      }, {
+        slotPos: 11,
+        rotations: {
+          horizontal: 40,
+          vertical: 40
+        }
+      }, {
+        slotPos: 12,
+        rotations: {
+          horizontal: -30,
+          vertical: -30
+        }
+      }, {
+        slotPos: 13,
+        rotations: {
+          horizontal: 5,
+          vertical: 5
+        }
+      }, {
+        slotPos: 14,
+        rotations: {
+          horizontal: -20,
+          vertical: 40
+        }
+      }
+    ]
+    selectedSlots.forEach((slot: any, index: number) => {
+      badges[index].rotations = slot.rotations
+      templateList[slot.slotPos] = badges[index]
+    })
+    
+    return templateList
   }
-  
-  const {hexagon, image} = {
-    hexagon: isBadgeHovered ? "300px" : "150px",
-    image: isBadgeHovered ? "200px" : "130px"
+
+  const renderCoatPhase = () => {
+    const badgeStyle = {
+      height: "150%",
+      zIndex: "-10",
+      top: "-25px",
+      minWidth: "1640px",
+      maxWidth: "1640px",
+      filter: "grayscale(100%)",
+      position: "absolute" as "absolute"
+    }
+
+    switch (coatPhase) {
+      case "start":
+        return (<img src={gifFrames[0]} alt="coat" style={badgeStyle} />)
+      case "run":
+        return (<img src={gifFrames[frames]} alt="coat" style={badgeStyle} />)
+      case "end":
+        return (<img src={gifFrames[gifFrames.length-1]} alt="coat" style={badgeStyle} />)
+    }
   }
 
   return (
     <div className="h-full w-full flex items-center justify-end">
-      <img src={gifFrames[frames]} alt="coat" id={styles['badgeCoat']} />
+      {renderCoatPhase()}
 
-      <div id={styles['crawl-container']}>
-        <div id={styles['crawl']}
-          style={{
-            transform: `translateX(-100%) rotateY(${finalAngle}deg)`
-          }}
-          // initial={{
-          //   x: "-100%",
-          //   rotateY: 120,
-          // }}
-          // animate={{
-          //   rotateY: 0,
-          //   transition: {
-          //     delay: 0.26,
-          //     duration: badgeRevealTime-0.2,
-          //     type: "spring",
-          //     stiffness: 800,
-          //     damping: 100,
-          //   }
-          // }}
-        >
-          
-          <div className="h-full w-full grid grid-cols-3 grid-rows-5">
-            {cloudBadges.map((badge: any, index: number) => badge.name ? (
-              <div key={index} className="relative flex justify-end items-center" 
-                style={{height: `${hexagon}`, width: `${hexagon}`}}
+      {isSectionPermitted && frames === gifFrames.length-1 && <motion.div 
+        className="h-full w-full absolute flex justify-end"
+        style={{
+          width: "1640px"
+        }}
+        initial={{
+          opacity: 0
+        }}
+        animate={{
+          opacity: 1,
+          transition: {
+            duration: 1,
+            // type: "spring",
+            // stiffness: 800,
+            // damping: 100,
+          }
+        }}
+      >
+        <div className="h-full w-96 grid grid-cols-3 grid-rows-5">
+          {renderBadges().map((badge: any, index: number) => badge.name ? (
+            <div key={index} className="relative flex justify-end items-center h-36 w-36">
+              <motion.a 
+                className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
+                style={{borderStyle: "outset"}}
+                href={badge.evidence}
+                initial={{
+                  rotateX: badge.rotations.horizontal,
+                  rotateY: badge.rotations.vertical
+                }}
+                whileHover={{
+                  scale: 3,
+                  rotateX: 0,
+                  rotateY: 0,
+                  zIndex: 10,
+                  boxShadow: "5px 5px 15px black"
+                }}
               >
-                <motion.a 
-                  className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
-                  id={styles['icons']} 
-                  // style={{transform: `rotateX(${badge.rotations.horizontal}deg) rotateY(${badge.rotations.vertical}deg)`}}
-                  href={badge.evidence}
-                  initial={{
-                    rotateX: badge.rotations.horizontal,
-                    rotateY: badge.rotations.vertical
-                  }}
-                  whileHover={{
-                    scale: 1.5,
-                    rotateX: 0,
-                    rotateY: 0,
-                    zIndex: 10
-                    // boxShadow: "10px 5px 5px red"
-                  }}
-                >
-                  <img src={badge.image} width={image} height={image} />
-                </motion.a>
-              </div>
-            ) : (
-              <div key={index}></div>
-            ))}
-          </div>
-
-          <div id={styles['crawlGuard']}></div>
-
+                <img src={badge.image} width={130} height={130} />
+              </motion.a>
+            </div>
+          ) : (
+            <div key={index}></div>
+          ))}
         </div>
-      </div>                
+
+        <div className="h-full grid"
+          style={{
+            width: "530px"
+          }}
+        ></div>
+      </motion.div>}               
     </div>  
   )
 }

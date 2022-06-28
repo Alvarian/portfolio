@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
@@ -178,12 +178,32 @@ Home.getInitialProps = async function() {
   // Here i want to access the projectID sent from the previous page
   try {
     let overallStatsPayload: Record<string, any> = {}
-    const userResponse = await fetch("https://www.codewars.com/api/v1/users/Alvarian_")
-    const userData = await userResponse.json()
-    const challangesResponse = await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")
-    const challangesData = await challangesResponse.json()
+    const userData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_")).json()
+
+    const challangesData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")).json()
+
     const gifFrames = await getFilesFromDir()
-    
+
+    const collectionData = await (await fetch("https://api.badgr.io/v2/backpack/collections/DBRj-SFzTRu1ZscR12JQ5g", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
+        'Content-Type': 'application/json'
+      }
+    })).json()
+
+    const badges = (await Promise.all(collectionData.result[0].assertions.map(async (badgeID: any) => {
+      const badgeData = await (await fetch(`https://api.badgr.io/v2/backpack/assertions/${badgeID}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
+          'Content-Type': 'application/json'
+        }
+      })).json()
+
+      return badgeData
+    })))[0].result
+
     overallStatsPayload.leaderBoardScore = userData.leaderboardPosition
     overallStatsPayload.totalCompleted = challangesData.totalItems
     overallStatsPayload.languagesTotal = (() => {
@@ -221,7 +241,8 @@ Home.getInitialProps = async function() {
           mostRecentPayload,
         },
         knowledge: {
-          gifFrames
+          gifFrames,
+          badges
         }
       },
     }
