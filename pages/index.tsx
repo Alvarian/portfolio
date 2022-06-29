@@ -190,17 +190,25 @@ Home.getInitialProps = async function() {
     })).json()
 
     const badges = (await Promise.all(collectionData.result[0].assertions.map(async (badgeID: any) => {
-      const badgeData = await (await fetch(`https://api.badgr.io/v2/backpack/assertions/${badgeID}`, {
+      const badgeData = (await (await fetch(`https://api.badgr.io/v2/backpack/assertions/${badgeID}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
           'Content-Type': 'application/json'
         }
-      })).json()
+      })).json()).result[0]
 
-      return badgeData
-    })))[0].result
-
+      const moreBadgeData = (badgeData.badgeclassOpenBadgeId.split(".").find((part: any) => part === "credly")) ? await (await fetch(badgeData.badgeclassOpenBadgeId, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
+          'Content-Type': 'application/json'
+        }
+      })).json() : {}
+      
+      return Object.assign(badgeData, moreBadgeData)
+    })))
+    
     overallStatsPayload.leaderBoardScore = userData.leaderboardPosition
     overallStatsPayload.totalCompleted = challangesData.totalItems
     overallStatsPayload.languagesTotal = (() => {
