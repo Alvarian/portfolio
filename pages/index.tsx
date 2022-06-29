@@ -19,8 +19,8 @@ const Home: NextPage = (props) => {
   const [scrollMethodAdmissions, setAdmissions] = useState<any>({})
   const [areEventsLoaded, setAreLoaded] = useState<any>(false)
 
-  const propData: dataOptions = localMockData
-  // const propData: dataOptions = props
+  // const propData: dataOptions = localMockData
+  const propData: dataOptions = props
 
   const handleAutoRoutingOnScroll = (list: any) => {
     for (let key in list) {

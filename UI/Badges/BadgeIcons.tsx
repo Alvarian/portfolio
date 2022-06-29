@@ -63,8 +63,12 @@ const BadgeCoat: React.FC<any> = ({
       }
     ]
     selectedSlots.forEach((slot: any, index: number) => {
-      badges[index].rotations = slot.rotations
-      templateList[slot.slotPos] = badges[index]
+      if (!badges[index]) {
+        templateList[slot.slotPos] = {}
+      } else {
+        badges[index].rotations = slot.rotations
+        templateList[slot.slotPos] = badges[index]
+      }
     })
     
     return templateList
