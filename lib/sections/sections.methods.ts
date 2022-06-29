@@ -1,6 +1,5 @@
 import * as _ from "lodash"
 import { dataOptions } from "./sections.types"
-import fs from "fs"
 
 
 export const reducers = {
@@ -13,6 +12,23 @@ export const reducers = {
       default:
         throw new Error();
     }
+  }
+}
+
+export const formatDate = (blob: string) => {
+  const monthList = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+  const date = new Date(blob)
+  const {month, day, year} = {
+    month: date.getMonth(),
+    day: date.getDate(),
+    year: date.getFullYear()
+  }
+
+  return {
+    month: monthList[month],
+    day,
+    year,
+    minimal: `${month}/${day}/${year}`
   }
 }
 

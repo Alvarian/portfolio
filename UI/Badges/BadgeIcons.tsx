@@ -1,7 +1,8 @@
 import { motion } from "framer-motion"
 
 const BadgeCoat: React.FC<any> = ({
-  badges
+  badges,
+  handleBadgeDetails
 }) => {
   const renderBadges = () => {
     const slots = new Array(15)
@@ -68,7 +69,7 @@ const BadgeCoat: React.FC<any> = ({
     
     return templateList
   }    
-
+  
   return (
     <div className="h-full w-96 grid grid-cols-3 grid-rows-5">
       {renderBadges().map((badge: any, index: number) => badge.name ? (
@@ -76,13 +77,15 @@ const BadgeCoat: React.FC<any> = ({
           <motion.a 
             className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
             style={{borderStyle: "outset"}}
-            href={badge.evidence}
+            href={badge.evidence[0].url}
+            onMouseOver={handleBadgeDetails.bind(this, badge)}
+            onMouseOut={handleBadgeDetails.bind(this, null)}
             initial={{
               rotateX: badge.rotations.horizontal,
               rotateY: badge.rotations.vertical
             }}
             whileHover={{
-              scale: 3,
+              scale: 1.7,
               rotateX: 0,
               rotateY: 0,
               zIndex: 10,
