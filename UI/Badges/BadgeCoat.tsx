@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 
-const BadgeCoat: React.FC<any> = ({
+const BadgeCoat: React.FC<{
+  isSectionPermitted: boolean,
+  gifFrames: Array<string>,
+  setIfEnded: Dispatch<SetStateAction<boolean>>
+}> = ({
     isSectionPermitted,
     gifFrames,
     setIfEnded
 }) => {
-    const [coatPhase, setCoatPhase] = useState("start")
-    const [coatProperties, setProperties] = useState({length: 0, sources: []})
+    const [coatPhase, setCoatPhase] = useState<string>("start")
+    const [coatProperties, setProperties] = useState<{length: number, sources: Array<string>}>({length: 0, sources: []})
     const [frames, incrementFrame] = useState(0)
-    let runFrames: any
+    let runFrames: NodeJS.Timeout
 
     useEffect(() => { 
       if (isSectionPermitted) {

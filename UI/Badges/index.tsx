@@ -1,48 +1,58 @@
 import { motion } from "framer-motion"
 import { formatDate } from "lib/sections/sections.methods"
+import { Badge } from "lib/sections/sections.types"
 import { useState, useEffect } from "react"
 import BadgeCoat from "./BadgeCoat"
 import BadgeIcons from "./BadgeIcons"
 
-interface Badge {
-  issuedOn: string,
-  name: string,
-  tags: Array<string>
-}
-const index: React.FC<any> = ({
+
+const index: React.FC<{
+  isSectionPermitted: boolean,
+  width: number,
+  data: {
+    gifFrames: Array<string>,
+    badges: Array<Badge>
+  }
+}> = ({
   isSectionPermitted,
   width,
   data
 }) => {
   const { gifFrames, badges } = data
   const [isFrameEnded, setIfEnded] = useState(false)
-  const [badgeDetails, setDetails] = useState<Badge>({
+  const reset = {
     issuedOn: "",
+    image: "",
+    evidence: [{url: ""}],
     name: "",
-    tags: []
-  })
+    description: "",
+    tags: [],
+    rotations: {
+      horizontal: 0,
+      vertical: 0
+    }
+  }
+  const [badgeDetails, setDetails] = useState<Badge>(reset)
   
   const handleBadgeDetails = (details: Badge) => {
-    if (!details) {
-      setDetails({
-        issuedOn: "",
-        name: "",
-        tags: []
-      })
-
-      return
-    } 
-     
     const {
       issuedOn,
       name,
-      tags
+      tags,
+      image,
+      evidence,
+      description,
+      rotations
     } = details
 
     setDetails({
       issuedOn: "Completed on "+formatDate(issuedOn).minimal,
       name,
-      tags
+      tags,
+      image,
+      evidence,
+      description,
+      rotations
     })
   }
 
@@ -108,6 +118,7 @@ const index: React.FC<any> = ({
         <BadgeIcons
           badges={badges}
           handleBadgeDetails={handleBadgeDetails}
+          reset={reset}
         />
 
         <div className="h-full flex justify-center items-center"

@@ -130,7 +130,6 @@ export const localMockData = {
           "evidence": [{
             "url": "#"
           }],
-          "issuedBy": "credily",
           "name": 'JavaScript - Advanced',
           "description": 'JavaScript is an open source scripting language used to enhance user interfaces and dynamic websites. It works directly with HTML and CSS to create effects, features and formatting. In this course, students with a basic knowledge of Java will be able to advance their skillset and learn complex functions of the technology.',
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]
@@ -141,7 +140,6 @@ export const localMockData = {
           "evidence": [{
             "url": "#"
           }],
-          "issuedBy": "credily",
           "name": 'JavaScript - Advanced',
           "description": 'JavaScript is an open source scripting language used to enhance user interfaces and dynamic websites. It works directly with HTML and CSS to create effects, features and formatting. In this course, students with a basic knowledge of Java will be able to advance their skillset and learn complex functions of the technology.',
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]
@@ -152,7 +150,6 @@ export const localMockData = {
           "evidence": [{
             "url": "#"
           }],
-          "issuedBy": "credily",
           "name": 'JavaScript - Advanced',
           "description": 'JavaScript is an open source scripting language used to enhance user interfaces and dynamic websites. It works directly with HTML and CSS to create effects, features and formatting. In this course, students with a basic knowledge of Java will be able to advance their skillset and learn complex functions of the technology.',
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]
@@ -163,7 +160,6 @@ export const localMockData = {
           "evidence": [{
             "url": "#"
           }],
-          "issuedBy": "credily",
           "name": 'JavaScript - Advanced',
           "description": 'JavaScript is an open source scripting language used to enhance user interfaces and dynamic websites. It works directly with HTML and CSS to create effects, features and formatting. In this course, students with a basic knowledge of Java will be able to advance their skillset and learn complex functions of the technology.',
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]
@@ -174,7 +170,6 @@ export const localMockData = {
           "evidence": [{
             "url": "#"
           }],
-          "issuedBy": "credily",
           "name": 'JavaScript - Advanced',
           "description": 'JavaScript is an open source scripting language used to enhance user interfaces and dynamic websites. It works directly with HTML and CSS to create effects, features and formatting. In this course, students with a basic knowledge of Java will be able to advance their skillset and learn complex functions of the technology.',
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]
@@ -185,7 +180,6 @@ export const localMockData = {
           "evidence": [{
             "url": "#"
           }],
-          "issuedBy": "credily",
           "name": 'JavaScript - Advanced',
           "description": 'JavaScript is an open source scripting language used to enhance user interfaces and dynamic websites. It works directly with HTML and CSS to create effects, features and formatting. In this course, students with a basic knowledge of Java will be able to advance their skillset and learn complex functions of the technology.',
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]
@@ -196,7 +190,6 @@ export const localMockData = {
           "evidence": [{
             "url": "#"
           }],
-          "issuedBy": "credily",
           "name": 'JavaScript - Advanced',
           "description": 'JavaScript is an open source scripting language used to enhance user interfaces and dynamic websites. It works directly with HTML and CSS to create effects, features and formatting. In this course, students with a basic knowledge of Java will be able to advance their skillset and learn complex functions of the technology.',
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]
@@ -207,7 +200,6 @@ export const localMockData = {
           "evidence": [{
             "url": "#"
           }],
-          "issuedBy": "credily",
           "name": 'JavaScript - Advanced',
           "description": 'JavaScript is an open source scripting language used to enhance user interfaces and dynamic websites. It works directly with HTML and CSS to create effects, features and formatting. In this course, students with a basic knowledge of Java will be able to advance their skillset and learn complex functions of the technology.',
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]

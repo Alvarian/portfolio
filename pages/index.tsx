@@ -9,7 +9,7 @@ import Footer from 'UI/footer'
 import Navbar from 'UI/navbar'
 import { useResize } from 'hooks/'
 
-import { Content, dataOptions } from 'lib/sections/sections.types'
+import { Badge, Content, dataOptions } from 'lib/sections/sections.types'
 import { sectionData } from 'lib/sections/sections.data'
 import { rateLimiters, getFilesFromDir } from 'lib/sections/sections.methods'
 
@@ -196,14 +196,7 @@ Home.getInitialProps = async function() {
       }
     })).json()
 
-    const badges: Array<{
-      issuedOn: string,
-      image: string,
-      evidence: Array<{"url": string}>,
-      name: string,
-      description: string,
-      tags: Array<string>
-    }> = await Promise.all(collectionData.result[0].assertions.map(async (badgeID: string) => {
+    const badges: Array<Badge> = await Promise.all(collectionData.result[0].assertions.map(async (badgeID: string) => {
       const {
         issuedOn,
         image,
@@ -235,7 +228,11 @@ Home.getInitialProps = async function() {
         evidence,
         name,
         description,
-        tags
+        tags,
+        rotations: {
+          horizontal: 0,
+          vertical: 0
+        }
       }
     }))
     
