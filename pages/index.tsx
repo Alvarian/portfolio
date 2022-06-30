@@ -10,20 +10,27 @@ import Navbar from 'UI/navbar'
 import { useResize } from 'hooks/'
 
 import { Content, dataOptions } from 'lib/sections/sections.types'
-import { sectionData, localMockData } from 'lib/sections/sections.data'
+import { sectionData } from 'lib/sections/sections.data'
 import { rateLimiters, getFilesFromDir } from 'lib/sections/sections.methods'
 
 
+interface Admissions {
+  [key: string]: {
+    position: number,
+    isPermitted: boolean | null
+  }
+}
+
 const Home: NextPage = (props) => {
-  const beginning = useRef<any>(null)
+  const beginning = useRef<HTMLElement>(null)
   const [width] = useResize()
-  const [scrollMethodAdmissions, setAdmissions] = useState<any>({})
-  const [areEventsLoaded, setAreLoaded] = useState<any>(false)
+  const [scrollMethodAdmissions, setAdmissions] = useState<Admissions>({})
+  const [areEventsLoaded, setAreLoaded] = useState<boolean>(false)
 
   // const propData: dataOptions = localMockData
   const propData: dataOptions = props
 
-  const handleAutoRoutingOnScroll = (list: any) => {
+  const handleAutoRoutingOnScroll = (list: Admissions) => {
     for (let key in list) {
       if (list[key].isPermitted) {
         window.scrollTo(0, list[key].position)
@@ -41,7 +48,7 @@ const Home: NextPage = (props) => {
       switch (key) {
         case "navbar":
           const footer = document.querySelector("#footer") as HTMLElement | null
-          const isNavbarPermitted = footer && beginning.current.offsetTop-50 <= currentScrollPos && footer.offsetTop-150 > currentScrollPos
+          const isNavbarPermitted = footer && beginning.current && beginning.current.offsetTop-50 <= currentScrollPos && footer.offsetTop-150 > currentScrollPos
       
           if (isNavbarPermitted && !scrollMethodAdmissions[key].isPermitted) {
             scrollMethodAdmissions[key].isPermitted = isNavbarPermitted
@@ -82,7 +89,7 @@ const Home: NextPage = (props) => {
       const footer = document.querySelector("#footer") as HTMLElement | null
       admissions['navbar'] = {
         position: footer && footer.offsetTop,
-        isPermitted: footer && beginning.current.offsetTop-50 <= currentScrollPos && footer.offsetTop-150 > currentScrollPos
+        isPermitted: footer && beginning.current && beginning.current.offsetTop-50 <= currentScrollPos && footer.offsetTop-150 > currentScrollPos
       }
   
       for (let section of sectionData) {
@@ -175,7 +182,6 @@ const Home: NextPage = (props) => {
 Home.getInitialProps = async function() {
   // Here i want to access the projectID sent from the previous page
   try {
-    let overallStatsPayload: Record<string, any> = {}
     const userData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_")).json()
 
     const challangesData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")).json()
@@ -190,8 +196,20 @@ Home.getInitialProps = async function() {
       }
     })).json()
 
-    const badges = (await Promise.all(collectionData.result[0].assertions.map(async (badgeID: any) => {
-      const badgeData = (await (await fetch(`https://api.badgr.io/v2/backpack/assertions/${badgeID}`, {
+    const badges: Array<{
+      issuedOn: string,
+      image: string,
+      evidence: Array<{"url": string}>,
+      name: string,
+      description: string,
+      tags: Array<string>
+    }> = await Promise.all(collectionData.result[0].assertions.map(async (badgeID: string) => {
+      const {
+        issuedOn,
+        image,
+        evidence,
+        badgeclassOpenBadgeId
+      }: Record<string, string> = (await (await fetch(`https://api.badgr.io/v2/backpack/assertions/${badgeID}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
@@ -199,7 +217,11 @@ Home.getInitialProps = async function() {
         }
       })).json()).result[0]
 
-      const moreBadgeData = (badgeData.badgeclassOpenBadgeId.split(".").find((part: any) => part === "credly")) ? await (await fetch(badgeData.badgeclassOpenBadgeId, {
+      const {
+        name,
+        description,
+        tags
+      }: Record<string, string | Array<{[key: string]: string}>> = (badgeclassOpenBadgeId.split(".").find((part: string) => part === "credly")) ? await (await fetch(badgeclassOpenBadgeId, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
@@ -207,9 +229,21 @@ Home.getInitialProps = async function() {
         }
       })).json() : {}
       
-      return Object.assign(badgeData, moreBadgeData)
-    })))
+      return {
+        issuedOn,
+        image,
+        evidence,
+        name,
+        description,
+        tags
+      }
+    }))
     
+    let overallStatsPayload: Record<string, number | Record<string, number>> = {
+      leaderBoardScore: 0,
+      totalCompleted: 0,
+      languagesTotal: 0
+    }
     overallStatsPayload.leaderBoardScore = userData.leaderboardPosition
     overallStatsPayload.totalCompleted = challangesData.totalItems
     overallStatsPayload.languagesTotal = (() => {
@@ -228,9 +262,24 @@ Home.getInitialProps = async function() {
       return languages
     })()
 
-    let mostRecentPayload: Record<string, any> = {}
-    const recentChallengeResponse = await fetch(`https://www.codewars.com/api/v1/code-challenges/${challangesData.data[0].id}`)
-    const recentChallengeData = await recentChallengeResponse.json()
+    let mostRecentPayload: Record<string, string | number | Array<string>> = {
+      title: "",
+      attemptedTotal: 0,
+      completedTotal: 0,
+      url: "",
+      tags: [],
+      completionDate: "",
+      languagesUsed: []
+    }
+    const recentChallengeData: {
+      name: string,
+      totalAttempts: number,
+      totalCompleted: number,
+      url: string,
+      tags: Array<string>,
+      completionDate: string,
+      completedLanguages: Array<string>
+    } = await (await fetch(`https://www.codewars.com/api/v1/code-challenges/${challangesData.data[0].id}`)).json()
       
     mostRecentPayload.title = recentChallengeData.name
     mostRecentPayload.attemptedTotal = recentChallengeData.totalAttempts

@@ -3,6 +3,7 @@ import Badges from 'UI/Badges'
 import Stats from 'UI/Stats'
 
 import { Content } from 'lib/sections/sections.types'
+import UnderConstruction from '@components/underConstruction'
 
 export const sectionData: Array<Content> = [
   {
@@ -36,6 +37,16 @@ export const sectionData: Array<Content> = [
     type: "default",
     keyIcon: "",
     bgImageName: "img_clock1-min.jpg"
+  },
+  {
+    alt: "projects",
+    content: {
+      body: UnderConstruction,
+      isFull: false
+    },
+    type: "default",
+    keyIcon: "",
+    bgImageName: "img_highest-min.jpg"
   }
 ]
 
