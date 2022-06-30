@@ -1,14 +1,21 @@
 import { motion } from "framer-motion"
+import { Badge } from "lib/sections/sections.types"
 
-const BadgeCoat: React.FC<any> = ({
+
+const BadgeCoat: React.FC<{
+  badges: Array<Badge>,
+  reset: Badge,
+  handleBadgeDetails: (details: Badge) => void
+}> = ({
   badges,
+  reset,
   handleBadgeDetails
 }) => {
-  const renderBadges = () => {
+  const renderBadges: () => Array<Badge> = () => {
     const slots = new Array(15)
-    const templateList: any[] = []
+    const templateList: Array<Badge> = []
     for (let _ of slots) {
-      templateList.push({})
+      templateList.push(reset)
     }
 
     const selectedSlots = [
@@ -62,28 +69,34 @@ const BadgeCoat: React.FC<any> = ({
         }
       }
     ]
-    selectedSlots.forEach((slot: any, index: number) => {
+    selectedSlots.forEach((slot: {
+      slotPos: number,
+      rotations: {
+        horizontal: number,
+        vertical: number,
+      }
+    }, index: number) => {
       if (!badges[index]) {
-        templateList[slot.slotPos] = {}
+        templateList[slot.slotPos] = reset
       } else {
         badges[index].rotations = slot.rotations
         templateList[slot.slotPos] = badges[index]
       }
     })
-    
+
     return templateList
   }    
   
   return (
     <div className="h-full w-96 grid grid-cols-3 grid-rows-5">
-      {renderBadges().map((badge: any, index: number) => badge.name ? (
+      {renderBadges().map((badge: Badge, index: number) => badge.name ? (
         <div key={index} className="relative flex justify-end items-center h-36 w-36">
           <motion.a 
             className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
             style={{borderStyle: "outset"}}
             href={badge.evidence[0].url}
             onMouseOver={handleBadgeDetails.bind(this, badge)}
-            onMouseOut={handleBadgeDetails.bind(this, null)}
+            onMouseOut={handleBadgeDetails.bind(this, reset)}
             initial={{
               rotateX: badge.rotations.horizontal,
               rotateY: badge.rotations.vertical
@@ -107,3 +120,7 @@ const BadgeCoat: React.FC<any> = ({
 }
 
 export default BadgeCoat 
+
+function reset(reset: any) {
+  throw new Error("Function not implemented.")
+}
