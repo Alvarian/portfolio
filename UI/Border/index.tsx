@@ -1,11 +1,17 @@
 import { motion } from "framer-motion"
-import { slider } from "./varients"
 
 
-const Border: React.FC<any> = ({
+const Border: React.FC<{
+    slotFields: Array<{
+        admissions: {
+            isPermitted: boolean | null
+        },
+        name: string
+    }>
+}> = ({
     slotFields
 }) => {
-    const isVisible: boolean = slotFields[1].admissions?.isPermitted 
+    const isVisible: boolean | null = slotFields[1].admissions?.isPermitted 
 
     const determineSlot4 = () => {
         if (slotFields[3].name) return slotFields[3].name

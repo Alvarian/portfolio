@@ -142,9 +142,9 @@ const Home: NextPage = (props) => {
           {name: nextSection?.alt || "Outro", admissions: scrollMethodAdmissions[nextSection?.alt]},
           {name: nextNextSection?.alt, admissions: scrollMethodAdmissions[nextNextSection?.alt]},
         ]}
-        width={width}
-        thickness="h-40"
-        color="bg-black"
+        // width={width}
+        // thickness="h-40"
+        // color="bg-black"
       />)
     }
     
