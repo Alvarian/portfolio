@@ -1,13 +1,14 @@
-import Icon from "components/icon"
-import dedent from "dedent-js"
 import { motion } from "framer-motion"
+import { MostrecentPayload } from "lib/sections/sections.types"
 import { useState } from "react"
 import { overallMenuData } from "./icons.data"
 import mostRecentSnippets from "./mostRecentSnippets"
 import { slider } from "./varients"
 
 
-const MostRecent: React.FC<any> = ({ 
+const MostRecent: React.FC<{
+    payload: MostrecentPayload
+}> = ({ 
     payload, 
 }) => {
     const {

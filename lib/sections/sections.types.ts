@@ -24,6 +24,22 @@ export interface Badge {
   }
 }
 
+export interface OverallPayload {      
+  leaderBoardScore: number,
+  totalCompleted: number,
+  languagesTotal: {[key: string]: number}
+}
+
+export interface MostrecentPayload {
+  title: string,
+  attemptedTotal: number,
+  completedTotal: number,
+  url: string,
+  tags: Array<string>,
+  completionDate: string,
+  languagesUsed: Array<string>
+}
+
 export type dataOptions = {
   [key: string]: any
 }

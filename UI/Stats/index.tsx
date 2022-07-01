@@ -1,12 +1,18 @@
 import Icon from "@components/icon";
 import SlideShow from "components/slideshow";
-import { dataOptions } from "lib/sections/sections.types";
+import { dataOptions, MostrecentPayload, OverallPayload } from "lib/sections/sections.types";
 import { useState } from "react"
 import MostRecent from "./MostRecent"
 import Overall from "./Overall"
 
 
-const index: React.FC<any> = ({ 
+const index: React.FC<{
+  data: {
+    overallStatsPayload: OverallPayload, 
+    mostRecentPayload: MostrecentPayload
+  },
+  isSectionPermitted: boolean
+}> = ({ 
   data,
   isSectionPermitted
 }) => {

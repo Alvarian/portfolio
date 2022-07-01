@@ -46,7 +46,7 @@ const index: React.FC<{
     } = details
 
     setDetails({
-      issuedOn: "Completed on "+formatDate(issuedOn).minimal,
+      issuedOn: details.name ? "Completed on "+formatDate(issuedOn).minimal : "",
       name,
       tags,
       image,

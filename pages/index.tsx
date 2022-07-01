@@ -9,7 +9,7 @@ import Footer from 'UI/footer'
 import Navbar from 'UI/navbar'
 import { useResize } from 'hooks/'
 
-import { Badge, Content, dataOptions } from 'lib/sections/sections.types'
+import { Badge, Content, dataOptions, MostrecentPayload, OverallPayload } from 'lib/sections/sections.types'
 import { sectionData } from 'lib/sections/sections.data'
 import { rateLimiters, getFilesFromDir } from 'lib/sections/sections.methods'
 
@@ -236,15 +236,15 @@ Home.getInitialProps = async function() {
       }
     }))
     
-    let overallStatsPayload: Record<string, number | Record<string, number>> = {
+    let overallStatsPayload: OverallPayload = {
       leaderBoardScore: 0,
       totalCompleted: 0,
-      languagesTotal: 0
+      languagesTotal: {}
     }
     overallStatsPayload.leaderBoardScore = userData.leaderboardPosition
     overallStatsPayload.totalCompleted = challangesData.totalItems
     overallStatsPayload.languagesTotal = (() => {
-      let languages: Record<string, number> = {}
+      let languages: {[key: string]: number} = {}
 
       for (let challenge of challangesData.data) {
         for (let lang of challenge.completedLanguages) {
@@ -259,7 +259,7 @@ Home.getInitialProps = async function() {
       return languages
     })()
 
-    let mostRecentPayload: Record<string, string | number | Array<string>> = {
+    let mostRecentPayload: MostrecentPayload = {
       title: "",
       attemptedTotal: 0,
       completedTotal: 0,
