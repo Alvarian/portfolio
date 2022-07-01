@@ -8,7 +8,10 @@ import { defaultVariants } from 'lib/sections/sections.data'
 import { motion } from "framer-motion"
 
 
-const Footer: React.FC<any> = ({
+const Footer: React.FC<{
+  handleRenderLinks: (elementType: string, size: string) => JSX.Element,
+  width: number
+}> = ({
   handleRenderLinks,
   width
 }) => {  
@@ -36,7 +39,7 @@ const Footer: React.FC<any> = ({
           <Link href="/"><a className="btn btn-ghost normal-case text-5xl">Ivan Alvarez</a></Link>
         </div>
 
-        <div className="menu flex menu-vertical p-0 w-3/6">{handleRenderLinks("footer")}</div>
+        <div className="menu flex menu-vertical p-0 w-3/6">{handleRenderLinks("footer", "default")}</div>
       </div>
     )
   }
@@ -104,7 +107,7 @@ const Footer: React.FC<any> = ({
   )
 }
 
-const FooterSection: React.FC<any> = ({
+const FooterSection: React.FC<{width: number}> = ({
   width
 }) => {
   return <Section

@@ -7,7 +7,11 @@ import { motion } from "framer-motion"
 import { defaultVariants } from "lib/sections/sections.data"
 
 
-const Header: React.FC<any> = ({
+const Header: React.FC<{
+  handleRenderLinks: (elementType: string, size: string) => JSX.Element,
+  width: number,
+  icon: string
+}> = ({
   handleRenderLinks,
   width,
   icon
