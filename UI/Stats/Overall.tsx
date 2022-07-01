@@ -7,12 +7,21 @@ import { Doughnut } from 'react-chartjs-2';
 import CountUp from 'react-countup';
 
 import { slider } from "./varients"
-import { dataOptions } from 'lib/sections/sections.types'
-import { overallMenuData } from "./icons.data"
+import { Overall } from 'lib/sections/sections.types'
+import { MenuData, overallMenuData } from "./icons.data"
 import Icon from "components/icon"
 
 
-const Overall: React.FC<any> = ({ 
+interface LanguageValue {
+    titles: Array<string>,
+    colors: Array<string>,
+    ratios: Array<number>
+}
+
+const Overall: React.FC<{
+    payload: Overall,
+    isSectionPermitted: boolean
+}> = ({ 
     payload, 
     isSectionPermitted
 }) => {
@@ -21,19 +30,16 @@ const Overall: React.FC<any> = ({
         languagesTotal,
         totalCompleted
     } = payload
-
-    const [languagesListValues, setValues] = useState<any>({
+    const reset = {
         titles: [],
         colors: [],
         ratios: []
-    })
+    }
+
+    const [languagesListValues, setValues] = useState<LanguageValue>(reset)
     
     useEffect(() => {
-        const languageValues: Record<string, any> = {
-            titles: [],
-            colors: [],
-            ratios: []
-        }
+        const languageValues: LanguageValue = reset
 
         let totalCounter: number = 0
 
@@ -49,7 +55,7 @@ const Overall: React.FC<any> = ({
             languageValues.colors.push("#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6))
         }
 
-        setValues(languageValues)
+        setValues({...languageValues})
     }, [])
 
     const ratioStatsList = () => {
@@ -65,7 +71,7 @@ const Overall: React.FC<any> = ({
                 </li>
             )
         }
-
+        
         return list
     }
 
@@ -86,12 +92,12 @@ const Overall: React.FC<any> = ({
                 }
             ],
         }
-
+        
         return (
             <Doughnut data={data} />
         )
     }
-
+    
     return (
         <div className="flex flex-col h-full min-h-[624px]">
             {isSectionPermitted && <motion.div
@@ -118,7 +124,7 @@ const Overall: React.FC<any> = ({
                     {overallMenuData({
                         Rank: roundThousandsOrGetDefault(leaderBoardScore),
                         Completed: <CountUp duration={4} end={totalCompleted} /> 
-                    }).map((item: any) => (
+                    }).map((item: MenuData) => (
                         <div className="flex items-center justify-center" key={item.name}>
                             <span className="text-2xl">{item.name}: </span>
 
@@ -137,7 +143,7 @@ const Overall: React.FC<any> = ({
                 <div className="bg-gradient-to-r from-amber-200 flex justify-around py-10">
                     <ul id="ratioStats">{ratioStatsList()}</ul>
 
-                    <div id="ratioGraph" className="min-h-[300px] min-w-[300px]">{isSectionPermitted && renderDonut()}</div>
+                    <div id="ratioGraph" className="min-h-[300px] min-w-[300px]">{renderDonut()}</div>
                 </div>
             </motion.div>}
         </div>

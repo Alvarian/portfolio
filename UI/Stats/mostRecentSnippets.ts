@@ -1,7 +1,13 @@
 import dedent from "dedent-js"
 
 
-const snippets = {
+const snippets: {
+    title: string,
+    languages: Array<{
+        language: string,
+        solution: string
+    }>
+} = {
     title: "Rectangle into Squares",
     languages: [
         {

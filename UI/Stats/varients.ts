@@ -1,7 +1,7 @@
 const directionOffset = 600
 
 export const slider = {
-    enter: (direction: any) => ({
+    enter: (direction: number) => ({
         x: direction < 0 ? -directionOffset : directionOffset,
         opacity: 0
     }),
@@ -10,7 +10,7 @@ export const slider = {
         x: 0,
         opacity: 1
     },
-    exit: (direction: any) => ({
+    exit: (direction: number) => ({
         zIndex: 0,
         x: direction < 0 ? -directionOffset : directionOffset,
         opacity: 0
