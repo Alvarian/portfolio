@@ -18,7 +18,7 @@ const Section: React.FC<any> = ({
   keyIcon,
   alt,
 }) => {
-  const handleRenderLinks = (elementType: string, size: any) => {
+  const handleRenderLinks: (elementType: string, size: any) => JSX.Element = (elementType: string, size: string) => {
     let outsourcedLinks = []
     let defaultLinks = []
     

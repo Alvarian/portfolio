@@ -6,7 +6,10 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 
-const Navbar: React.FC<any> = ({
+const Navbar: React.FC<{
+  navVisible: boolean,
+  width: number
+}> = ({
   navVisible,
   width
 }) => {
