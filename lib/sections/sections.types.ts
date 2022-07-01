@@ -2,10 +2,10 @@ type Nullable<T> = T | null;
 
 export interface Content {
   alt: string,
-  content: Nullable<{
+  content: {
     body: React.FC<any>,
     isFull: boolean
-  }>,
+  } | null,
   type: string,
   keyIcon: string,
   bgImageName: string
@@ -38,6 +38,20 @@ export interface MostrecentPayload {
   tags: Array<string>,
   completionDate: string,
   languagesUsed: Array<string>
+}
+
+export interface IconInter {
+  src: string,
+  size: string,
+  content: string,
+  position: string,
+  custom: {
+      [key:string]: string
+  },
+  kind: {
+      type: string,
+      content: () => void
+  }
 }
 
 export type dataOptions = {

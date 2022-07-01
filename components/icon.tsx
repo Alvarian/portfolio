@@ -1,9 +1,9 @@
 import { motion } from "framer-motion"
-import { dataOptions } from "lib/sections/sections.types"
+import { dataOptions, IconInter } from "lib/sections/sections.types"
 import Image from "next/image"
 
 
-const Icon: React.FC<any> = ({
+const Icon: React.FC<IconInter> = ({
     src,
     size,
     content,
@@ -73,9 +73,9 @@ const Icon: React.FC<any> = ({
         switch (kind?.type) {
             case "link":
                 return (
-                    <div className={"w-full "+mappedIconPositions[position].parent+" "+custom?.parent} style={mappedIconSizes[size].parent}>            
+                    <div className={"w-full "+mappedIconPositions[position].parent+" "+custom.parent} style={mappedIconSizes[size].parent}>            
                     
-                        <motion.a href={kind?.content} className={"rounded-full "+custom?.img} style={mappedIconPositions[position].child}
+                        <motion.a href="#" className={"rounded-full "+custom.img} style={mappedIconPositions[position].child}
                             animate={{ 
                                 rotate: 360,
                             }}
@@ -87,20 +87,20 @@ const Icon: React.FC<any> = ({
                                 repeatType: 'reverse'
                             }}
                         >{img}</motion.a>
-                        {content && <span className={mappedIconSizes[size].child.content+" "+custom?.content} style={mappedIconPositions[position].child}>{content}</span>}
+                        {content && <span className={mappedIconSizes[size].child.content+" "+custom.content} style={mappedIconPositions[position].child}>{content}</span>}
 
                     </div>
                 )
             case "button":
                 return (
-                    <motion.button className={"m-7 w-full "+mappedIconPositions[position].parent+" "+custom?.parent} onClick={() => {kind?.content()}}
+                    <motion.button className={"m-7 w-full "+mappedIconPositions[position].parent+" "+custom.parent} onClick={() => {kind.content()}}
                         whileHover={{ scale: 1.2 }}
                         onHoverStart={e => {}}
                         onHoverEnd={e => {}}
                     >
                         
-                        <span className={custom?.img} style={mappedIconPositions[position].child}>{img}</span>
-                        {content && <span className={mappedIconSizes[size].child.content+" "+custom?.content} style={mappedIconPositions[position].child}>{content}</span>}
+                        <span className={custom.img} style={mappedIconPositions[position].child}>{img}</span>
+                        {content && <span className={mappedIconSizes[size].child.content+" "+custom.content} style={mappedIconPositions[position].child}>{content}</span>}
 
                     </motion.button>
                 )
@@ -117,10 +117,10 @@ const Icon: React.FC<any> = ({
     }
 
     return renderParentIcon(<Image 
-                src={src}
-                height={mappedIconSizes[size].child.img}
-                width={mappedIconSizes[size].child.img}
-            />)
+        src={src}
+        height={mappedIconSizes[size].child.img}
+        width={mappedIconSizes[size].child.img}
+    />)
 }
 
 export default Icon

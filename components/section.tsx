@@ -1,24 +1,41 @@
 import Link from 'next/link'
 
-import { Content, dataOptions } from 'lib/sections/sections.types'
+import { Badge, Content, dataOptions, MostrecentPayload, OverallPayload } from 'lib/sections/sections.types'
 import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 import Underline from "components/underline"
 
 import { motion } from 'framer-motion'
 
 
-const Section: React.FC<any> = ({
+const Section: React.FC<{
+  content: {
+    body: React.FC<any>,
+    isFull: boolean
+  } | null,
+  bgImageName: string,
+  width: number,
+  setRef: React.RefObject<HTMLElement> | null,
+  isSectionPermitted: boolean | null,
+  serverProps: {
+    overallStatsPayload: OverallPayload,
+    mostRecentPayload: MostrecentPayload,
+  } | {
+    gifFrames: Array<string>,
+    badges: Array<Badge>
+  },
+  keyIcon: string,
+  alt: string,
+}> = ({
   content,
   bgImageName,
   width,
   setRef,
   isSectionPermitted,
-  pageWidth,
   serverProps,
   keyIcon,
   alt,
 }) => {
-  const handleRenderLinks: (elementType: string, size: any) => JSX.Element = (elementType: string, size: string) => {
+  const handleRenderLinks: (elementType: string, size: string) => JSX.Element = (elementType: string, size: string) => {
     let outsourcedLinks = []
     let defaultLinks = []
     
@@ -111,7 +128,7 @@ const Section: React.FC<any> = ({
     tailwind: {
       main: `flex justify-center h-screen w-full items-center relative`,
       background: `bg-no-repeat bg-cover bg-center bg-fixed absolute w-full h-full -z-10`,
-      content: `flex justify-center ${content.isFull ? "h-full w-full" : "h-2/3 w-2/3 rounded-3xl"} items-center`,
+      content: `flex justify-center ${content?.isFull ? "h-full w-full" : "h-2/3 w-2/3 rounded-3xl"} items-center`,
       nav: `flex flex-col items-center `
     }
   }
@@ -120,7 +137,7 @@ const Section: React.FC<any> = ({
     <section className={styles.tailwind.main} id={alt} ref={setRef}>
       <div className={styles.tailwind.background} style={styles.css.background}></div>
 
-      {content.body ? 
+      {content?.body ? 
         <div className={styles.tailwind.content}>
           <content.body 
             data={serverProps} 
@@ -128,7 +145,6 @@ const Section: React.FC<any> = ({
             width={width} 
             alt={alt}
             isSectionPermitted={isSectionPermitted}
-            pageWidth={pageWidth}
             handleRenderLinks={handleRenderLinks} 
           />
         </div>
