@@ -186,7 +186,7 @@ Home.getInitialProps = async function() {
 
     const challangesData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")).json()
 
-    const gifFrames = await getFilesFromDir()
+    const gifFrames: Array<string> = await getFilesFromDir()
 
     const collectionData = await (await fetch("https://api.badgr.io/v2/backpack/collections/DBRj-SFzTRu1ZscR12JQ5g", {
       method: "GET",
