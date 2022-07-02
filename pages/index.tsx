@@ -12,6 +12,7 @@ import { useResize } from 'hooks/'
 import { Badge, Content, dataOptions, MostrecentPayload, OverallPayload } from 'lib/sections/sections.types'
 import { localMockData, sectionData } from 'lib/sections/sections.data'
 import { rateLimiters, getFilesFromDir } from 'lib/sections/sections.methods'
+// import Redis from 'ioredis'
 
 
 interface Admissions {
@@ -27,8 +28,8 @@ const Home: NextPage = (props) => {
   const [scrollMethodAdmissions, setAdmissions] = useState<Admissions>({})
   const [areEventsLoaded, setAreLoaded] = useState<boolean>(false)
 
-  const propData: dataOptions = localMockData
-  // const propData: dataOptions = props
+  // const propData: dataOptions = localMockData
+  const propData: dataOptions = props
 
   const handleAutoRoutingOnScroll = (list: Admissions) => {
     for (let key in list) {
@@ -181,51 +182,73 @@ const Home: NextPage = (props) => {
 
 Home.getInitialProps = async function() {
   // Here i want to access the projectID sent from the previous page
+  const r = require('ioredis')
   try {
     const userData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_")).json()
 
     const challangesData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")).json()
 
     const gifFrames: Array<string> = await getFilesFromDir()
+    
+    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw "Missing Redis Credentials"
+    const redis = new r(process.env.NEXT_PUBLIC_REDIS_URL)
+    
+    const hasAccessToken = await redis.get('portfolioAccess')
+    if (!hasAccessToken) throw "Redis does not have access token"
 
-    const affirmToken = async () => {
-      try {
-        const token = await(await fetch("https://api.badgr.io/v2/users/self", {
-          method: "GET",
+    const hasRefreshToken = await redis.get('portfolioRefresh')
+    if (!hasRefreshToken) throw "Redis does not have refresh token"
+
+    const collectionData = await (async () => {
+      const getNewToken = (refresh_token: string) => {
+        return fetch('https://api.badgr.io/o/token', {
+          method: 'POST',
           headers: {
-            Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
+            'Accept': 'application/json',
             'Content-Type': 'application/json'
-          }
-        })).json()
+          },
+          body: JSON.stringify({
+            grant_type: 'refresh_token', 
+            refresh_token
+          })
+        })
+      }
 
-        if (!token.status.success) throw token.status.description
+      const fetchData = (accessToken: string) => fetch("https://api.badgr.io/v2/backpack/collections/DBRj-SFzTRu1ZscR12JQ5g", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      })
 
-        console.log(token)
+      try {
+        const data = await (await fetchData(hasAccessToken)).json()
+        if (!data.status.success) {
+          const { access_token, refresh_token } = await (await getNewToken(hasRefreshToken)).json()
+
+          await redis.set('portfolioRefresh', refresh_token)
+          await redis.set('portfolioAccess', access_token)
+
+          return await (await fetchData(access_token)).json()
+        }
+
+        return data
       } catch (err) {
-        console.log("error",err)
-
-        return "?"
+        console.log(err)
       }
-    }
-console.log(await affirmToken())
-    const collectionData = await (await fetch("https://api.badgr.io/v2/backpack/collections/DBRj-SFzTRu1ZscR12JQ5g", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${affirmToken()}`,
-        'Content-Type': 'application/json'
-      }
-    })).json()
-
-    const badges: Array<Badge> = await Promise.all(collectionData.result[0].assertions.map(async (badgeID: string) => {
+    })()
+    
+    const badges: Array<Badge> = await Promise.all(collectionData.result[0].assertions.map(async (assertion: string) => {
       const {
         issuedOn,
         image,
         evidence,
         badgeclassOpenBadgeId
-      }: Record<string, string> = (await (await fetch(`https://api.badgr.io/v2/backpack/assertions/${badgeID}`, {
+      } = (await (await fetch(`https://api.badgr.io/v2/backpack/assertions/${assertion}`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
+          Authorization: `Bearer ${hasAccessToken}`,
           'Content-Type': 'application/json'
         }
       })).json()).result[0]
@@ -237,7 +260,7 @@ console.log(await affirmToken())
       }: Record<string, string | Array<{[key: string]: string}>> = (badgeclassOpenBadgeId.split(".").find((part: string) => part === "credly")) ? await (await fetch(badgeclassOpenBadgeId, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
+          Authorization: `Bearer ${hasAccessToken}`,
           'Content-Type': 'application/json'
         }
       })).json() : {}
@@ -318,9 +341,10 @@ console.log(await affirmToken())
         }
       },
     }
-    console.log(payload)
+    // console.log(payload)
     return payload
   } catch (err) {
+    console.log(err)
     return {err}
   }
 }

@@ -63,7 +63,7 @@ const Header: React.FC<{
           initial="hidden"
           whileInView="visible"
           variants={defaultVariants.fallUp(2)}            
-        >Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. And most times they're friends, like you and me! I should've known way back when... You know why, David? Because of the kids. They called me Mr Glass.</motion.p>
+        >A website and software developer. My indie project stacks are mostly javascript based and are available in my github. Currently working on dedicated section on this page that will be created to display and allow visiters to interact with my projects.</motion.p>
 
         <div className={styles.tailwind.content.buttons.main}>
           <Underline width="100%" />
