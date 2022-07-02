@@ -3,7 +3,7 @@ import { pathVariant } from "lib/sections/sections.data"
 import { motion } from 'framer-motion';
 
 
-const Underline: React.FC<any> = ({
+const Underline: React.FC<{ width: number }> = ({
     width
 }) => {
     return (

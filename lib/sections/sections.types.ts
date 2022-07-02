@@ -40,20 +40,8 @@ export interface MostrecentPayload {
   languagesUsed: Array<string>
 }
 
-export interface IconInter {
-  src: string,
-  size: string,
-  content: string,
-  position: string,
-  custom: {
-      [key:string]: string
-  },
-  kind: {
-      type: string,
-      content: () => void
-  }
-}
-
 export type dataOptions = {
   [key: string]: any
 }
+
+export const specific = <T>() => <U extends T>(argument: U) => argument;

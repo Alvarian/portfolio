@@ -1,49 +1,59 @@
+import { IconInter } from "@components/icon"
 import { dataOptions } from "lib/sections/sections.types"
 
-export interface MenuData {
-    name: string,
-    size: string,
-    kind: {
-        type: string,
-        content: string
-    } | null,
-    src: string,
-    position: string,
-    custom: {parent: string} | null,
-    content: JSX.Element | string | null
-}
 
-export const overallMenuData: (mappedPayload: dataOptions) => Array<MenuData> = (mappedPayload: dataOptions) => {
+export const overallMenuData: (mappedPayload: dataOptions) => Array<IconInter> = (mappedPayload: dataOptions) => {
     return [
         {
             name: "Profile",
             size: "sm",
             kind: {
                 type: "link",
-                content: "https://www.codewars.com/users/Alvarian_"
+                content: "https://www.codewars.com/users/Alvarian_",
+                callback: () => {}
             },
             src: "/icons/codewars.svg",
             position: "right",
-            custom: {parent:"bg-red-700 border hover:invert"},
-            content: null
+            content: null,
+            custom: {
+                parent:"bg-red-700 border hover:invert",
+                img: "",
+                content: ""
+            }
         },
         {
             name: "Rank",
             size: "md",
-            kind: null,
+            kind: {
+                type: "",
+                content: "",
+                callback: () => {}
+            },
             src: "/icons/star-svgrepo-com.svg",
             position: "center",
             content: mappedPayload["Rank"],
-            custom: null    
+            custom: {
+                parent:"",
+                img: "",
+                content: ""
+            }    
         },
         {
             name: "Completed",
             size: "md",
-            kind: null,
+            kind: {
+                type: "",
+                content: "",
+                callback: () => {}
+            },
             src: "/icons/fire-svgrepo-com.svg",
             position: "center",
             content: mappedPayload["Completed"],
-            custom: null    
+            custom: {
+                parent: "",
+                img: "",
+                content: ""
+            }    
         }
     ]
 }

@@ -50,7 +50,11 @@ export const sectionData: Array<Content> = [
   }
 ]
 
-export const localMockData = {
+export const localMockData: {
+  data: {
+    [key: string]: any
+  }
+} = {
   data: {
     stats: {
       overallStatsPayload: {

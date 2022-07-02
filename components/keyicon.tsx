@@ -1,13 +1,14 @@
 import Image from "next/image"
 
-import { Content, IconInter } from 'lib/sections/sections.types'
+import { Content } from 'lib/sections/sections.types'
 import { sectionData } from 'lib/sections/sections.data'
+import { IconInter } from "./icon"
 
 
 const KeyIcon: React.FC<{
   position: any,
   size: number,
-  icon: IconInter
+  icon: string
 }> = ({
   position,
   size,

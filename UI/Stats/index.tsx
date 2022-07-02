@@ -20,7 +20,7 @@ const index: React.FC<{
   
   const { overallStatsPayload, mostRecentPayload } = data
 
-  const handleVisible = () => {
+  const handleVisible: () => void = () => {
     setVisible(!isVisible)
   }
   
@@ -64,13 +64,15 @@ const index: React.FC<{
       />}
 
       <Icon 
+        name="arrow"
         position={orArrowAttributes.position}
         src="/icons/up-arrow-svgrepo-com.svg"
         size="lg"
         content={orArrowAttributes.content}
         kind={{
           type: "button",
-          content: handleVisible
+          content: "",
+          callback: handleVisible
         }}
         custom={orArrowAttributes.custom}
       />

@@ -7,9 +7,9 @@ import { Doughnut } from 'react-chartjs-2';
 import CountUp from 'react-countup';
 
 import { slider } from "./varients"
-import { Overall } from 'lib/sections/sections.types'
-import { MenuData, overallMenuData } from "./icons.data"
-import Icon from "components/icon"
+import { OverallPayload } from 'lib/sections/sections.types'
+import { overallMenuData } from "./icons.data"
+import Icon, { IconInter } from "components/icon"
 
 
 interface LanguageValue {
@@ -19,7 +19,7 @@ interface LanguageValue {
 }
 
 const Overall: React.FC<{
-    payload: Overall,
+    payload: OverallPayload,
     isSectionPermitted: boolean
 }> = ({ 
     payload, 
@@ -124,11 +124,12 @@ const Overall: React.FC<{
                     {overallMenuData({
                         Rank: roundThousandsOrGetDefault(leaderBoardScore),
                         Completed: <CountUp duration={4} end={totalCompleted} /> 
-                    }).map((item: MenuData) => (
+                    }).map((item: IconInter) => (
                         <div className="flex items-center justify-center" key={item.name}>
                             <span className="text-2xl">{item.name}: </span>
 
                             <Icon 
+                                name={item.name}
                                 size={item.size}
                                 kind={item.kind}
                                 src={item.src}

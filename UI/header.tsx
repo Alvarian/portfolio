@@ -51,7 +51,7 @@ const Header: React.FC<{
           MIGHT USE THIS TO REPRESENT SECTION ANIMATION TRIGGER
           <KeyIcon icon={icon} size={iconSize} />
         </div> */}
-        <KeyIcon icon={icon} size={iconSize} />
+        <KeyIcon position="" icon={icon} size={iconSize} />
 
         <motion.h1 className={styles.tailwind.content.name}
           initial="hidden"
