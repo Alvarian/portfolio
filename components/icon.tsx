@@ -1,9 +1,25 @@
 import { motion } from "framer-motion"
-import { dataOptions, IconInter } from "lib/sections/sections.types"
+import { dataOptions } from "lib/sections/sections.types"
 import Image from "next/image"
 
 
+export interface IconInter {
+    name: string,
+    size: string,
+    kind: {
+        type: string,
+        content: string,
+        callback: () => void
+    },
+    src: string,
+    position: string,
+    custom: {parent: string, img: string, content: string},
+    content: JSX.Element | string | null
+}
+
+
 const Icon: React.FC<IconInter> = ({
+    name,
     src,
     size,
     content,
@@ -70,12 +86,12 @@ const Icon: React.FC<IconInter> = ({
     }
 
     const renderParentIcon = (img: JSX.Element) => {
-        switch (kind?.type) {
+        switch (kind.type) {
             case "link":
                 return (
-                    <div className={"w-full "+mappedIconPositions[position].parent+" "+custom.parent} style={mappedIconSizes[size].parent}>            
+                    <div className={"w-full "+mappedIconPositions[position].parent+" "+custom?.parent} style={mappedIconSizes[size].parent}>            
                     
-                        <motion.a href="#" className={"rounded-full "+custom.img} style={mappedIconPositions[position].child}
+                        <motion.a href={kind.content} className={"rounded-full "+custom?.img} style={mappedIconPositions[position].child}
                             animate={{ 
                                 rotate: 360,
                             }}
@@ -87,20 +103,20 @@ const Icon: React.FC<IconInter> = ({
                                 repeatType: 'reverse'
                             }}
                         >{img}</motion.a>
-                        {content && <span className={mappedIconSizes[size].child.content+" "+custom.content} style={mappedIconPositions[position].child}>{content}</span>}
+                        {content && <span className={mappedIconSizes[size].child.content+" "+custom?.content} style={mappedIconPositions[position].child}>{content}</span>}
 
                     </div>
                 )
             case "button":
                 return (
-                    <motion.button className={"m-7 w-full "+mappedIconPositions[position].parent+" "+custom.parent} onClick={() => {kind.content()}}
+                    <motion.button className={"m-7 w-full "+mappedIconPositions[position].parent+" "+custom?.parent} onClick={() => {kind.callback()}}
                         whileHover={{ scale: 1.2 }}
                         onHoverStart={e => {}}
                         onHoverEnd={e => {}}
                     >
                         
-                        <span className={custom.img} style={mappedIconPositions[position].child}>{img}</span>
-                        {content && <span className={mappedIconSizes[size].child.content+" "+custom.content} style={mappedIconPositions[position].child}>{content}</span>}
+                        <span className={custom?.img} style={mappedIconPositions[position].child}>{img}</span>
+                        {content && <span className={mappedIconSizes[size].child.content+" "+custom?.content} style={mappedIconPositions[position].child}>{content}</span>}
 
                     </motion.button>
                 )

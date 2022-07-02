@@ -1,7 +1,10 @@
 import Image from "next/image"
 
 
-const Trophy: React.FC<any> = ({
+const Trophy: React.FC<{
+    content: string,
+    size: number
+}> = ({
     content,
     size
 }) => {

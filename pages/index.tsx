@@ -10,7 +10,7 @@ import Navbar from 'UI/navbar'
 import { useResize } from 'hooks/'
 
 import { Badge, Content, dataOptions, MostrecentPayload, OverallPayload } from 'lib/sections/sections.types'
-import { sectionData } from 'lib/sections/sections.data'
+import { localMockData, sectionData } from 'lib/sections/sections.data'
 import { rateLimiters, getFilesFromDir } from 'lib/sections/sections.methods'
 
 
@@ -27,8 +27,8 @@ const Home: NextPage = (props) => {
   const [scrollMethodAdmissions, setAdmissions] = useState<Admissions>({})
   const [areEventsLoaded, setAreLoaded] = useState<boolean>(false)
 
-  // const propData: dataOptions = localMockData
-  const propData: dataOptions = props
+  const propData: dataOptions = localMockData
+  // const propData: dataOptions = props
 
   const handleAutoRoutingOnScroll = (list: Admissions) => {
     for (let key in list) {
@@ -188,10 +188,30 @@ Home.getInitialProps = async function() {
 
     const gifFrames: Array<string> = await getFilesFromDir()
 
+    const affirmToken = async () => {
+      try {
+        const token = await(await fetch("https://api.badgr.io/v2/users/self", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
+            'Content-Type': 'application/json'
+          }
+        })).json()
+
+        if (!token.status.success) throw token.status.description
+
+        console.log(token)
+      } catch (err) {
+        console.log("error",err)
+
+        return "?"
+      }
+    }
+console.log(await affirmToken())
     const collectionData = await (await fetch("https://api.badgr.io/v2/backpack/collections/DBRj-SFzTRu1ZscR12JQ5g", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${process.env.BADGR_AUTH_BEARER}`,
+        Authorization: `Bearer ${affirmToken()}`,
         'Content-Type': 'application/json'
       }
     })).json()
@@ -209,7 +229,7 @@ Home.getInitialProps = async function() {
           'Content-Type': 'application/json'
         }
       })).json()).result[0]
-
+      
       const {
         name,
         description,
@@ -298,7 +318,7 @@ Home.getInitialProps = async function() {
         }
       },
     }
-    
+    console.log(payload)
     return payload
   } catch (err) {
     return {err}

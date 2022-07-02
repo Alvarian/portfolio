@@ -1,4 +1,7 @@
-const UnderConstruction: React.FC<any> = ({
+const UnderConstruction: React.FC<{
+    alt: string,
+    width: number
+}> = ({
     alt,
     width
 }) => {
