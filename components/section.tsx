@@ -22,8 +22,8 @@ const Section: React.FC<{
   } | {
     gifFrames: Array<string>,
     badges: Array<Badge>
-  },
-  keyIcon: string,
+  } | null,
+  keyIcon: string | null,
   alt: string,
 }> = ({
   content,
@@ -98,7 +98,7 @@ const Section: React.FC<{
             variants={defaultVariants.fallUp(1)}
           >Sections</motion.h1>
 
-          <Underline />
+          <Underline width={null} />
 
           {defaultLinks}
         </div> : ""}
@@ -110,7 +110,7 @@ const Section: React.FC<{
             variants={defaultVariants.fallUp(1)}
           >Outsourced</motion.h1>
 
-          <Underline />
+          <Underline width={null} />
 
           {outsourcedLinks}
         </div> : ""}

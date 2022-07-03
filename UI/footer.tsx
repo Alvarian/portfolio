@@ -114,7 +114,11 @@ const FooterSection: React.FC<{width: number}> = ({
     key="last"
     content={{body: Footer, isFull: true}}
     width={width}
+    setRef={null}
+    isSectionPermitted={null}
     bgImageName="library-min.jpg"
+    keyIcon={null}
+    serverProps={null}
     alt="footer"
   />
 }
