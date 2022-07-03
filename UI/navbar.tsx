@@ -6,8 +6,11 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 
-const Navbar: React.FC<any> = ({
-  visible,
+const Navbar: React.FC<{
+  navVisible: boolean,
+  width: number
+}> = ({
+  navVisible,
   width
 }) => {
   const handleRenderLinks = (textStyles: string) => {
@@ -42,7 +45,7 @@ const Navbar: React.FC<any> = ({
   return (
     <motion.div className={styles.tailwind.main} style={styles.css} id="droppingNavbar"
       variants={defaultVariants.dropDown(1)}
-      animate={visible ? 'lift' : 'drop'}
+      animate={navVisible ? 'lift' : 'drop'}
     >
       <div className="navbar-start pl-10">
         {width > 800 ? 

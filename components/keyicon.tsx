@@ -2,9 +2,14 @@ import Image from "next/image"
 
 import { Content } from 'lib/sections/sections.types'
 import { sectionData } from 'lib/sections/sections.data'
+import { IconInter } from "./icon"
 
 
-const KeyIcon: React.FC<any> = ({
+const KeyIcon: React.FC<{
+  position: any,
+  size: number,
+  icon: string
+}> = ({
   position,
   size,
   icon
