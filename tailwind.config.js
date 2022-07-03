@@ -1,3 +1,17 @@
+const plugin = require('tailwindcss/plugin')
+
+const backfaceVisibility = plugin(function({addUtilities}) {
+  addUtilities({
+    '.backfaceVisible': {
+      'backface-visibility': 'visible',
+    },
+    '.backfaceHidden': {
+      'backface-visibility': 'hidden',
+    }
+  })
+});
+
+
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -23,5 +37,6 @@ module.exports = {
   },
   plugins: [
     require('daisyui'),
+    [backfaceVisibility]
   ],
 }
