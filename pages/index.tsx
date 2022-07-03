@@ -28,8 +28,8 @@ const Home: NextPage = (props) => {
   const [scrollMethodAdmissions, setAdmissions] = useState<Admissions>({})
   const [areEventsLoaded, setAreLoaded] = useState<boolean>(false)
 
-  // const propData: dataOptions = localMockData
-  const propData: dataOptions = props
+  const hasPropData: dataOptions = props
+  const propData: dataOptions = hasPropData.setting === "local" ? localMockData : props
 
   const handleAutoRoutingOnScroll = (list: Admissions) => {
     for (let key in list) {
@@ -184,36 +184,55 @@ Home.getInitialProps = async function() {
   // Here i want to access the projectID sent from the previous page
   const r = require('ioredis')
   try {
+    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw "Missing Redis Credentials"
+    if (!process.env.NEXT_PUBLIC_BADGR_USER) throw "Missing Badgr Username Credential"
+    if (!process.env.NEXT_PUBLIC_BADGR_PASS) throw "Missing Badgr Password Credential"
+    const redis = new r(process.env.NEXT_PUBLIC_REDIS_URL)
+    const hasCache = await redis.get("portfolioCache")
+    if (hasCache) return JSON.parse(hasCache)
+
     const userData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_")).json()
 
     const challangesData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")).json()
 
     const gifFrames: Array<string> = await getFilesFromDir()
-    
-    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw "Missing Redis Credentials"
-    const redis = new r(process.env.NEXT_PUBLIC_REDIS_URL)
-    
-    const hasAccessToken = await redis.get('portfolioAccess')
-    if (!hasAccessToken) throw "Redis does not have access token"
 
-    const hasRefreshToken = await redis.get('portfolioRefresh')
-    if (!hasRefreshToken) throw "Redis does not have refresh token"
+    const { hasAccessToken, hasRefreshToken } = await (async () => {
+      const hasAccessToken = await redis.get('portfolioAccess')
+      const hasRefreshToken = await redis.get('portfolioRefresh')
 
-    const collectionData = await (async () => {
-      const getNewToken = (refresh_token: string) => {
-        return fetch('https://api.badgr.io/o/token', {
+      if (!hasRefreshToken || !hasAccessToken) {
+        const response: {
+          [key: string]: string | number
+        } = await (await fetch('https://api.badgr.io/o/token', {
           method: 'POST',
           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
-          body: JSON.stringify({
-            grant_type: 'refresh_token', 
-            refresh_token
-          })
-        })
+          body: `username=${process.env.NEXT_PUBLIC_BADGR_USER}&password=${process.env.NEXT_PUBLIC_BADGR_PASS}`
+        })).json()
+        
+        await redis.set("portfolioAccess", response.access_token)
+        await redis.set("portfolioRefresh", response.refresh_token)
+        return { hasAccessToken: response.access_token, hasRefreshToken: response.access_token }
       }
 
+      return { hasAccessToken, hasRefreshToken }
+    })()
+
+    const getNewAccessToken = (refresh_token: string) => fetch('https://api.badgr.io/o/token', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        grant_type: 'refresh_token', 
+        refresh_token
+      })
+    })
+
+    const collectionData = await (async () => {
       const fetchData = (accessToken: string) => fetch("https://api.badgr.io/v2/backpack/collections/DBRj-SFzTRu1ZscR12JQ5g", {
         method: "GET",
         headers: {
@@ -225,7 +244,7 @@ Home.getInitialProps = async function() {
       try {
         const data = await (await fetchData(hasAccessToken)).json()
         if (!data.status.success) {
-          const { access_token, refresh_token } = await (await getNewToken(hasRefreshToken)).json()
+          const { access_token, refresh_token } = await (await getNewAccessToken(hasRefreshToken)).json()
 
           await redis.set('portfolioRefresh', refresh_token)
           await redis.set('portfolioAccess', access_token)
@@ -235,6 +254,7 @@ Home.getInitialProps = async function() {
 
         return data
       } catch (err) {
+        // WRITE TO CLOUD AND BE RECEPTIVE TO ERRORS FROM OTHER FEED ex. email, 3rd party app like sandbox
         console.log(err)
       }
     })()
@@ -330,6 +350,7 @@ Home.getInitialProps = async function() {
     mostRecentPayload.languagesUsed = challangesData.data[0].completedLanguages
 
     const payload = {
+      setting: 'external',
       data: {
         stats: {
           overallStatsPayload,
@@ -341,11 +362,17 @@ Home.getInitialProps = async function() {
         }
       },
     }
-    // console.log(payload)
+    
+    redis.setex("portfolioCache", 88000, JSON.stringify(payload))
+
     return payload
   } catch (err) {
+    // WRITE TO CLOUD AND BE RECEPTIVE TO ERRORS FROM OTHER FEED ex. email, 3rd party app like sandbox
     console.log(err)
-    return {err}
+    return {
+      setting: "local",
+      err
+    }
   }
 }
 
