@@ -12,6 +12,8 @@ import { useResize } from 'hooks/'
 import { Badge, Content, dataOptions, MostrecentPayload, OverallPayload } from 'lib/sections/sections.types'
 import { localMockData, sectionData } from 'lib/sections/sections.data'
 import { rateLimiters, getFilesFromDir } from 'lib/sections/sections.methods'
+import { getUserData, getChallengesData, getMostRecentChallengeData } from 'helpers/stats'
+import { getBadgrAuthTokens, getBadgrBadgeData, getBadgrBadgeDecriptions, getBadgrCollectionsData, getNewAccessToken } from 'helpers/badges'
 // import Redis from 'ioredis'
 
 
@@ -189,101 +191,51 @@ Home.getInitialProps = async function() {
     if (!process.env.NEXT_PUBLIC_BADGR_PASS) throw "Missing Badgr Password Credential"
     const redis = new r(process.env.NEXT_PUBLIC_REDIS_URL)
     const hasCache = await redis.get("portfolioCache")
-    if (hasCache) return JSON.parse(hasCache)
+    // if (hasCache) return JSON.parse(hasCache)
 
-    const userData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_")).json()
-
-    const challangesData = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")).json()
+    const userData = await getUserData()
+    
+    const challangesData = await getChallengesData()
 
     const gifFrames: Array<string> = await getFilesFromDir()
 
-    const { hasAccessToken, hasRefreshToken } = await (async () => {
-      const hasAccessToken = await redis.get('portfolioAccess')
-      const hasRefreshToken = await redis.get('portfolioRefresh')
-
-      if (!hasRefreshToken || !hasAccessToken) {
-        const response: {
-          [key: string]: string | number
-        } = await (await fetch('https://api.badgr.io/o/token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: `username=${process.env.NEXT_PUBLIC_BADGR_USER}&password=${process.env.NEXT_PUBLIC_BADGR_PASS}`
-        })).json()
-        
-        await redis.set("portfolioAccess", response.access_token)
-        await redis.set("portfolioRefresh", response.refresh_token)
-        return { hasAccessToken: response.access_token, hasRefreshToken: response.access_token }
-      }
-
-      return { hasAccessToken, hasRefreshToken }
-    })()
-
-    const getNewAccessToken = (refresh_token: string) => fetch('https://api.badgr.io/o/token', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        grant_type: 'refresh_token', 
-        refresh_token
-      })
-    })
+    const { hasAccessToken, hasRefreshToken } = await getBadgrAuthTokens(redis)
 
     const collectionData = await (async () => {
-      const fetchData = (accessToken: string) => fetch("https://api.badgr.io/v2/backpack/collections/DBRj-SFzTRu1ZscR12JQ5g", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
+      const data = await getBadgrCollectionsData(hasAccessToken)
 
-      try {
-        const data = await (await fetchData(hasAccessToken)).json()
-        if (!data.status.success) {
-          const { access_token, refresh_token } = await (await getNewAccessToken(hasRefreshToken)).json()
+      if (!data.status.success) {
+        const hasNewTokens = await getNewAccessToken(hasRefreshToken)
 
-          await redis.set('portfolioRefresh', refresh_token)
-          await redis.set('portfolioAccess', access_token)
+        const isGrantedToGetTokens = (hasNewTokens.error) ? await getBadgrAuthTokens(redis) : hasNewTokens
 
-          return await (await fetchData(access_token)).json()
-        }
+        const { access_token, refresh_token } = isGrantedToGetTokens
+        await redis.set('portfolioRefresh', refresh_token)
+        await redis.set('portfolioAccess', access_token)
 
-        return data
-      } catch (err) {
-        // WRITE TO CLOUD AND BE RECEPTIVE TO ERRORS FROM OTHER FEED ex. email, 3rd party app like sandbox
-        console.log(err)
+        const certainData = await getBadgrCollectionsData(access_token)
+        return certainData
       }
+
+      return data
     })()
-    
+
     const badges: Array<Badge> = await Promise.all(collectionData.result[0].assertions.map(async (assertion: string) => {
+      const badgeData = await getBadgrBadgeData(assertion, hasAccessToken)
+      if (!badgeData.status.success) throw "Assertion is not found or access token is incorrect"
+
       const {
         issuedOn,
         image,
         evidence,
         badgeclassOpenBadgeId
-      } = (await (await fetch(`https://api.badgr.io/v2/backpack/assertions/${assertion}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${hasAccessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })).json()).result[0]
+      } = badgeData.result[0]
       
       const {
         name,
         description,
         tags
-      }: Record<string, string | Array<{[key: string]: string}>> = (badgeclassOpenBadgeId.split(".").find((part: string) => part === "credly")) ? await (await fetch(badgeclassOpenBadgeId, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${hasAccessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })).json() : {}
+      }: Record<string, string | Array<{[key: string]: string}>> = (badgeclassOpenBadgeId.split(".").find((part: string) => part === "credly")) ? await getBadgrBadgeDecriptions(badgeclassOpenBadgeId) : {}
       
       return {
         issuedOn,
@@ -331,6 +283,10 @@ Home.getInitialProps = async function() {
       completionDate: "",
       languagesUsed: []
     }
+
+    const mostRecentChallengeData = await getMostRecentChallengeData(challangesData.data[0].id)
+    if (!mostRecentChallengeData.success && !mostRecentChallengeData.id) throw "Challenge Id does not exist"
+
     const recentChallengeData: {
       name: string,
       totalAttempts: number,
@@ -339,7 +295,7 @@ Home.getInitialProps = async function() {
       tags: Array<string>,
       completionDate: string,
       completedLanguages: Array<string>
-    } = await (await fetch(`https://www.codewars.com/api/v1/code-challenges/${challangesData.data[0].id}`)).json()
+    } = mostRecentChallengeData
       
     mostRecentPayload.title = recentChallengeData.name
     mostRecentPayload.attemptedTotal = recentChallengeData.totalAttempts
@@ -363,7 +319,7 @@ Home.getInitialProps = async function() {
       },
     }
     
-    redis.setex("portfolioCache", 88000, JSON.stringify(payload))
+    // redis.setex("portfolioCache", 88000, JSON.stringify(payload))
 
     return payload
   } catch (err) {
