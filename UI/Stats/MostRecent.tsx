@@ -2,7 +2,6 @@ import { motion } from "framer-motion"
 import { MostrecentPayload } from "lib/sections/sections.types"
 import { useState } from "react"
 import { overallMenuData } from "./icons.data"
-import mostRecentSnippets from "./mostRecentSnippets"
 import { slider } from "./varients"
 
 
@@ -18,9 +17,10 @@ const MostRecent: React.FC<{
         url,
         tags,
         completionDate,
-        languagesUsed
+        languagesUsed,
+        solutions
     } = payload
-
+    
     const [currentSnippet, setSnippet] = useState(languagesUsed[0])
 
     const renderTags = () => {
@@ -32,13 +32,12 @@ const MostRecent: React.FC<{
     }
 
     const renderSnippets = () => {
-        console.log(mostRecentSnippets.title, title)
-        if (mostRecentSnippets.title !== title) return "<!-- Update snippets for "+title+" -->"
+        if (solutions.title !== title) return "<!-- Update snippets for "+title+" -->"
 
         const languageTabs = []
         const languageSnippets = []
         for (let i = 0; i < languagesUsed.length; i++) {
-            const snippet = mostRecentSnippets.languages[i]
+            const snippet = solutions.languages[i]
             const language = languagesUsed[i]
 
             const styles = {
@@ -47,7 +46,7 @@ const MostRecent: React.FC<{
             }
 
             languageTabs.push(<button key={snippet.language+"_tab"} className={styles.button} onClick={() => setSnippet(language)}>{language.toLocaleUpperCase()}</button>)
-            languageSnippets.push(<div key={snippet.language+"_snip"} className={styles.snippet}>{snippet.solution}</div>)
+            languageSnippets.push(<pre key={snippet.language+"_snip"} className={styles.snippet}>{snippet.solution}</pre>)
         }
 
         return (
