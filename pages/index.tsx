@@ -396,7 +396,7 @@ Home.getInitialProps = async function() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(notifications)
-      })
+      }).then((response: any) => response.json()).then((json: {}) => console.log(json)).catch((err: unknown) => console.log(err))
     }
   }
 }
