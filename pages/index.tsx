@@ -11,10 +11,9 @@ import { useResize } from 'hooks/'
 
 import { Badge, Content, dataOptions, MostrecentPayload, OverallPayload } from 'lib/sections/sections.types'
 import { localMockData, sectionData } from 'lib/sections/sections.data'
-import { rateLimiters, getFilesFromDir } from 'lib/sections/sections.methods'
+import { rateLimiters, getFilesFromDir, formatDate } from 'lib/sections/sections.methods'
 import { getUserData, getChallengesData, getMostRecentChallengeData } from 'helpers/stats'
 import { getBadgrAuthTokens, getBadgrBadgeData, getBadgrBadgeDecriptions, getBadgrCollectionsData, getNewAccessToken } from 'helpers/badges'
-// import Redis from 'ioredis'
 
 
 interface Admissions {
@@ -185,13 +184,43 @@ const Home: NextPage = (props) => {
 Home.getInitialProps = async function() {
   // Here i want to access the projectID sent from the previous page
   const r = require('ioredis')
+  const moment = require('moment-timezone')
+  const now = formatDate(moment.tz(new Date(), "America/New_York|US/Eastern").format())
+  
+  const notifications: {
+    error: unknown,
+    warnings: unknown[]
+  } = {
+    error: null,
+    warnings: []
+  }
+
   try {
-    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw "Missing Redis Credentials"
-    if (!process.env.NEXT_PUBLIC_BADGR_USER) throw "Missing Badgr Username Credential"
-    if (!process.env.NEXT_PUBLIC_BADGR_PASS) throw "Missing Badgr Password Credential"
+    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
+      line: 200,
+      file: "pages/index",
+      time: now.minimal,
+      msg: "Missing Redis Credentials"
+    }
+    
+    if (!process.env.NEXT_PUBLIC_BADGR_USER) throw {
+      line: 208,
+      file: "pages/index",
+      time: now.minimal,
+      msg: "Missing Badgr Username Credential"
+    }
+    
+    if (!process.env.NEXT_PUBLIC_BADGR_PASS) throw {
+      line: 216,
+      file: "pages/index",
+      time: now.minimal,
+      msg: "Missing Badgr Password Credential"
+    }
+    
     const redis = new r(process.env.NEXT_PUBLIC_REDIS_URL)
+
     const hasCache = await redis.get("portfolioCache")
-    // if (hasCache) return JSON.parse(hasCache)
+    if (hasCache) return JSON.parse(hasCache)
 
     const userData = await getUserData()
     
@@ -199,7 +228,7 @@ Home.getInitialProps = async function() {
 
     const gifFrames: Array<string> = await getFilesFromDir()
 
-    const { hasAccessToken, hasRefreshToken } = await getBadgrAuthTokens(redis)
+    let { hasAccessToken, hasRefreshToken } = await getBadgrAuthTokens(redis)
 
     const collectionData = await (async () => {
       const data = await getBadgrCollectionsData(hasAccessToken)
@@ -210,6 +239,8 @@ Home.getInitialProps = async function() {
         const isGrantedToGetTokens = (hasNewTokens.error) ? await getBadgrAuthTokens(redis) : hasNewTokens
 
         const { access_token, refresh_token } = isGrantedToGetTokens
+        hasAccessToken = access_token
+        hasRefreshToken = refresh_token
         await redis.set('portfolioRefresh', refresh_token)
         await redis.set('portfolioAccess', access_token)
 
@@ -219,10 +250,15 @@ Home.getInitialProps = async function() {
 
       return data
     })()
-
+    
     const badges: Array<Badge> = await Promise.all(collectionData.result[0].assertions.map(async (assertion: string) => {
       const badgeData = await getBadgrBadgeData(assertion, hasAccessToken)
-      if (!badgeData.status.success) throw "Assertion is not found or access token is incorrect"
+      if (!badgeData.status.success) throw {
+        line: 257,
+        file: "pages/index",
+        time: now.minimal,        
+        msg: "Assertion is not found or access token is incorrect"
+      }
 
       const {
         issuedOn,
@@ -281,11 +317,17 @@ Home.getInitialProps = async function() {
       url: "",
       tags: [],
       completionDate: "",
-      languagesUsed: []
+      languagesUsed: [],
+      solutions: {title: "", languages: []}
     }
 
     const mostRecentChallengeData = await getMostRecentChallengeData(challangesData.data[0].id)
-    if (!mostRecentChallengeData.success && !mostRecentChallengeData.id) throw "Challenge Id does not exist"
+    if (!mostRecentChallengeData.success && !mostRecentChallengeData.id) throw {
+      line: 324,
+      file: "pages/index",
+      time: now.minimal,
+      msg: "Challenge Id does not exist"
+    }
 
     const recentChallengeData: {
       name: string,
@@ -294,7 +336,8 @@ Home.getInitialProps = async function() {
       url: string,
       tags: Array<string>,
       completionDate: string,
-      completedLanguages: Array<string>
+      completedLanguages: Array<string>,
+      solutions: Array<{language: string, solution: string}>
     } = mostRecentChallengeData
       
     mostRecentPayload.title = recentChallengeData.name
@@ -305,6 +348,21 @@ Home.getInitialProps = async function() {
     mostRecentPayload.completionDate = challangesData.data[0].completedAt
     mostRecentPayload.languagesUsed = challangesData.data[0].completedLanguages
 
+    const mostRecentSolutions = JSON.parse(await redis.get("mostRecentSolution"))
+    mostRecentPayload.solutions = mostRecentSolutions
+
+    const doesCacheMatchWithCodewarsLanguages = mostRecentPayload.languagesUsed.map((langaugeFromCodeWars: string) => {
+      return !!mostRecentSolutions.languages.find((lAndSFromCache: {[key: string]: string}) => lAndSFromCache.language === langaugeFromCodeWars)
+    }).reduce((final: boolean, value: boolean) => final && value)
+    
+    !doesCacheMatchWithCodewarsLanguages && notifications.warnings.push({
+      line: 358,
+      file: "pages/index",
+      time: now.minimal,
+      priority: notifications.warnings.length+1,
+      msg: "warning, using old payload. update cache of newest solution"
+    })
+    
     const payload = {
       setting: 'external',
       data: {
@@ -319,19 +377,28 @@ Home.getInitialProps = async function() {
       },
     }
     
-    // redis.setex("portfolioCache", 88000, JSON.stringify(payload))
+    redis.setex("portfolioCache", 88000, JSON.stringify(payload))
 
     return payload
   } catch (err) {
     // WRITE TO CLOUD AND BE RECEPTIVE TO ERRORS FROM OTHER FEED ex. email, 3rd party app like sandbox
-    console.log(err)
+    notifications.error = err
+
     return {
       setting: "local",
       err
+    }
+  } finally {
+    if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {
+      fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(notifications)
+      })
     }
   }
 }
 
 export default Home
-
-

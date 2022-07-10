@@ -37,7 +37,11 @@ export interface MostrecentPayload {
   url: string,
   tags: Array<string>,
   completionDate: string,
-  languagesUsed: Array<string>
+  languagesUsed: Array<string>,
+  solutions: {
+    title: string, 
+    languages: Array<{language: string, solution: string}>
+  }
 }
 
 export type dataOptions = {
