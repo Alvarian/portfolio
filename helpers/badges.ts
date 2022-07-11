@@ -47,14 +47,20 @@ export const getBadgrBadgeData = async (assertion: string, hasAccessToken: strin
   }
 })).json()
 
-export const getBadgrBadgeDecriptions = async (badgeclassOpenBadgeId: string) => {
+export const getBadgrBadgeDecriptions = async (badgeclassOpenBadgeId: string, currentDate: string) => {
   const response = await (await fetch(badgeclassOpenBadgeId, {
     method: "GET",
     headers: {
       'Content-Type': 'application/json'
     }
   })).json()
-  if (!response.metadata && !response.id) throw "Badge descriptions could not be fetched"
+  if (!response.metadata && !response.id) throw {
+    line: 257,
+    file: "helpers/badges",
+    time: currentDate,        
+    msg: "Badge descriptions could not be fetched"
+  }
+  
 
   return response
 }

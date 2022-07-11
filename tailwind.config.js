@@ -25,7 +25,8 @@ module.exports = {
         'inherit': 'inherit'
       },
       height: {
-        'inherit': 'inherit'
+        'inherit': 'inherit',
+        'section': '900px'
       },
       top: {
         '34': '8.5rem'
