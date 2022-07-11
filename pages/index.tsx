@@ -85,7 +85,7 @@ const Home: NextPage = (props) => {
   useEffect(() => {
     if (!Object.keys(scrollMethodAdmissions).length) {
       const currentScrollPos = window.pageYOffset
-
+console.log()
       let admissions: dataOptions = {}
 
       const footer = document.querySelector("#footer") as HTMLElement | null
@@ -185,7 +185,7 @@ Home.getInitialProps = async function() {
   // Here i want to access the projectID sent from the previous page
   const r = require('ioredis')
   const moment = require('moment-timezone')
-  const now = formatDate(moment.tz(new Date(), "America/New_York|US/Eastern").format())
+  const now = formatDate(moment.tz(new Date(), "America/New_York").format())
   
   const notifications: {
     error: unknown,
@@ -271,7 +271,7 @@ Home.getInitialProps = async function() {
         name,
         description,
         tags
-      }: Record<string, string | Array<{[key: string]: string}>> = (badgeclassOpenBadgeId.split(".").find((part: string) => part === "credly")) ? await getBadgrBadgeDecriptions(badgeclassOpenBadgeId) : {}
+      }: Record<string, string | Array<{[key: string]: string}>> = (badgeclassOpenBadgeId.split(".").find((part: string) => part === "credly")) ? await getBadgrBadgeDecriptions(badgeclassOpenBadgeId, now.minimal) : {}
       
       return {
         issuedOn,
@@ -359,7 +359,6 @@ Home.getInitialProps = async function() {
       line: 358,
       file: "pages/index",
       time: now.minimal,
-      priority: notifications.warnings.length+1,
       msg: "warning, using old payload. update cache of newest solution"
     })
     
