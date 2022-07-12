@@ -38,7 +38,7 @@ const BadgeCoat: React.FC<{
           
           counter++
           incrementFrame((oldCount) => oldCount + 1)
-        }, 30)
+        }, 70)
         
         return () => clearInterval(runFrames)
       } else {
