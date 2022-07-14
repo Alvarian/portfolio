@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { formatDate } from "lib/sections/sections.methods"
 import { Badge } from "lib/sections/sections.types"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import BadgeCoat from "./BadgeCoat"
 import BadgeIcons from "./BadgeIcons"
 
@@ -20,6 +20,83 @@ const index: React.FC<{
 }) => {
   const { gifFrames, badges } = data
   const [isFrameEnded, setIfEnded] = useState(false)
+
+  const { tailwind, css } = (() => { 
+    if (width > 1500) {
+      return {
+        css: {
+          iconIndicator: {
+            width: "530px",
+            color: "#fff",
+            textShadow: `
+              0 0 5px #fff,
+              0 0 10px #fff,
+              0 0 20px #fff,
+              0 0 40px #0ff,
+              0 0 80px #0ff,
+              0 0 90px #0ff,
+              0 0 100px #0ff,
+              0 0 150px #0ff
+            `
+          }
+        },
+        tailwind: {
+          main: `h-full w-full flex items-center justify-end`,
+          iconIndicator: `h-full flex justify-center items-center`,
+          badgesMain: `h-full w-full absolute flex justify-end`
+        }
+      }
+    } else if (width <= 760) {
+      return {
+        css: {
+          iconIndicator: {
+            width: "530px",
+            color: "#fff",
+            textShadow: `
+              0 0 5px #fff,
+              0 0 10px #fff,
+              0 0 20px #fff,
+              0 0 40px #0ff,
+              0 0 80px #0ff,
+              0 0 90px #0ff,
+              0 0 100px #0ff,
+              0 0 150px #0ff
+            `
+          }
+        },
+        tailwind: {
+          main: `h-full w-full flex items-center justify-end mr-[-680px]`,
+          iconIndicator: `h-full flex justify-center items-center relative top-[240px]`,
+          badgesMain: `h-full w-full absolute flex flex-col-reverse items-center right-[-440px] bottom-[110px]`
+        }
+      }
+    } else {
+      return {
+        css: {
+          iconIndicator: {
+            width: "530px",
+            color: "#fff",
+            textShadow: `
+              0 0 5px #fff,
+              0 0 10px #fff,
+              0 0 20px #fff,
+              0 0 40px #0ff,
+              0 0 80px #0ff,
+              0 0 90px #0ff,
+              0 0 100px #0ff,
+              0 0 150px #0ff
+            `
+          }
+        },
+        tailwind: {
+          main: `h-full w-full flex items-center justify-end`,
+          iconIndicator: `h-full flex justify-center items-center top-[-260px]`,
+          badgesMain: `h-full w-full absolute flex justify-end`
+        }
+      }
+    }
+  })()
+
   const reset = {
     issuedOn: "",
     image: "",
@@ -56,21 +133,6 @@ const index: React.FC<{
     })
   }
 
-  const badgeDetailsStyles = {
-    width: "530px",
-    color: "#fff",
-    textShadow: `
-      0 0 5px #fff,
-      0 0 10px #fff,
-      0 0 20px #fff,
-      0 0 40px #0ff,
-      0 0 80px #0ff,
-      0 0 90px #0ff,
-      0 0 100px #0ff,
-      0 0 150px #0ff
-    `
-  }
-
   const renderTags = () => {
     return badgeDetails.tags.map((tag: string, index: number) => {
         return (
@@ -80,15 +142,16 @@ const index: React.FC<{
   }
 
   return (
-    <div className="h-full w-full flex items-center justify-end">
+    <div className={tailwind.main}>
       <BadgeCoat
         isSectionPermitted={isSectionPermitted}
         gifFrames={gifFrames}
         setIfEnded={setIfEnded}
+        width={width}
       />
 
       {isSectionPermitted && isFrameEnded && <motion.div 
-        className="h-full w-full absolute flex justify-end"
+        className={tailwind.badgesMain}
         style={{
           width: "1640px"
         }}
@@ -105,15 +168,15 @@ const index: React.FC<{
           }
         }}
       >
-        <div className="h-full flex justify-center items-center"
-          style={badgeDetailsStyles}
+        {width > 1500 && <div className="h-full flex justify-center items-center"
+          style={css.iconIndicator}
         >
-          {width > 1500 && <div>
+          <div>
             <h2 className="text-4xl">{badgeDetails.name}</h2>
             <p className="text-2xl">{badgeDetails.issuedOn}</p>
             <div className="flex justify-around">{renderTags()}</div>
-          </div>}
-        </div>
+          </div>
+        </div>}
 
         <BadgeIcons
           badges={badges}
@@ -121,10 +184,16 @@ const index: React.FC<{
           reset={reset}
         />
 
-        <div className="h-full flex justify-center items-center"
-          style={badgeDetailsStyles}
+        <div className={tailwind.iconIndicator}
+          style={css.iconIndicator}
         >
-          {width < 1500 && <div>
+          {width <= 1500 && width > 760 && <div>
+            <h2 className="text-3xl">{badgeDetails.name}</h2>
+            <p className="text-lg">{badgeDetails.issuedOn}</p>
+            <div className="flex justify-around">{renderTags()}</div>
+          </div>}
+
+          {width <= 760 && <div>
             <h2 className="text-4xl">{badgeDetails.name}</h2>
             <p className="text-2xl">{badgeDetails.issuedOn}</p>
             <div className="flex justify-around">{renderTags()}</div>

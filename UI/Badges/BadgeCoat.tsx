@@ -3,76 +3,87 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 const BadgeCoat: React.FC<{
   isSectionPermitted: boolean,
   gifFrames: Array<string>,
-  setIfEnded: Dispatch<SetStateAction<boolean>>
+  setIfEnded: Dispatch<SetStateAction<boolean>>,
+  width: number
 }> = ({
-    isSectionPermitted,
-    gifFrames,
-    setIfEnded
+  isSectionPermitted,
+  gifFrames,
+  setIfEnded,
+  width
 }) => {
-    const [coatPhase, setCoatPhase] = useState<string>("start")
-    const [coatProperties, setProperties] = useState<{length: number, sources: Array<string>}>({length: 0, sources: []})
-    const [frames, incrementFrame] = useState(0)
-    let runFrames: NodeJS.Timeout
+  const [coatPhase, setCoatPhase] = useState<string>("start")
+  const [coatProperties, setProperties] = useState<{length: number, sources: Array<string>}>({length: 0, sources: []})
+  const [frames, incrementFrame] = useState(0)
+  let runFrames: NodeJS.Timeout
 
-    useEffect(() => { 
-      if (isSectionPermitted) {
-        if (coatPhase === "start") {
-          if (!coatProperties.length) {
-            setProperties({
-              length: gifFrames.length,
-              sources: gifFrames
-            })
-          }
-          
-          setCoatPhase("run")
+  useEffect(() => { 
+    if (isSectionPermitted) {
+      if (coatPhase === "start") {
+        if (!coatProperties.length) {
+          setProperties({
+            length: gifFrames.length,
+            sources: gifFrames
+          })
         }
-  
-        let counter = 0
-        runFrames = setInterval(() => {
-          if (counter >= 46) {
-            clearInterval(runFrames)
-            
-            setIfEnded(true)
-            setCoatPhase("end")
-          }
-          
-          counter++
-          incrementFrame((oldCount) => oldCount + 1)
-        }, 70)
         
-        return () => clearInterval(runFrames)
-      } else {
-        clearInterval(runFrames)
-  
-        incrementFrame(0)
-        
-        setIfEnded(false)
-        setCoatPhase("start")
+        setCoatPhase("run")
       }
-    }, [isSectionPermitted])
 
-    const renderCoatPhase = () => {
-        const badgeStyle = {
-          height: "150%",
-          zIndex: "-10",
-          top: "-25px",
-          minWidth: "1640px",
-          maxWidth: "1640px",
-          filter: "grayscale(100%)",
-          position: "absolute" as "absolute"
+      let counter = 0
+      runFrames = setInterval(() => {
+        if (counter >= 46) {
+          clearInterval(runFrames)
+          
+          setIfEnded(true)
+          setCoatPhase("end")
         }
-    
-        switch (coatPhase) {
-          case "start":
-            return (<img src={gifFrames[0]} alt="coat" style={badgeStyle} />)
-          case "run":
-            return (<img src={gifFrames[frames]} alt="coat" style={badgeStyle} />)
-          case "end":
-            return (<img src={gifFrames[gifFrames.length-1]} alt="coat" style={badgeStyle} />)
-        }
+        
+        counter++
+        incrementFrame((oldCount) => oldCount + 1)
+      }, 60)
+      
+      return () => clearInterval(runFrames)
+    } else {
+      clearInterval(runFrames)
+
+      incrementFrame(0)
+      
+      setIfEnded(false)
+      setCoatPhase("start")
+    }
+  }, [isSectionPermitted])
+
+  const renderCoatPhase = () => {
+    const styles = width > 930 ? {
+      height: "150%",
+      zIndex: "-10",
+      top: "-25px",
+      maxWidth: "1640px",
+      minWidth: "1640px",
+      filter: "grayscale(100%)",
+      position: "absolute" as "absolute"
+    } : {
+      height: "150%",
+      zIndex: "-10",
+      top: "-25px",
+      maxWidth: "1640px",
+      minWidth: "1640px",
+      filter: "grayscale(100%)",
+      position: "absolute" as "absolute"
     }
 
-    return (<>{renderCoatPhase()}</>)
+
+    switch (coatPhase) {
+      case "start":
+        return (<img src={gifFrames[0]} alt="coat" style={styles} />)
+      case "run":
+        return (<img src={gifFrames[frames]} alt="coat" style={styles} />)
+      case "end":
+        return (<img src={gifFrames[gifFrames.length-1]} alt="coat" style={styles} />)
+    }
+  }
+
+  return (<>{renderCoatPhase()}</>)
 }
 
 export default BadgeCoat

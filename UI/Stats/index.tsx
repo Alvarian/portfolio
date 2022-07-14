@@ -11,10 +11,12 @@ const index: React.FC<{
     overallStatsPayload: OverallPayload, 
     mostRecentPayload: MostrecentPayload
   },
-  isSectionPermitted: boolean
+  isSectionPermitted: boolean,
+  width: number
 }> = ({ 
   data,
-  isSectionPermitted
+  isSectionPermitted,
+  width
 }) => {
   const [isVisible, setVisible] = useState(true)
   
@@ -56,11 +58,13 @@ const index: React.FC<{
         key="overall"
         payload={overallStatsPayload}
         isSectionPermitted={isSectionPermitted}
+        width={width}
       />
         :
       <MostRecent 
         key="recent"
         payload={mostRecentPayload}
+        width={width}
       />}
 
       <Icon 

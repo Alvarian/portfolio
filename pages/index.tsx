@@ -196,7 +196,7 @@ Home.getInitialProps = async function() {
   }
 
   try {
-    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
+    if (process.env.NEXT_PUBLIC_REDIS_URL) throw {
       line: 200,
       file: "pages/index",
       time: now.minimal,
@@ -216,9 +216,23 @@ Home.getInitialProps = async function() {
       time: now.minimal,
       msg: "Missing Badgr Password Credential"
     }
-    
-    const redis = new r(process.env.NEXT_PUBLIC_REDIS_URL)
 
+    const redis: any = await (new Promise((resolve, reject) => {
+      const client = new r(process.env.NEXT_PUBLIC_REDIS_URL)
+      client.on("error", function (err: any) {
+        reject({
+          line: 220,
+          file: "pages/index",
+          time: now.minimal,
+          msg: "redis connection is unaccepted"
+        })
+      })
+
+      client.on("ready", function () {
+        resolve(client)
+      })
+    }))
+    
     const hasCache = await redis.get("portfolioCache")
     if (hasCache) return JSON.parse(hasCache)
 
@@ -388,15 +402,15 @@ Home.getInitialProps = async function() {
       err
     }
   } finally {
-    if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {
-      fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(notifications)
-      }).then((response: any) => response.json()).then((json: {}) => console.log(json)).catch((err: unknown) => console.log(err))
-    }
+    // if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {
+    //   fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
+    //     method: "POST",
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(notifications)
+    //   }).then((response: any) => response.json()).then((json: {}) => console.log(json)).catch((err: unknown) => console.log(err))
+    // }
   }
 }
 

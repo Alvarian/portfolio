@@ -20,10 +20,12 @@ interface LanguageValue {
 
 const Overall: React.FC<{
     payload: OverallPayload,
-    isSectionPermitted: boolean
+    isSectionPermitted: boolean,
+    width: number
 }> = ({ 
     payload, 
-    isSectionPermitted
+    isSectionPermitted,
+    width
 }) => {
     const {     
         leaderBoardScore,
@@ -58,23 +60,6 @@ const Overall: React.FC<{
         setValues({...languageValues})
     }, [])
 
-    const ratioStatsList = () => {
-        const list = []
-        for (let i = 0; i < languagesListValues.titles.length; i++) {
-            const title = languagesListValues.titles[i]
-            const ratio = languagesListValues.ratios[i]
-            const color = languagesListValues.colors[i]
-
-            list.push(
-                <li className="text-left text-2xl m-1" key={title}>
-                    <span className="w-6" style={{backgroundColor: color}}>[&#8594;]</span> {title}: {Math.round(ratio * 10) / 10}%
-                </li>
-            )
-        }
-        
-        return list
-    }
-
     const roundThousandsOrGetDefault = (num: number) => {
         return Math.abs(num) > 999 ? (Math.sign(num)*Math.abs(num)/1000).toFixed(1) + 'k' : Math.sign(num)*Math.abs(num)
     }
@@ -97,12 +82,53 @@ const Overall: React.FC<{
             <Doughnut data={data} />
         )
     }
+
+    const { css, tailwind } = width > 900 ? {
+        css: {},
+        tailwind: {
+            main: `flex flex-col h-full min-h-[624px] min-w-[600px]`,
+            container: `bg-gradient-to-r rounded-lg from-black h-full flex flex-col justify-center pt-10`,
+            header: `p-10 text-left text-4xl font-bold`,
+            rankings: `flex justify-around items-center`,
+            rankIcons: `flex items-center justify-center text-3xl`,
+            donutContainer: `bg-gradient-to-r from-amber-200 flex justify-around py-10 text-2xl`,
+            donut: `h-[300px] w-[300px]`
+        }
+    } : {
+        css: {},
+        tailwind: {
+            main: `flex flex-col h-full min-h-[624px] min-w-[600px]`,
+            container: `bg-gradient-to-r rounded-lg from-black h-full flex flex-col justify-center pt-10`,
+            header: `p-10 text-left text-3xl font-bold`,
+            rankings: `flex justify-around items-center`,
+            rankIcons: `flex items-center justify-center text-lg`,
+            donutContainer: `bg-gradient-to-r from-amber-200 flex justify-around py-5 text-md`,
+            donut: `h-[200px] w-[200px]`
+        }
+    }
     
+    const ratioStatsList = () => {
+        const list = []
+        for (let i = 0; i < languagesListValues.titles.length; i++) {
+            const title = languagesListValues.titles[i]
+            const ratio = languagesListValues.ratios[i]
+            const color = languagesListValues.colors[i]
+
+            list.push(
+                <li className="text-left m-1" key={title}>
+                    <span className="w-6" style={{backgroundColor: color}}>[&#8594;]</span> {title}: {Math.round(ratio * 10) / 10}%
+                </li>
+            )
+        }
+        
+        return list
+    }
+
     return (
-        <div className="flex flex-col h-full min-h-[624px]">
+        <div className={tailwind.main}>
             {isSectionPermitted && <motion.div
                 id="overall"
-                className="bg-gradient-to-r rounded-lg from-black h-full flex flex-col justify-center pt-10"
+                className={tailwind.container}
                 initial="enter"
                 animate="center"
                 exit="exit"
@@ -118,15 +144,15 @@ const Overall: React.FC<{
                     opacity: { duration: 0.4 }
                 }}
             >
-                <h2 className="p-10 text-left text-3xl font-bold">Overall Stats (codewars)</h2>
+                <h2 className={tailwind.header}>Overall Stats (codewars)</h2>
 
-                <div className="flex justify-around items-center">
+                <div className={tailwind.rankings}>
                     {overallMenuData({
                         Rank: roundThousandsOrGetDefault(leaderBoardScore),
                         Completed: <CountUp duration={4} end={totalCompleted} /> 
                     }).map((item: IconInter) => (
-                        <div className="flex items-center justify-center" key={item.name}>
-                            <span className="text-2xl">{item.name}: </span>
+                        <div className={tailwind.rankIcons} key={item.name}>
+                            <span>{item.name}: </span>
 
                             <Icon 
                                 name={item.name}
@@ -141,10 +167,10 @@ const Overall: React.FC<{
                     ))}
                 </div>
 
-                <div className="bg-gradient-to-r from-amber-200 flex justify-around py-10">
+                <div className={tailwind.donutContainer}>
                     <ul id="ratioStats">{ratioStatsList()}</ul>
 
-                    <div id="ratioGraph" className="min-h-[300px] min-w-[300px]">{renderDonut()}</div>
+                    <div id="ratioGraph" className={tailwind.donut}>{renderDonut()}</div>
                 </div>
             </motion.div>}
         </div>
