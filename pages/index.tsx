@@ -234,7 +234,7 @@ Home.getInitialProps = async function() {
     }))
     
     const hasCache = await redis.get("portfolioCache")
-    // if (hasCache) return JSON.parse(hasCache)
+    if (hasCache) return JSON.parse(hasCache)
 
     const userData = await getUserData()
     
@@ -387,7 +387,7 @@ Home.getInitialProps = async function() {
       },
     }
     
-    // redis.setex("portfolioCache", 88000, JSON.stringify(payload))
+    redis.setex("portfolioCache", 88000, JSON.stringify(payload))
 
     return payload
   } catch (err) {
