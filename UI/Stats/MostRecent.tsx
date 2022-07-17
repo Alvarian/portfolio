@@ -1,7 +1,6 @@
 import { motion } from "framer-motion"
 import { MostrecentPayload } from "lib/sections/sections.types"
 import { useState } from "react"
-import { overallMenuData } from "./icons.data"
 import { slider } from "./varients"
 
 
@@ -58,8 +57,6 @@ const MostRecent: React.FC<{
     }
 
     const renderSnippets = () => {
-        if (solutions.title !== title) return "<!-- Update snippets for "+title+" -->"
-
         const languageTabs = []
         const languageSnippets = []
         for (let i = 0; i < languagesUsed.length; i++) {
