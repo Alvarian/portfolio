@@ -19,7 +19,7 @@ const index: React.FC<{
   width
 }) => {
   const [isVisible, setVisible] = useState(true)
-  
+
   const { overallStatsPayload, mostRecentPayload } = data
 
   const handleVisible: () => void = () => {

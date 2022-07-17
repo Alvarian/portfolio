@@ -50,11 +50,7 @@ export const sectionData: Array<Content> = [
   }
 ]
 
-export const localMockData: {
-  data: {
-    [key: string]: any
-  }
-} = {
+export const localMockData = {
   data: {
     stats: {
       overallStatsPayload: {
@@ -66,14 +62,25 @@ export const localMockData: {
         }
       },
       mostRecentPayload: {
+        id: 1,
+        success: true,
         title: "Rectangle into Squares",
         attemptedTotal: 100000,
         completedTotal: 20000,
         url: "www.lorem.com",
         problem: "lorem",
         tags: ["science", "math"],
-        completionData: "1634682265",
-        languagesUsed: ["javascript", "rust"]
+        completionDate: "2021-10-25T20:12:03.473Z",
+        languagesUsed: ["javascript"],
+        solutions: {
+          title: "Rectangle into Squares",
+          languages:[
+            {
+              language: "javascript",
+              solution: "function sqInRect(lng, wdth){\n  let sizeOfSquares = [];\n  if (lng == wdth) sizeOfSquares = null;\n  \n  const recurse = (lng, wdth) => {\n      if (lng == wdth) {\n          sizeOfSquares.push(lng);\n          \n          return;\n      }\n      \n      if (lng < wdth) {\n          sizeOfSquares.push(lng);\n          recurse(lng, wdth - lng);\n      } else {\n          sizeOfSquares.push(wdth);\n          recurse(lng - wdth, wdth);\n      }\n  }\n  \n  if (sizeOfSquares) recurse(lng, wdth);\n  \n  return sizeOfSquares;\n}"
+            }
+          ]
+        }
       }
     },
     knowledge: {

@@ -85,7 +85,7 @@ const Home: NextPage = (props) => {
   useEffect(() => {
     if (!Object.keys(scrollMethodAdmissions).length) {
       const currentScrollPos = window.pageYOffset
-console.log()
+      
       let admissions: dataOptions = {}
 
       const footer = document.querySelector("#footer") as HTMLElement | null
@@ -204,14 +204,14 @@ Home.getInitialProps = async function() {
     }
     
     if (!process.env.NEXT_PUBLIC_BADGR_USER) throw {
-      line: 208,
+      line: 207,
       file: "pages/index",
       time: now.minimal,
       msg: "Missing Badgr Username Credential"
     }
     
     if (!process.env.NEXT_PUBLIC_BADGR_PASS) throw {
-      line: 216,
+      line: 214,
       file: "pages/index",
       time: now.minimal,
       msg: "Missing Badgr Password Credential"
@@ -221,7 +221,7 @@ Home.getInitialProps = async function() {
       const client = new r(process.env.NEXT_PUBLIC_REDIS_URL)
       client.on("error", function (err: any) {
         reject({
-          line: 220,
+          line: 224,
           file: "pages/index",
           time: now.minimal,
           msg: "redis connection is unaccepted"
@@ -234,7 +234,7 @@ Home.getInitialProps = async function() {
     }))
     
     const hasCache = await redis.get("portfolioCache")
-    if (hasCache) return JSON.parse(hasCache)
+    // if (hasCache) return JSON.parse(hasCache)
 
     const userData = await getUserData()
     
@@ -268,7 +268,7 @@ Home.getInitialProps = async function() {
     const badges: Array<Badge> = await Promise.all(collectionData.result[0].assertions.map(async (assertion: string) => {
       const badgeData = await getBadgrBadgeData(assertion, hasAccessToken)
       if (!badgeData.status.success) throw {
-        line: 257,
+        line: 271,
         file: "pages/index",
         time: now.minimal,        
         msg: "Assertion is not found or access token is incorrect"
@@ -301,49 +301,27 @@ Home.getInitialProps = async function() {
       }
     }))
     
-    let overallStatsPayload: OverallPayload = {
-      leaderBoardScore: 0,
-      totalCompleted: 0,
-      languagesTotal: {}
-    }
-    overallStatsPayload.leaderBoardScore = userData.leaderboardPosition
-    overallStatsPayload.totalCompleted = challangesData.totalItems
-    overallStatsPayload.languagesTotal = (() => {
-      let languages: {[key: string]: number} = {}
-
-      for (let challenge of challangesData.data) {
-        for (let lang of challenge.completedLanguages) {
-          if (!languages[lang]) {
-            languages[lang] = 1
-          } else {
-            languages[lang]++
+    const overallStatsPayload: OverallPayload = {
+      leaderBoardScore: userData.leaderboardPosition,
+      totalCompleted: challangesData.totalItems,
+      languagesTotal: (() => {
+        let languages: {[key: string]: number} = {}
+  
+        for (let challenge of challangesData.data) {
+          for (let lang of challenge.completedLanguages) {
+            if (!languages[lang]) {
+              languages[lang] = 1
+            } else {
+              languages[lang]++
+            }
           }
         }
-      }
-
-      return languages
-    })()
-
-    let mostRecentPayload: MostrecentPayload = {
-      title: "",
-      attemptedTotal: 0,
-      completedTotal: 0,
-      url: "",
-      tags: [],
-      completionDate: "",
-      languagesUsed: [],
-      solutions: {title: "", languages: []}
+  
+        return languages
+      })()
     }
 
-    const mostRecentChallengeData = await getMostRecentChallengeData(challangesData.data[0].id)
-    if (!mostRecentChallengeData.success && !mostRecentChallengeData.id) throw {
-      line: 324,
-      file: "pages/index",
-      time: now.minimal,
-      msg: "Challenge Id does not exist"
-    }
-
-    const recentChallengeData: {
+    const mostRecentChallengeData: {
       name: string,
       totalAttempts: number,
       totalCompleted: number,
@@ -352,36 +330,55 @@ Home.getInitialProps = async function() {
       completionDate: string,
       completedLanguages: Array<string>,
       solutions: Array<{language: string, solution: string}>
-    } = mostRecentChallengeData
-      
-    mostRecentPayload.title = recentChallengeData.name
-    mostRecentPayload.attemptedTotal = recentChallengeData.totalAttempts
-    mostRecentPayload.completedTotal = recentChallengeData.totalCompleted
-    mostRecentPayload.url = recentChallengeData.url
-    mostRecentPayload.tags = recentChallengeData.tags
-    mostRecentPayload.completionDate = challangesData.data[0].completedAt
-    mostRecentPayload.languagesUsed = challangesData.data[0].completedLanguages
-
-    const mostRecentSolutions = JSON.parse(await redis.get("mostRecentSolution"))
-    mostRecentPayload.solutions = mostRecentSolutions
-
-    const doesCacheMatchWithCodewarsLanguages = mostRecentPayload.languagesUsed.map((langaugeFromCodeWars: string) => {
-      return !!mostRecentSolutions.languages.find((lAndSFromCache: {[key: string]: string}) => lAndSFromCache.language === langaugeFromCodeWars)
-    }).reduce((final: boolean, value: boolean) => final && value)
-    
-    !doesCacheMatchWithCodewarsLanguages && notifications.warnings.push({
-      line: 358,
+      id: number,
+      success: boolean
+    } = await getMostRecentChallengeData(challangesData.data[0].id)
+    if (!mostRecentChallengeData.success && !mostRecentChallengeData.id) throw {
+      line: 336,
       file: "pages/index",
       time: now.minimal,
-      msg: "warning, using old payload. update cache of newest solution"
+      msg: "Challenge Id does not exist"
+    }
+
+    const mostRecentPayload: Map<string, {title: string, languages: Array<{language: string, solution: string}>} | Array<string> | string | number> = new Map([
+      ["title", mostRecentChallengeData.name],
+      ["attemptedTotal", mostRecentChallengeData.totalAttempts],
+      ["completedTotal", mostRecentChallengeData.totalCompleted],
+      ["url", mostRecentChallengeData.url],
+      ["tags", mostRecentChallengeData.tags],
+      ["completionDate", challangesData.data[0].completedAt],
+      ["languagesUsed", challangesData.data[0].completedLanguages]
+    ])
+
+    const mostRecentSolutions: {title: string, languages: Array<{language: string, solution: string}>} = JSON.parse(await redis.get("mostRecentSolution"))
+    const languagesUsed = mostRecentPayload.get("languagesUsed") as Array<string>
+    
+    const doesCacheMatchWithCodewarsLanguages = languagesUsed.map((langaugeFromCodeWars: string) => {
+      return !!mostRecentSolutions.languages.find((lAndSFromCache: {[key: string]: string}) => lAndSFromCache.language === langaugeFromCodeWars)
+    }).reduce((final: boolean, value: boolean) => final && value)
+
+    mostRecentSolutions.title !== mostRecentPayload.get("title") && notifications.warnings.push({
+      line: 360,
+      file: "pages/index",
+      time: now.minimal,
+      msg: "warning, using old payload. update cache with the newest challenge completed"
     })
+      ||
+    !doesCacheMatchWithCodewarsLanguages && mostRecentSolutions.title === mostRecentPayload.get("title") && notifications.warnings.push({
+      line: 368,
+      file: "pages/index",
+      time: now.minimal,
+      msg: "warning, all solutions are not included. update cache by including the solution for the newest language"
+    })
+      
+    mostRecentPayload.set("solutions", mostRecentSolutions)
     
     const payload = {
       setting: 'external',
       data: {
         stats: {
           overallStatsPayload,
-          mostRecentPayload,
+          mostRecentPayload: Object.fromEntries(mostRecentPayload),
         },
         knowledge: {
           gifFrames,
@@ -390,7 +387,7 @@ Home.getInitialProps = async function() {
       },
     }
     
-    redis.setex("portfolioCache", 88000, JSON.stringify(payload))
+    // redis.setex("portfolioCache", 88000, JSON.stringify(payload))
 
     return payload
   } catch (err) {
@@ -402,15 +399,16 @@ Home.getInitialProps = async function() {
       err
     }
   } finally {
-    if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {
-      fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(notifications)
-      }).then((response: any) => response.json()).then((json: {}) => console.log(json)).catch((err: unknown) => console.log(err))
-    }
+    console.log(notifications)
+    // if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {
+    //   fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
+    //     method: "POST",
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(notifications)
+    //   }).then((response: any) => response.json()).then((json: {}) => console.log(json)).catch((err: unknown) => console.log(err))
+    // }
   }
 }
 
