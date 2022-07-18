@@ -39,8 +39,8 @@ const Header: React.FC<{
             main: `z-10 flex flex-col justify-center w-full items-center pb-8`,
             links: `hover:invert bg-white flex items-center justify-center h-20 w-20 m-3 rounded-full`
           },
-          description: `z-10 normal-case text-xl`,
-          name: `z-10 normal-case text-4xl p-5`
+          description: `z-10 normal-case text-2xl`,
+          name: `z-10 normal-case text-5xl p-5`
         }
       }
     }
@@ -63,7 +63,7 @@ const Header: React.FC<{
           initial="hidden"
           whileInView="visible"
           variants={defaultVariants.fallUp(2)}            
-        >A website and software developer. My indie project stacks are mostly javascript based and are available in my github. Currently working on dedicated section on this page that will be created to display and allow visiters to interact with my projects.</motion.p>
+        >An indie website and software developer. Current project stacks are mostly javascript based and are available in my github. Future project demos together with my completed projects will be portrayed in a dedicated section on this page that will allow visitors to experience my work first hand!</motion.p>
 
         <div className={styles.tailwind.content.buttons.main}>
           <Underline width="100%" />
@@ -87,12 +87,14 @@ const Header: React.FC<{
 
   const directory = (reponsiveType: string) => {
     const styles = reponsiveType === "mobile" ? {
-      tailwind: `menu menu-vertical p-0 w-96`
+      tailwind: `menu menu-vertical p-0 w-96`,
+      renderLinkSize: 'sm'
     } : {
-      tailwind: `menu menu-vertical p-0 w-96`
+      tailwind: `menu menu-vertical p-0 w-96`,
+      renderLinkSize: 'default'
     }
 
-    return (<div className={styles.tailwind}>{handleRenderLinks("header", "sm")}</div>)
+    return (<div className={styles.tailwind}>{handleRenderLinks("header", styles.renderLinkSize)}</div>)
   }
 
   return (
