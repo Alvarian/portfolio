@@ -37,9 +37,4 @@ export const rateLimiters = {
   debounce: (rate: number, callback: any) => _.debounce(callback, rate)
 }
 
-export const getFilesFromDir = async function () {
-  const response = await fetch("http://localhost:3000/api/readFiles")
-  const payload = await response.json()
-
-  return payload
-}
+export const getFilesFromDir = async (host: string | undefined) => await (await fetch(`http://${host}/api/readFiles`)).json()

@@ -181,7 +181,7 @@ const Home: NextPage = (props) => {
   )
 }
 
-Home.getInitialProps = async function() {
+Home.getInitialProps = async function({req}) {
   // Here i want to access the projectID sent from the previous page
   const r = require('ioredis')
   const moment = require('moment-timezone')
@@ -240,7 +240,7 @@ Home.getInitialProps = async function() {
     
     const challangesData = await getChallengesData()
 
-    const gifFrames: Array<string> = await getFilesFromDir()
+    const gifFrames: Array<string> = await getFilesFromDir(req?.headers.host)
 
     let { hasAccessToken, hasRefreshToken } = await getBadgrAuthTokens(redis)
 
