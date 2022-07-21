@@ -10,7 +10,7 @@ const index: React.FC<{
   isSectionPermitted: boolean,
   width: number,
   data: {
-    gifFrames: Array<string>,
+    // gifFrames: Array<string>,
     badges: Array<Badge>
   }
 }> = ({
@@ -18,7 +18,10 @@ const index: React.FC<{
   width,
   data
 }) => {
-  const { gifFrames, badges } = data
+  const { 
+    // gifFrames, 
+    badges 
+  } = data
   const [isFrameEnded, setIfEnded] = useState(false)
 
   const { tailwind, css } = (() => { 
@@ -145,7 +148,7 @@ const index: React.FC<{
     <div className={tailwind.main}>
       <BadgeCoat
         isSectionPermitted={isSectionPermitted}
-        gifFrames={gifFrames}
+        // gifFrames={gifFrames}
         setIfEnded={setIfEnded}
         width={width}
       />
