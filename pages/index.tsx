@@ -196,7 +196,7 @@ Home.getInitialProps = async function({req}) {
   }
 
   try {
-    if (process.env.NEXT_PUBLIC_REDIS_URL) throw {
+    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
       line: 200,
       file: "pages/index",
       time: now.minimal,
