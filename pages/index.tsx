@@ -196,7 +196,7 @@ Home.getInitialProps = async function({req}) {
   }
 
   try {
-    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
+    if (process.env.NEXT_PUBLIC_REDIS_URL) throw {
       line: 200,
       file: "pages/index",
       time: now.minimal,
@@ -240,7 +240,7 @@ Home.getInitialProps = async function({req}) {
     
     const challangesData = await getChallengesData()
 
-    const gifFrames: Array<string> = await getFilesFromDir(req?.headers.host)
+    // const gifFrames: Array<string> = await getFilesFromDir(req?.headers.host)
 
     let { hasAccessToken, hasRefreshToken } = await getBadgrAuthTokens(redis)
 
@@ -381,7 +381,7 @@ Home.getInitialProps = async function({req}) {
           mostRecentPayload: Object.fromEntries(mostRecentPayload),
         },
         knowledge: {
-          gifFrames,
+          // gifFrames,
           badges
         }
       },

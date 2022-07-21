@@ -2,29 +2,29 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 
 const BadgeCoat: React.FC<{
   isSectionPermitted: boolean,
-  gifFrames: Array<string>,
+  // gifFrames: Array<string>,
   setIfEnded: Dispatch<SetStateAction<boolean>>,
   width: number
 }> = ({
   isSectionPermitted,
-  gifFrames,
+  // gifFrames,
   setIfEnded,
   width
 }) => {
   const [coatPhase, setCoatPhase] = useState<string>("start")
-  const [coatProperties, setProperties] = useState<{length: number, sources: Array<string>}>({length: 0, sources: []})
+  // const [coatProperties, setProperties] = useState<{length: number, sources: Array<string>}>({length: 0, sources: []})
   const [frames, incrementFrame] = useState(0)
   let runFrames: NodeJS.Timeout
 
   useEffect(() => { 
     if (isSectionPermitted) {
       if (coatPhase === "start") {
-        if (!coatProperties.length) {
-          setProperties({
-            length: gifFrames.length,
-            sources: gifFrames
-          })
-        }
+        // if (!coatProperties.length) {
+        //   setProperties({
+        //     length: gifFrames.length,
+        //     sources: gifFrames
+        //   })
+        // }
         
         setCoatPhase("run")
       }
@@ -71,15 +71,14 @@ const BadgeCoat: React.FC<{
       filter: "grayscale(100%)",
       position: "absolute" as "absolute"
     }
-
-
+    
     switch (coatPhase) {
       case "start":
-        return (<img src={gifFrames[0]} alt="coat" style={styles} />)
+        return (<img src="/images/badgeCoat/frame_000.gif" alt="coat" style={styles} />)
       case "run":
-        return (<img src={gifFrames[frames]} alt="coat" style={styles} />)
+        return (<img src={`/images/badgeCoat/frame_0${frames.toString().length === 1 ? "0" + frames.toString() : frames.toString()}.gif`} alt="coat" style={styles} />)
       case "end":
-        return (<img src={gifFrames[gifFrames.length-1]} alt="coat" style={styles} />)
+        return (<img src="/images/badgeCoat/frame_047.gif" alt="coat" style={styles} />)
     }
   }
 

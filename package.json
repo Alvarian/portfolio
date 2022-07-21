@@ -13,7 +13,7 @@
     "ioredis": "^5.1.0",
     "lodash": "^4.17.21",
     "moment-timezone": "^0.5.34",
-    "next": "canary",
+    "next": "latest",
     "react": "^17.0.2",
     "react-chartjs-2": "^4.1.0",
     "react-countup": "^6.2.0",
