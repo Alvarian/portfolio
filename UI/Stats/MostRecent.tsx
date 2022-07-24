@@ -59,7 +59,8 @@ const MostRecent: React.FC<{
     const renderSnippets = () => {
         const languageTabs = []
         const languageSnippets = []
-        for (let i = 0; i < languagesUsed.length; i++) {
+        
+        for (let i = 0; i < solutions.languages.length; i++) {
             const snippet = solutions.languages[i]
             const language = languagesUsed[i]
 
