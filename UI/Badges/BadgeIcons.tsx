@@ -92,6 +92,7 @@ const BadgeCoat: React.FC<{
       {renderBadges().map((badge: Badge, index: number) => badge.name ? (
         <div key={index} className="relative flex justify-end items-center h-36 w-36">
           <motion.a 
+            target="_blank"
             className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
             style={{borderStyle: "outset"}}
             href={badge.evidence[0].url}
