@@ -1,8 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 
-import Section from 'components/section'
-import Underline from "components/underline"
+import Section from 'shared/section'
+import Underline from "shared/underline"
 import { defaultVariants } from 'lib/sections/sections.data'
 
 import { motion } from "framer-motion"

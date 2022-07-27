@@ -1,7 +1,7 @@
 import Image from "next/image"
 
-import KeyIcon from "components/keyicon"
-import Underline from "components/underline"
+import KeyIcon from "shared/keyicon"
+import Underline from "shared/underline"
 
 import { motion } from "framer-motion"
 import { defaultVariants } from "lib/sections/sections.data"
