@@ -1,4 +1,4 @@
-import Header from 'sections/header'
+import Header from 'sections/Header'
 import Badges from 'sections/Badges'
 import Stats from 'sections/Stats'
 
