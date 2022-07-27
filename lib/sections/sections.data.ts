@@ -3,7 +3,7 @@ import Badges from 'UI/Badges'
 import Stats from 'UI/Stats'
 
 import { Content } from 'lib/sections/sections.types'
-import UnderConstruction from '@components/underConstruction'
+import UnderConstruction from 'components/underConstruction'
 
 export const sectionData: Array<Content> = [
   {
