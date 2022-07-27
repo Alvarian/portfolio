@@ -1,5 +1,4 @@
 import * as _ from "lodash"
-import { dataOptions } from "./sections.types"
 
 
 export const reducers = {

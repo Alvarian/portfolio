@@ -9,7 +9,7 @@ import CountUp from 'react-countup';
 import { slider } from "./varients"
 import { OverallPayload } from 'lib/sections/sections.types'
 import { overallMenuData } from "./icons.data"
-import Icon, { IconInter } from "components/icon"
+import Icon, { IconInter } from "shared/icon"
 
 
 interface LanguageValue {

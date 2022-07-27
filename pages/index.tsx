@@ -3,15 +3,15 @@ React.useLayoutEffect = React.useEffect
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
-import Section from 'components/section'
-import Border from 'UI/Border'
-import Footer from 'UI/footer'
-import Navbar from 'UI/navbar'
+import Section from 'shared/section'
+import Border from 'sections/Border'
+import Footer from 'sections/footer'
+import Navbar from 'sections/navbar'
 import { useResize } from 'hooks/'
 
-import { Badge, Content, dataOptions, MostrecentPayload, OverallPayload } from 'lib/sections/sections.types'
+import { Badge, Content, dataOptions, OverallPayload } from 'lib/sections/sections.types'
 import { localMockData, sectionData } from 'lib/sections/sections.data'
-import { rateLimiters, getFilesFromDir, formatDate } from 'lib/sections/sections.methods'
+import { rateLimiters, formatDate } from 'lib/sections/sections.methods'
 import { getUserData, getChallengesData, getMostRecentChallengeData } from 'helpers/stats'
 import { getBadgrAuthTokens, getBadgrBadgeData, getBadgrBadgeDecriptions, getBadgrCollectionsData, getNewAccessToken } from 'helpers/badges'
 

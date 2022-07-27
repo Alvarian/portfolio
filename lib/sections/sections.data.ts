@@ -1,9 +1,9 @@
-import Header from 'UI/header'
-import Badges from 'UI/Badges'
-import Stats from 'UI/Stats'
+import Header from 'sections/header'
+import Badges from 'sections/Badges'
+import Stats from 'sections/Stats'
 
 import { Content } from 'lib/sections/sections.types'
-import UnderConstruction from 'components/underConstruction'
+import UnderConstruction from 'shared/underConstruction'
 
 export const sectionData: Array<Content> = [
   {

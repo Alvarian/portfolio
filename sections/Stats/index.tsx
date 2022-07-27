@@ -1,5 +1,5 @@
-import Icon from "components/icon";
-import SlideShow from "components/slideshow";
+import Icon from "shared/icon";
+import SlideShow from "shared/slideshow";
 import { dataOptions, MostrecentPayload, OverallPayload } from "lib/sections/sections.types";
 import { useState } from "react"
 import MostRecent from "./MostRecent"

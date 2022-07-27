@@ -1,4 +1,4 @@
-import { IconInter } from "@components/icon"
+import { IconInter } from "shared/icon"
 import { dataOptions } from "lib/sections/sections.types"
 
 
