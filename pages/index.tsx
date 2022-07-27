@@ -235,7 +235,7 @@ Home.getInitialProps = async function({req}) {
     
     const hasCache = await redis.get("portfolioCache")
     if (hasCache) return JSON.parse(hasCache)
-
+    
     const userData = await getUserData()
     
     const challangesData = await getChallengesData()
