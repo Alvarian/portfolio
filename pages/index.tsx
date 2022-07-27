@@ -5,8 +5,8 @@ import Head from 'next/head'
 
 import Section from 'shared/section'
 import Border from 'sections/Border'
-import Footer from 'sections/footer'
-import Navbar from 'sections/navbar'
+import Footer from 'sections/Footer'
+import Navbar from 'sections/Navbar'
 import { useResize } from 'hooks/'
 
 import { Badge, Content, dataOptions, OverallPayload } from 'lib/sections/sections.types'
