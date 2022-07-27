@@ -1,4 +1,4 @@
-import Icon from "@components/icon";
+import Icon from "components/icon";
 import SlideShow from "components/slideshow";
 import { dataOptions, MostrecentPayload, OverallPayload } from "lib/sections/sections.types";
 import { useState } from "react"
