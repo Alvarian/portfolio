@@ -285,7 +285,7 @@ Home.getInitialProps = async function({req}) {
         name,
         description,
         tags
-      }: Record<string, string | Array<{[key: string]: string}>> = (badgeclassOpenBadgeId.split(".").find((part: string) => part === "credly")) ? await getBadgrBadgeDecriptions(badgeclassOpenBadgeId, now.minimal) : {}
+      }: Record<string, string | Array<{[key: string]: string}>> = await getBadgrBadgeDecriptions(badgeclassOpenBadgeId, now.minimal)
       
       return {
         issuedOn,
