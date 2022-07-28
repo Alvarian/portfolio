@@ -71,7 +71,6 @@ export const localMockData = {
         problem: "lorem",
         tags: ["science", "math"],
         completionDate: "2021-10-25T20:12:03.473Z",
-        languagesUsed: ["javascript"],
         solutions: {
           title: "Rectangle into Squares",
           languages:[
