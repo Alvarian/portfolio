@@ -196,7 +196,7 @@ Home.getInitialProps = async function({req}) {
   }
 
   try {
-    if (process.env.NEXT_PUBLIC_REDIS_URL) throw {
+    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
       line: 200,
       file: "pages/index",
       time: now.minimal,
@@ -370,7 +370,7 @@ Home.getInitialProps = async function({req}) {
       time: now.minimal,
       msg: "warning, all solutions are not included. update cache by including the solution for the newest language"
     })
-      
+
     mostRecentPayload.set("solutions", mostRecentSolutions)
     
     const payload = {
@@ -399,6 +399,7 @@ Home.getInitialProps = async function({req}) {
       err
     }
   } finally {
+    console.log(notifications)
     if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {
       fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
         method: "POST",

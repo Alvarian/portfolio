@@ -31,11 +31,10 @@ const MostRecent: React.FC<{
       url,
       tags,
       completionDate,
-      languagesUsed,
       solutions
   } = payload
   
-  const [currentSnippet, setSnippet] = useState(languagesUsed[0])
+  const [currentSnippet, setSnippet] = useState(solutions.languages[0].language)
   
   const { css, tailwind } = width > 900 ? {
       css: {},
@@ -75,14 +74,14 @@ const MostRecent: React.FC<{
       
       for (let i = 0; i < solutions.languages.length; i++) {
           const snippet = solutions.languages[i]
-          const language = languagesUsed[i]
+          const language = snippet.language
 
           const styles = {
               button: `${tailwind.snippetTab} ${currentSnippet === snippet.language ? "tab-active bg-slate-700" : "bg-slate-200"}`,
               snippet: `${tailwind.snippetSolution} ${currentSnippet === snippet.language ? "flex" : "hidden"}`
           }
 
-          languageTabs.push(<button key={snippet.language+"_tab"} className={styles.button} onClick={() => setSnippet(language)}>{language.toLocaleUpperCase()}</button>)
+          languageTabs.push(<button key={snippet.language+"_tab"} className={styles.button} onClick={() => setSnippet(snippet.language)}>{snippet.language.toLocaleUpperCase()}</button>)
           languageSnippets.push(<pre key={snippet.language+"_snip"} className={styles.snippet}>{snippet.solution}</pre>)
       }
 
