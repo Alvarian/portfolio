@@ -9,7 +9,7 @@
     "@types/page-flip": "^2.0.0",
     "chart.js": "^3.7.1",
     "daisyui": "^2.14.2",
-    "framer-motion": "^6.3.3",
+    "framer-motion": "^6.5.1",
     "ioredis": "^5.1.0",
     "lodash": "^4.17.21",
     "moment-timezone": "^0.5.34",

@@ -4,6 +4,8 @@ import Stats from 'sections/Stats'
 
 import { Content } from 'lib/sections/sections.types'
 import UnderConstruction from 'shared/underConstruction'
+import Projects from 'sections/Projects'
+
 
 export const sectionData: Array<Content> = [
   {
@@ -41,8 +43,8 @@ export const sectionData: Array<Content> = [
   {
     alt: "projects",
     content: {
-      body: UnderConstruction,
-      isFull: false
+      body: Projects,
+      isFull: true
     },
     type: "default",
     keyIcon: "",
@@ -83,56 +85,6 @@ export const localMockData = {
       }
     },
     knowledge: {
-      gifFrames: [
-        '/images/badgeCoat/frame_000_delay-0.03s.gif',
-        '/images/badgeCoat/frame_001_delay-0.04s.gif',
-        '/images/badgeCoat/frame_002_delay-0.03s.gif',
-        '/images/badgeCoat/frame_003_delay-0.03s.gif',
-        '/images/badgeCoat/frame_004_delay-0.04s.gif',
-        '/images/badgeCoat/frame_005_delay-0.03s.gif',
-        '/images/badgeCoat/frame_006_delay-0.04s.gif',
-        '/images/badgeCoat/frame_007_delay-0.03s.gif',
-        '/images/badgeCoat/frame_008_delay-0.03s.gif',
-        '/images/badgeCoat/frame_009_delay-0.04s.gif',
-        '/images/badgeCoat/frame_010_delay-0.03s.gif',
-        '/images/badgeCoat/frame_011_delay-0.03s.gif',
-        '/images/badgeCoat/frame_012_delay-0.04s.gif',
-        '/images/badgeCoat/frame_013_delay-0.03s.gif',
-        '/images/badgeCoat/frame_014_delay-0.04s.gif',
-        '/images/badgeCoat/frame_015_delay-0.03s.gif',
-        '/images/badgeCoat/frame_016_delay-0.03s.gif',
-        '/images/badgeCoat/frame_017_delay-0.04s.gif',
-        '/images/badgeCoat/frame_018_delay-0.03s.gif',
-        '/images/badgeCoat/frame_019_delay-0.03s.gif',
-        '/images/badgeCoat/frame_020_delay-0.04s.gif',
-        '/images/badgeCoat/frame_021_delay-0.03s.gif',
-        '/images/badgeCoat/frame_022_delay-0.04s.gif',
-        '/images/badgeCoat/frame_023_delay-0.03s.gif',
-        '/images/badgeCoat/frame_024_delay-0.03s.gif',
-        '/images/badgeCoat/frame_025_delay-0.04s.gif',
-        '/images/badgeCoat/frame_026_delay-0.03s.gif',
-        '/images/badgeCoat/frame_027_delay-0.03s.gif',
-        '/images/badgeCoat/frame_028_delay-0.04s.gif',
-        '/images/badgeCoat/frame_029_delay-0.03s.gif',
-        '/images/badgeCoat/frame_030_delay-0.04s.gif',
-        '/images/badgeCoat/frame_031_delay-0.03s.gif',
-        '/images/badgeCoat/frame_032_delay-0.03s.gif',
-        '/images/badgeCoat/frame_033_delay-0.04s.gif',
-        '/images/badgeCoat/frame_034_delay-0.03s.gif',
-        '/images/badgeCoat/frame_035_delay-0.03s.gif',
-        '/images/badgeCoat/frame_036_delay-0.04s.gif',
-        '/images/badgeCoat/frame_037_delay-0.03s.gif',
-        '/images/badgeCoat/frame_038_delay-0.04s.gif',
-        '/images/badgeCoat/frame_039_delay-0.03s.gif',
-        '/images/badgeCoat/frame_040_delay-0.03s.gif',
-        '/images/badgeCoat/frame_041_delay-0.04s.gif',
-        '/images/badgeCoat/frame_042_delay-0.03s.gif',
-        '/images/badgeCoat/frame_043_delay-0.03s.gif',
-        '/images/badgeCoat/frame_044_delay-0.04s.gif',
-        '/images/badgeCoat/frame_045_delay-0.03s.gif',
-        '/images/badgeCoat/frame_046_delay-0.04s.gif',
-        '/images/badgeCoat/frame_047_delay-0.03s.gif'
-      ],
       badges: [
         {
           "issuedOn": "2022-06-05T04:06:47Z",
@@ -215,7 +167,129 @@ export const localMockData = {
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]
         },
       ]
-    }
+    },
+    projects: [
+      {
+        id: 1,
+        icon: "https://picsum.photos/id/233/620/620",
+        title: "rails",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 2,
+        icon: "https://picsum.photos/id/234/620/620",
+        title: "paris",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 3,
+        icon: "https://picsum.photos/id/235/620/620",
+        title: "everest",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 4,
+        icon: "https://picsum.photos/id/236/620/620",
+        title: "town",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 5,
+        icon: "https://picsum.photos/id/237/620/620",
+        title: "puppy",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 6,
+        icon: "https://picsum.photos/id/238/620/620",
+        title: "city",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 7,
+        icon: "https://picsum.photos/id/239/620/620",
+        title: "dandylion",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 8,
+        icon: "https://picsum.photos/id/240/620/620",
+        title: "stairs",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 9,
+        icon: "https://picsum.photos/id/241/620/620",
+        title: "road",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 10,
+        icon: "https://picsum.photos/id/242/620/620",
+        title: "factory",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 11,
+        icon: "https://picsum.photos/id/243/620/620",
+        title: "forest",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      },
+      {
+        id: 12,
+        icon: "https://picsum.photos/id/244/620/620",
+        title: "pier",
+        description: "",
+        stacks: [""],
+        repo: "",
+        lastUpdate: "",
+        type: "Embedded script(modal) / slideshow(modal) / deployed(new window)"
+      }
+    ]
   }
 }
 
