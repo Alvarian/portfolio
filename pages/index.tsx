@@ -196,7 +196,7 @@ Home.getInitialProps = async function({req}) {
   }
 
   try {
-    if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
+    if (process.env.NEXT_PUBLIC_REDIS_URL) throw {
       line: 200,
       file: "pages/index",
       time: now.minimal,
@@ -400,16 +400,16 @@ Home.getInitialProps = async function({req}) {
     }
   } finally {
     console.log(notifications)
-    if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {
-      fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(notifications)
-      })
-        .catch((err: unknown) => console.log(err))
-    }
+    // if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {
+    //   fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
+    //     method: "POST",
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(notifications)
+    //   })
+    //     .catch((err: unknown) => console.log(err))
+    // }
   }
 }
 
