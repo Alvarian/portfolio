@@ -9,6 +9,7 @@ import CountUp from 'react-countup';
 import SlideShow from "shared/slideshow";
 import { dataOptions, MostrecentPayload, OverallPayload } from "lib/sections/sections.types";
 import Icon, { IconInter } from "shared/icon"
+import { getFormattedDate } from "lib/sections/sections.methods";
 
 
 interface LanguageValue {
@@ -92,17 +93,6 @@ const MostRecent: React.FC<{
               {languageSnippets}
           </div>
       )
-  }
-
-  const getFormattedDate = (blob: string) => {
-      const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-
-      const d = new Date(blob)
-      let monthName = month[d.getMonth()]
-      let day = d.getDay()
-      let year = d.getFullYear()
-
-      return `${monthName} ${day}, ${year}`
   }
 
   return (

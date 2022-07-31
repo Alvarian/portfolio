@@ -57,7 +57,7 @@ const Footer: React.FC<{
     } : {
       tailwind: {
         content: {
-          main: `bg-black/50 rounded-lg hover:bg-black h-4/5 w-5/6 flex justify-between flex-col items-center`,
+          main: `bg-black/50 rounded-lg hover:bg-black transition ease-in-out delay-150 duration-300 h-4/5 w-5/6 flex justify-between flex-col items-center`,
           nav: `navbar h-4/5 w-5/6 flex flex-row justify-around`,
           buttons: {
             main: `flex flex-col justify-center w-full items-center pb-8`,
