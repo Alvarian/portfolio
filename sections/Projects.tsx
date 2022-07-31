@@ -14,15 +14,14 @@ interface Project {
 
 const ProductImage: FC<{
     project: Project,
-    onExpand: (project: Project) => void,
-    position: number
-}> = ({ project, onExpand, position }) => {
+    onExpand: (project: Project) => void
+}> = ({ project, onExpand }) => {
     return (
         <motion.img
             src={project.icon}
             alt=""
             onClick={() => onExpand(project)}
-            className={`m-[5px] w-[140px] rounded-xl ${position === 0 ? "mt-0" : ""}`}
+            className="m-[5px] w-[140px] rounded-xl border-8 cursor-pointer transition z-10 ease-in-out hover:z-10 hover:scale-105 border-indigo-600"
             layoutId={`product-${project.id}`}
         />
     )
@@ -44,7 +43,7 @@ const index: FC<{data: Array<Project>}> = ({ data }) => {
     }
 
     return (
-        <div className="m-auto flex flex-row items-center h-[620px] overflow-hidden">
+        <div className="m-auto flex flex-row items-center h-[620px]">
             <main className="h-[620px] min-w-[880px] relative mr-[40px]">
                 <AnimatePresence>
                     <motion.img
@@ -57,10 +56,10 @@ const index: FC<{data: Array<Project>}> = ({ data }) => {
                 </AnimatePresence>
             </main>
 
-            <aside className="flex flex-col flex-wrap overflow-auto h-[620px] w-[360px] z-1 mt-0">
+            <aside className="flex flex-col flex-wrap overflow-auto h-[620px] w-[220px] mt-0 border-transparent border-4">
                 <AnimatePresence>
-                    {productIds.map((project: Project, index: number) => (
-                        <ProductImage project={project} key={project.id} position={index} onExpand={setAsPrimary} />
+                    {productIds.map((project: Project) => (
+                        <ProductImage project={project} key={project.id} onExpand={setAsPrimary} />
                     ))}
                 </AnimatePresence>
             </aside>
