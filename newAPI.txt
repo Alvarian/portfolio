@@ -1,0 +1,54 @@
+curl -i -H "Authorization: token 123456" \
+    https://api.github.com/repos/Alvarian/portfolio
+
+curl -i -H "Authorization: token 123456" \
+    https://api.github.com/users/Alvarian/repos
+
+if description has check mark, get instruction from description to treat the search as a script/website/app
+if script, look in dedicated txt file for bucket url zip
+curl -i -H "Authorization: token 123456" \ 
+    https://raw.githubusercontent.com/Alvarian/lovemee/main/requirements.txt
+
+if website, look in homepage attribute for site url
+curl -i -H "Authorization: token 123456" \
+    https://api.github.com/repos/Alvarian/portfolio
+    
+if app, look in readme for list of bucket url images
+curl -i -H "Authorization: token 123456" \ 
+    https://raw.githubusercontent.com/Alvarian/My-general-setup/master/README.md
+
+tables (data that requires auth)
+======
+projects 
+	id
+	title
+	description
+	repo
+	icon
+	type
+	ref
+	createdAt
+	updatedAt
+
+	one to many slides
+		id 
+		project_id 
+		url
+
+
+badges
+	id 
+	issuedOn
+	image
+	name
+	description
+	
+	one to many evidences
+		id
+		url
+	
+	one to many tags
+		id
+		name
+		
+
