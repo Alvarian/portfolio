@@ -4,8 +4,7 @@ export default (req: any, res: any) => {
     try {
         if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
             line: 200,
-            file: "pages/index",
-            time: now.minimal,
+            file: "pages/api/cache/getMostRecentChallenge",
             msg: "Missing Redis Credentials"
         }
 
