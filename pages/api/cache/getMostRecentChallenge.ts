@@ -2,6 +2,13 @@ import Redis from 'ioredis'
 
 export default (req: any, res: any) => {
     try {
+        if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
+            line: 200,
+            file: "pages/index",
+            time: now.minimal,
+            msg: "Missing Redis Credentials"
+        }
+
         const redis: any = new Promise((resolve, reject) => {
             const client = new Redis(process.env.NEXT_PUBLIC_REDIS_URL)
             client.on("error", function (err: any) {
