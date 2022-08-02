@@ -17,38 +17,24 @@ if app, look in readme for list of bucket url images
 curl -i -H "Authorization: token 123456" \ 
     https://raw.githubusercontent.com/Alvarian/My-general-setup/master/README.md
 
-tables (data that requires auth)
-======
-projects 
-	id
-	title
-	description
-	repo
-	icon
-	type
-	ref
-	createdAt
-	updatedAt
 
-	one to many slides
-		id 
-		project_id 
-		url
+worker functions
+================
+function getReference
+	switch for Site/Service/Script
+		case Site 
+			look for url in item.url
+		case Service
+			fetch readme and split it for list of image urls and instruction
+		case Script 
+			fetch dedicated file or readme that contains logic file url
 
-
-badges
-	id 
-	issuedOn
-	image
-	name
-	description
-	
-	one to many evidences
-		id
-		url
-	
-	one to many tags
-		id
-		name
+fetch list of repos from github
+	for each item get description
+		split description based on "|"
+		have index of 2 from split description equal to presentable
+		have index of 1 from split description equal to project type
 		
+		if presentable equals ":heavy_check_mark:" return getReference(projectType, item)
 
+		
