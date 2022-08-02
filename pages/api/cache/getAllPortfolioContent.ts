@@ -1,5 +1,6 @@
 import Redis from 'ioredis'
 
+
 export default async (req: any, res: any) => {
     try {
         if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
@@ -11,11 +12,11 @@ export default async (req: any, res: any) => {
         const redis: any = await (new Promise((resolve, reject) => {
             const client = new Redis(process.env.NEXT_PUBLIC_REDIS_URL as string)
             client.on("error", function (err: any) {
-              reject({
-                line: 224,
-                file: "pages/index",
-                msg: "redis connection is unaccepted"
-              })
+                reject({
+                    line: 224,
+                    file: "pages/index",
+                    msg: "redis connection is unaccepted"
+                })
             })
       
             client.on("ready", function () {
@@ -23,7 +24,7 @@ export default async (req: any, res: any) => {
             })
         }))
 
-        const mostRecentChallenge = await redis.get('mostRecentSolution')
+        const mostRecentChallenge = await redis.get('portfolioCache')
         
         res.statusCode = 200
         res.json(mostRecentChallenge);
