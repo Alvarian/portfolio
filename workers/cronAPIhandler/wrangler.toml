@@ -1,0 +1,7 @@
+name = "cronapihandler"
+main = "src/index.ts"
+compatibility_date = "2022-08-01"
+node_compat = true
+
+[triggers]
+crons = [ "*/1 * * * *" ]
