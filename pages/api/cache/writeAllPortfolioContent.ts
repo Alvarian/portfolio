@@ -24,11 +24,10 @@ export default async (req: any, res: any) => {
             })
         }))
 
-        console.log(req)
-        // const mostRecentChallenge = await redis.set('portfolioCache', paramsData)
+        await redis.set('portfolioCache', req.body)
         
         res.statusCode = 200
-        // res.json(mostRecentChallenge);
+        res.json("ok");
     } catch (err) {
         console.log(err)
         res.statusCode = 400
