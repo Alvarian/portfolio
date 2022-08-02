@@ -2,7 +2,7 @@ import Redis from 'ioredis'
 
 export default (req: any, res: any) => {
     try {
-        const redis: any = await (new Promise((resolve, reject) => {
+        const redis: any = new Promise((resolve, reject) => {
             const client = new Redis(process.env.NEXT_PUBLIC_REDIS_URL)
             client.on("error", function (err: any) {
               reject({
@@ -16,7 +16,7 @@ export default (req: any, res: any) => {
             client.on("ready", function () {
                 resolve(client)
             })
-        }))
+        })
 
         const mostRecentChallenge = await redis.get('mostRecentSolution')
   
