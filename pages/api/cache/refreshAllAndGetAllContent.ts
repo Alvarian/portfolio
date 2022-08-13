@@ -16,7 +16,7 @@ export default async (req: any, res: any) => {
     const now = formatDate(moment.tz(new Date(), "America/New_York").format())  
 
     try {
-        if (process.env.NEXT_PUBLIC_REDIS_URL) throw {
+        if (!process.env.NEXT_PUBLIC_REDIS_URL) throw {
             line: 35,
             file: "pages/api/cache/refreshAllAndGetAllContent",
             msg: "Missing Redis Credentials"
