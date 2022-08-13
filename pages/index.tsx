@@ -22,7 +22,7 @@ interface Admissions {
 }
 
 export async function getServerSideProps (ctx: any) {
-  const payload = await (await fetch("http://"+ctx.req.headers.host+'/api/cache/refreshAllAndGetAllContent')).json()
+  const payload = await (await fetch("http://"+ctx.req.headers.host+'/api/cache/getAllContentOnly')).json()
 
   return {props: payload}
 }
