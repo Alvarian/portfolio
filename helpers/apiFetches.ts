@@ -150,7 +150,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
   if (projectsResponse.length === cachedData.length) return cachedData
   makeDifferenceTrue()
 
-  const getServiceSlidesAndInstructionFromReadMe = async (projectName: string) => {
+  const getContentFromReadMe = async (projectName: string) => {
       const readmeContentList = (await getAPIjson(`https://raw.githubusercontent.com/Alvarian/${projectName}/master/README.md`, 'text')).replace(/(\r\n|\n|\r)/gm, " ").split(":octocat:")
       const instructions = readmeContentList[0].trim()
       const hasSlides = (/\<\!\-\-([^}{]*)\-\-\>/g.exec(readmeContentList[1]))
@@ -158,18 +158,20 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
 
       return {
           instructions,
-          slides: JSON.parse(hasSlides[1].trim())
+          icon: hasSlides[1].trim(),
+          content: hasSlides[2]?.trim()
       }
   }
 
   const projects: Array<{[key:string]: any}> = []
   for (let it of projectsResponse) {
       const projectType = it.description?.split("|")[1].trim().split(" ")[2].trim()
+      const {instructions, icon, content} = await getContentFromReadMe(it.name)
       
       switch (projectType) {
           case "Service": projects.push({
               id: it.id,
-              icon: "https://picsum.photos/id/233/620/620",
+              icon,
               title: it.name,
               description: it.description?.split("|")[0].trim(),
               stacks: await getAPIjson(it.languages_url, 'json'),
@@ -177,7 +179,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
               lastUpdate: it.pushed_at,
               payload: {
                   type: "Service",
-                  ref: await getServiceSlidesAndInstructionFromReadMe(it.name)
+                  ref: JSON.parse(content)
               }
           }); break;
           case "Script": projects.push({
@@ -190,7 +192,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
               lastUpdate: it.pushed_at,
               payload: {
                   type: "Script",
-                  ref: it.homepage
+                  ref: content
               }
           }); break;
           case "Site": projects.push({
