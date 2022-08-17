@@ -149,66 +149,68 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
 
   if (projectsResponse.length === cachedData.length) return cachedData
   makeDifferenceTrue()
-
+  
   const getContentFromReadMe = async (projectName: string) => {
-      const readmeContentList = (await getAPIjson(`https://raw.githubusercontent.com/Alvarian/${projectName}/master/README.md`, 'text')).replace(/(\r\n|\n|\r)/gm, " ").split(":octocat:")
-      const instructions = readmeContentList[0].trim()
-      const hasSlides = (/\<\!\-\-([^}{]*)\-\-\>/g.exec(readmeContentList[1]))
-      if (!hasSlides) throw "repo does not have slides"
+    const readmeContentList = (await getAPIjson(`https://raw.githubusercontent.com/Alvarian/${projectName}/master/README.md`, 'text')).replace(/(\r\n|\n|\r)/gm, " ").split(":octocat:")
 
-      return {
-          instructions,
-          icon: hasSlides[1].trim(),
-          content: hasSlides[2]?.trim()
-      }
+    const instructions = readmeContentList[0].trim()
+    const hasContent = (/\<\!\-\-([^}{]*)\-\-\>/g.exec(readmeContentList[1]))
+
+    if (!hasContent) throw "repo does not have slides"
+
+    return {
+      instructions,
+      icon: hasContent[1].split("|")[0].trim(),
+      content: hasContent[1].split("|")[1].trim()
+    }
   }
 
   const projects: Array<{[key:string]: any}> = []
   for (let it of projectsResponse) {
-      const projectType = it.description?.split("|")[1].trim().split(" ")[2].trim()
-      const {instructions, icon, content} = await getContentFromReadMe(it.name)
-      
-      switch (projectType) {
-          case "Service": projects.push({
-              id: it.id,
-              icon,
-              title: it.name,
-              description: it.description?.split("|")[0].trim(),
-              stacks: await getAPIjson(it.languages_url, 'json'),
-              repo: it.html_url,
-              lastUpdate: it.pushed_at,
-              payload: {
-                  type: "Service",
-                  ref: JSON.parse(content)
-              }
-          }); break;
-          case "Script": projects.push({
-              id: it.id,
-              icon: "https://picsum.photos/id/233/620/620",
-              title: it.name,
-              description: it.description?.split("|")[0].trim(),
-              stacks: await getAPIjson(it.languages_url, 'json'),
-              repo: it.html_url,
-              lastUpdate: it.pushed_at,
-              payload: {
-                  type: "Script",
-                  ref: content
-              }
-          }); break;
-          case "Site": projects.push({
-              id: it.id,
-              icon: "https://picsum.photos/id/233/620/620",
-              title: it.name,
-              description: it.description?.split("|")[0].trim(),
-              stacks: await getAPIjson(it.languages_url, 'json'),
-              repo: it.html_url,
-              lastUpdate: it.pushed_at,
-              payload: {
-                  type: "Site",
-                  ref: it.homepage
-              }
-          }); break;
-      }
+    const projectType = it.description?.split("|")[1].trim().split(" ")[2].trim()
+    const {icon, instructions, content} = await getContentFromReadMe(it.name)
+    
+    switch (projectType) {
+      case "Service": projects.push({
+        id: it.id,
+        icon,
+        title: it.name,
+        description: it.description?.split("|")[0].trim(),
+        stacks: await getAPIjson(it.languages_url, 'json'),
+        repo: it.html_url,
+        lastUpdate: it.pushed_at,
+        payload: {
+          type: "Service",
+          ref: JSON.parse(content)
+        }
+      }); break;
+      case "Script": projects.push({
+        id: it.id,
+        icon: "https://picsum.photos/id/233/620/620",
+        title: it.name,
+        description: it.description?.split("|")[0].trim(),
+        stacks: await getAPIjson(it.languages_url, 'json'),
+        repo: it.html_url,
+        lastUpdate: it.pushed_at,
+        payload: {
+          type: "Script",
+          ref: content
+        }
+      }); break;
+      case "Site": projects.push({
+        id: it.id,
+        icon: "https://picsum.photos/id/233/620/620",
+        title: it.name,
+        description: it.description?.split("|")[0].trim(),
+        stacks: await getAPIjson(it.languages_url, 'json'),
+        repo: it.html_url,
+        lastUpdate: it.pushed_at,
+        payload: {
+          type: "Site",
+          ref: it.homepage
+        }
+      }); break;
+    }
   }
   
   return projects
