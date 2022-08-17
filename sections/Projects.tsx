@@ -32,7 +32,7 @@ const ProductImage: FC<{
 const index: FC<{data: Array<Project>}> = ({ data }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
     const [primaryProduct, setPrimaryProduct] = useState(data[0])
-    
+    console.log(data)
     const setAsPrimary = (project: Project) =>  {
         const currentProductId = primaryProduct
         const newProductIds = [

@@ -41,7 +41,7 @@ export const getFormattedDate = (blob: string) => {
 
   const d = new Date(blob)
   let monthName = month[d.getMonth()]
-  let day = d.getDay()
+  let day = d.getDate()
   let year = d.getFullYear()
 
   return `${monthName} ${day}, ${year}`
