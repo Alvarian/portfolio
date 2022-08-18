@@ -75,7 +75,6 @@ const MostRecent: React.FC<{
       
       for (let i = 0; i < solutions.languages.length; i++) {
           const snippet = solutions.languages[i]
-          const language = snippet.language
 
           const styles = {
               button: `${tailwind.snippetTab} ${currentSnippet === snippet.language ? "tab-active bg-slate-700" : "bg-slate-200"}`,
