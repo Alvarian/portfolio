@@ -48,3 +48,5 @@ export const getFormattedDate = (blob: string) => {
 }
 
 export const getFilesFromDir = async (host: string | undefined) => await (await fetch(`http://${host}/api/readFiles`)).json()
+
+export const capitalizeFirst = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
