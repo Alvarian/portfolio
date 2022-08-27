@@ -52,7 +52,7 @@ export function zipDataIntoStream(fileData: any, ...media: any) {
   });
 }
 
-export async function determineAndGetChanges(files: any, body: any, encrypt: any, zip: any) {
+export async function determineAndGetChanges(files: any, body: any, encrypt: any, zip: any, secret: string) {
   const previousFields = JSON.parse(body.previousFieldsPayload);
 
   delete body.createdAt;
@@ -65,7 +65,7 @@ export async function determineAndGetChanges(files: any, body: any, encrypt: any
     const { 
       encryptedData, 
       secret_key
-    } = await encrypt(app);
+    } = await encrypt(app, secret);
     const project = await zip(encryptedData);
     body.secret_key = secret_key;
 
@@ -75,13 +75,13 @@ export async function determineAndGetChanges(files: any, body: any, encrypt: any
   const fileCollection = Object.keys(files);
   const filesArrayIfExist = [];
   for (const fileKey of fileCollection) {
-    const file = files[fileKey];
+    const file = files[fileKey]
     
-    if (file[0].fieldname === "app") {
+    if (file.fieldname === "app") {
       const encryptedAndZipped = await bundleAndReturnListOfFiles(file);
       filesArrayIfExist.push(encryptedAndZipped);
     } else {
-      filesArrayIfExist.push({name: "icon", data: file[0].buffer, type: file[0].mimetype});
+      filesArrayIfExist.push({name: "icon", data: file.buffer, type: file.mimetype});
     }
   }
 
