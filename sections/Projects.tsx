@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { capitalizeFirst, getFormattedDate } from "lib/sections/sections.methods"
-import { FC, useState } from "react"
+import { FC, useEffect, useState } from "react"
 
 
 interface Project {
@@ -11,7 +11,11 @@ interface Project {
     stacks: Array<string>,
     repo: string,
     lastUpdate: string,
-    type: string
+    payload: {type: string, ref: Array<any> | string}
+}
+
+declare global {
+    interface Window { games: any; }
 }
 
 const ProductImage: FC<{
@@ -32,7 +36,16 @@ const ProductImage: FC<{
 const index: FC<{data: Array<Project>}> = ({ data }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
     const [primaryProduct, setPrimaryProduct] = useState(data[0])
-    console.log(data)
+    const [isGameSet, setGame] = useState(false)
+
+    useEffect(() => {
+        if (!isGameSet) {
+            window.games = {}
+            setGame(!isGameSet)
+        }
+    }, [])
+
+    // console.log(data)
     const setAsPrimary = (project: Project) =>  {
         const currentProductId = primaryProduct
         const newProductIds = [
@@ -54,6 +67,39 @@ const index: FC<{data: Array<Project>}> = ({ data }) => {
         return capitalizeFirst(title)
     }
 
+    const handleProjectOpen = (title: string, payload: {type: string, ref: Array<any> | string}) => {
+        console.log(payload)
+        switch (payload.type) {
+            case "Service": 
+                // open modal
+                const serviceModal = document.getElementById("service-modal") as HTMLInputElement
+                serviceModal.checked = true
+
+                break;
+            case "Site":   
+                window.open(payload.ref as string, '_blank');
+                
+                break;
+            case "Script": 
+                // open modal
+                fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
+                    .then((res: any) => res.json())
+                    .then((script: string) => {
+                        const projectBox = document.getElementById("project-box") as HTMLElement
+                        projectBox.innerHTML = ""
+
+                        eval(script)
+
+                        window.games[capitalizeFirst(title)](projectBox)
+
+                        const projectModal = document.getElementById("project-modal") as HTMLInputElement
+                        projectModal.checked = true
+                    }).catch(err => console.log(err))
+
+                break;
+        }
+    }
+
     return (
         <div className="m-auto flex flex-row items-center h-[620px]">
             <main className="h-[620px] min-w-[880px] relative mr-[40px]">
@@ -72,7 +118,8 @@ const index: FC<{data: Array<Project>}> = ({ data }) => {
                                 alt=""
                             />
 
-                            <button className="btn btn-accent btn-wide text-2xl">OPEN PROJECT</button>
+                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, primaryProduct.title, primaryProduct.payload)}>OPEN PROJECT</button>
+                            {/* <label htmlFor="my-modal-6" className="btn modal-button btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, primaryProduct.payload)}>Open Project</label> */}
                         </div>
 
                         <ul className="w-1/3 h-3/4 text-left flex flex-col justify-around items-center">

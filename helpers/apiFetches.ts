@@ -37,7 +37,6 @@ export const getStats = async (makeDifferenceTrue: () => void, cachedData: Stats
     
       return response
   }
-  makeDifferenceTrue()
     
   const getChallengesData = async () => {
       const response = await (await fetch("https://www.codewars.com/api/v1/users/Alvarian_/code-challenges/completed")).json()
@@ -130,6 +129,8 @@ export const getStats = async (makeDifferenceTrue: () => void, cachedData: Stats
 }
 
 export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Array<Project>, now: Now) => {
+  const sortAndStringify = (obj: any) => JSON.stringify(obj.sort((a: any, b: any) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0)))
+  
   const getAPIjson: any = async (url: string, payloadType: string) => {
     const headers = {
       headers: {
@@ -146,9 +147,6 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
   }
 
   const projectsResponse = (await (await getAPIjson('https://api.github.com/search/repositories?q=user:Alvarian', 'json')).items).filter((it: {description: string|null}) => it.description?.split("|")[2].trim().split(" ")[1].trim() === ":heavy_check_mark:")
-
-  if (projectsResponse.length === cachedData.length) return cachedData
-  makeDifferenceTrue()
   
   const getContentFromReadMe = async (projectName: string) => {
     const readmeContentList = (await getAPIjson(`https://raw.githubusercontent.com/Alvarian/${projectName}/master/README.md`, 'text')).replace(/(\r\n|\n|\r)/gm, " ").split(":octocat:")
@@ -186,7 +184,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
       }); break;
       case "Script": projects.push({
         id: it.id,
-        icon: "https://picsum.photos/id/233/620/620",
+        icon,
         title: it.name,
         description: it.description?.split("|")[0].trim(),
         stacks: await getAPIjson(it.languages_url, 'json'),
@@ -199,7 +197,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
       }); break;
       case "Site": projects.push({
         id: it.id,
-        icon: "https://picsum.photos/id/233/620/620",
+        icon,
         title: it.name,
         description: it.description?.split("|")[0].trim(),
         stacks: await getAPIjson(it.languages_url, 'json'),
@@ -213,10 +211,16 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
     }
   }
   
+  // console.log("projects:", sortAndStringify(projects) === sortAndStringify(cachedData))
+  if (sortAndStringify(projects) === sortAndStringify(cachedData)) return cachedData
+  makeDifferenceTrue()
+  
   return projects
 }
 
 export const getBadges = async (makeDifferenceTrue: () => void, cachedData: {badges: Array<Badge>}, redis: any, now: Now) => {
+  const sortAndStringify = (obj: any) => JSON.stringify(obj.sort((a: any, b: any) => (a.issuedOn > b.issuedOn) ? 1 : ((b.issuedOn > a.issuedOn) ? -1 : 0)))
+
   if (!process.env.NEXT_PUBLIC_BADGR_USER) throw {
     line: 207,
     file: "pages/index",
@@ -319,9 +323,6 @@ export const getBadges = async (makeDifferenceTrue: () => void, cachedData: {bad
 
     return data
   })()).result[0].assertions
-  
-  if (collectionData.length === cachedData.badges.length) return cachedData
-  makeDifferenceTrue()
 
   const badges: Array<Badge> = await Promise.all(collectionData.map(async (assertion: string) => {
     const badgeData = await getBadgrBadgeData(assertion, hasAccessToken)
@@ -358,6 +359,10 @@ export const getBadges = async (makeDifferenceTrue: () => void, cachedData: {bad
       }
     }
   }))
+
+  // console.log("badges:", sortAndStringify(badges) === sortAndStringify(cachedData.badges))
+  if (sortAndStringify(badges) === sortAndStringify(cachedData.badges)) return {badges: cachedData.badges}
+  makeDifferenceTrue()
 
   return {badges}
 }

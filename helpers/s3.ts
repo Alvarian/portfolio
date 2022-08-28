@@ -15,8 +15,8 @@ export async function createOrUpdate(files: any, fields: any) {
   for (let file of files) {
     if (file.name === "core" && file.name === "icon") return
 
-    const corePath = `${fields.title}/${fields.version}`;
-    const iconPath = `${fields.title}/${file.name}`;
+    const corePath = `${fields.title}/core`;
+    const iconPath = `${fields.title}/icon`;
     
     s3.upload({
       Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME as string, // pass your bucket name
@@ -36,8 +36,8 @@ export async function createOrUpdate(files: any, fields: any) {
 
   if (errMsg.length) throw errMsg;
 
-  if(files[0]?.data) {fields.app = `${process.env.NEXT_PUBLIC_S3_ROOT_URL}/${fields.title}/${fields.version}`;}
-  if(files[1]?.data) {fields.icon = `${process.env.NEXT_PUBLIC_S3_ROOT_URL}/${fields.title}/${files[1].name}`;}
+  if(files[0]?.data) {fields.app = `${process.env.NEXT_PUBLIC_S3_ROOT_URL}/${fields.title}/core`;}
+  if(files[1]?.data) {fields.icon = `${process.env.NEXT_PUBLIC_S3_ROOT_URL}/${fields.title}/icon`;}
 }
 
 export function getOneAndUnzip(keyName: string) {
