@@ -181,6 +181,22 @@ const Home: NextPage = (props) => {
       </main>
 
       <Footer width={width} />
+
+      <input type="checkbox" id="project-modal" className="modal-toggle" />
+      <label htmlFor='project-modal' className="modal modal-bottom sm:modal-middle cursor-pointer">
+        <div className="modal-box" id="project-box"></div>
+      </label>
+
+      <input type="checkbox" id="service-modal" className="modal-toggle" />
+      <label htmlFor='service-modal' className="modal modal-bottom sm:modal-middle cursor-pointer">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Congratulations random Internet user!</h3>
+          <p className="py-4">A service goes in here</p>
+          <div className="modal-action">
+            <label htmlFor="service-modal" className="btn">Yay!</label>
+          </div>
+        </div>
+      </label>
     </div>
   )
 }
