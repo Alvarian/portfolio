@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { capitalizeFirst, getFormattedDate } from "lib/sections/sections.methods"
 import { FC, useEffect, useState } from "react"
+import DOMPurify from "dompurify"
+import parse from "html-react-parser"
 
 
 interface Project {
@@ -33,7 +35,9 @@ const ProductImage: FC<{
     )
 }
 
-const index: FC<{data: Array<Project>}> = ({ data }) => {
+const index: FC<{
+    data: Array<Project>
+}> = ({ data }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
     const [primaryProduct, setPrimaryProduct] = useState(data[0])
     const [isGameSet, setGame] = useState(false)
@@ -45,7 +49,6 @@ const index: FC<{data: Array<Project>}> = ({ data }) => {
         }
     }, [])
 
-    // console.log(data)
     const setAsPrimary = (project: Project) =>  {
         const currentProductId = primaryProduct
         const newProductIds = [
@@ -68,7 +71,6 @@ const index: FC<{data: Array<Project>}> = ({ data }) => {
     }
 
     const handleProjectOpen = (title: string, payload: {type: string, ref: Array<any> | string}) => {
-        console.log(payload)
         switch (payload.type) {
             case "Service": 
                 // open modal
@@ -82,20 +84,39 @@ const index: FC<{data: Array<Project>}> = ({ data }) => {
                 break;
             case "Script": 
                 // open modal
-                fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
-                    .then((res: any) => res.json())
-                    .then((script: string) => {
-                        const projectBox = document.getElementById("project-box") as HTMLElement
-                        projectBox.innerHTML = ""
+                const projectModal = document.getElementById("project-modal") as HTMLInputElement
+                const projectBox = document.getElementById("project-box") as HTMLDivElement
+                const body = document.querySelector("body") as HTMLBodyElement
 
-                        eval(script)
+                body.style.overflow = "hidden"
+                const game = window.games[capitalizeFirst(title)]
 
-                        window.games[capitalizeFirst(title)](projectBox)
+                if (game) {
+                    projectBox.appendChild(game())
+                    projectModal.checked = true
+                } else {
+                    fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
+                        .then((res: any) => {
+                            if (res.ok) {
+                                return res.json()
+                            }
+                            throw new Error(res.statusText)
+                        })
+                        .then((script: string) => {
+                            eval(script)
 
-                        const projectModal = document.getElementById("project-modal") as HTMLInputElement
-                        projectModal.checked = true
-                    }).catch(err => console.log(err))
-
+                            projectBox.appendChild(window.games[capitalizeFirst(title)]())
+                            projectModal.checked = true
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            const script = payload.ref as string
+                            eval(script)
+                            
+                            window.games[capitalizeFirst(title)](projectBox)
+                            projectModal.checked = true
+                        })
+                }
                 break;
         }
     }
