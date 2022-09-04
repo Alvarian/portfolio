@@ -46,6 +46,18 @@ const Home: NextPage = (props) => {
     }
   }
 
+  const handleModalTogle = (e: any) => {
+    const body = document.querySelector("body") as HTMLElement
+    const projectBox = document.getElementById("project-box") as HTMLDivElement
+
+    if (e.target.checked) {
+      body.style.overflow = "hidden"
+    } else {
+      projectBox.innerHTML = ""
+      body.style.overflow = "auto"
+    }
+  }
+
   const handlePermissionsOnScroll = () => {
     // find current scroll position
     const currentScrollPos = window.pageYOffset
@@ -182,13 +194,17 @@ const Home: NextPage = (props) => {
 
       <Footer width={width} />
 
-      <input type="checkbox" id="project-modal" className="modal-toggle" />
-      <label htmlFor='project-modal' className="modal modal-bottom sm:modal-middle cursor-pointer">
-        <div className="modal-box" id="project-box"></div>
+      <input type="checkbox" id="project-modal" className="modal-toggle" onChange={handleModalTogle.bind(this)} />
+      <label htmlFor="project-modal" className="modal cursor-pointer">
+        <label className="modal-box h-2/3 max-w-5xl relative mt-10">
+          <label htmlFor="project-modal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+        
+          <div id="project-box"></div>
+        </label>
       </label>
 
-      <input type="checkbox" id="service-modal" className="modal-toggle" />
-      <label htmlFor='service-modal' className="modal modal-bottom sm:modal-middle cursor-pointer">
+      <input type="checkbox" id="service-modal" className="modal-toggle" onChange={handleModalTogle.bind(this)} />
+      <label htmlFor='service-modal' className="modal sm:modal-middle cursor-pointer">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Congratulations random Internet user!</h3>
           <p className="py-4">A service goes in here</p>

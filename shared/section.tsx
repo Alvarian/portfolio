@@ -5,6 +5,7 @@ import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 import Underline from "shared/underline"
 
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 
 
 const Section: React.FC<{
@@ -145,7 +146,7 @@ const Section: React.FC<{
             width={width} 
             alt={alt}
             isSectionPermitted={isSectionPermitted}
-            handleRenderLinks={handleRenderLinks} 
+            handleRenderLinks={handleRenderLinks}
           />
         </div>
          : 
