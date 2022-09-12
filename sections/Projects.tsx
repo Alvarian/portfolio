@@ -1,8 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { capitalizeFirst, getFormattedDate } from "lib/sections/sections.methods"
-import { FC, useEffect, useState } from "react"
-import DOMPurify from "dompurify"
-import parse from "html-react-parser"
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 
 
 interface Project {
@@ -36,8 +34,9 @@ const ProductImage: FC<{
 }
 
 const index: FC<{
-    data: Array<Project>
-}> = ({ data }) => {
+    data: Array<Project>,
+    setModalCoverPageData: Dispatch<SetStateAction<{[key: string]: any} | null>>
+}> = ({ data, setModalCoverPageData }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
     const [primaryProduct, setPrimaryProduct] = useState(data[0])
     const [isGameSet, setGame] = useState(false)
@@ -70,7 +69,9 @@ const index: FC<{
         return capitalizeFirst(title)
     }
 
-    const handleProjectOpen = (title: string, payload: {type: string, ref: Array<any> | string}) => {
+    const handleProjectOpen = (title: string, stacks: {[key: string]: any} | null, payload: {type: string, ref: Array<any> | string}) => {
+        setModalCoverPageData({title, stacks})
+        
         switch (payload.type) {
             case "Service": 
                 // open modal
@@ -91,7 +92,13 @@ const index: FC<{
                 body.style.overflow = "hidden"
                 const game = window.games[capitalizeFirst(title)]
 
-                if (game) {
+                const localGame = localStorage.getItem(title+"_game")
+                if (localGame && !game) {
+                    eval(localGame)
+
+                    projectBox.appendChild(window.games[capitalizeFirst(title)]())
+                    projectModal.checked = true
+                } else if (game) {
                     projectBox.appendChild(game())
                     projectModal.checked = true
                 } else {
@@ -105,6 +112,7 @@ const index: FC<{
                         .then((script: string) => {
                             eval(script)
 
+                            localStorage.setItem(title+"_game", script)
                             projectBox.appendChild(window.games[capitalizeFirst(title)]())
                             projectModal.checked = true
                         })
@@ -113,7 +121,7 @@ const index: FC<{
                             const script = payload.ref as string
                             eval(script)
                             
-                            window.games[capitalizeFirst(title)](projectBox)
+                            window.games[capitalizeFirst(title)]()
                             projectModal.checked = true
                         })
                 }
@@ -139,7 +147,7 @@ const index: FC<{
                                 alt=""
                             />
 
-                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, primaryProduct.title, primaryProduct.payload)}>OPEN PROJECT</button>
+                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, primaryProduct.title, primaryProduct.stacks, primaryProduct.payload)}>OPEN PROJECT</button>
                             {/* <label htmlFor="my-modal-6" className="btn modal-button btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, primaryProduct.payload)}>Open Project</label> */}
                         </div>
 

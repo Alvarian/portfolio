@@ -14,6 +14,15 @@ export const reducers = {
   }
 }
 
+const getRandomColor = (arr: Array<any>) => {
+  if (!arr.length) {
+    return ["#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6)]
+  }
+  return arr.map(() => {
+    return "#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6);
+  });
+};
+
 export const formatDate = (blob: string) => {
   const monthList = ["January","February","March","April","May","June","July","August","September","October","November","December"]
   const date = new Date(blob)

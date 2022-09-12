@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 type Nullable<T> = T | null;
 
 export interface Content {
@@ -8,7 +10,8 @@ export interface Content {
   } | null,
   type: string,
   keyIcon: string | null,
-  bgImageName: string
+  bgImageName: string,
+  setModalCoverPageData: Dispatch<SetStateAction<{[key: string]: any} | null>>
 }
 
 export interface Badge {

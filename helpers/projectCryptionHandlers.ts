@@ -2,7 +2,6 @@ import archiver from 'archiver'
 import { WritableStreamBuffer } from 'stream-buffers'
 import fileType from 'file-type'
 import { AES, enc } from "crypto-js"
-import { reject } from 'lodash';
 
 
 export async function encryptAndPushCode(bundleFile: any, secret_key: string) {
