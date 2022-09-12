@@ -5,7 +5,7 @@ import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 import Underline from "shared/underline"
 
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { Dispatch, useEffect, useState } from 'react'
 
 
 const Section: React.FC<{
@@ -26,6 +26,7 @@ const Section: React.FC<{
   } | null,
   keyIcon: string | null,
   alt: string,
+  setModalCoverPageData: Dispatch<React.SetStateAction<{[key: string]: number} | null>>
 }> = ({
   content,
   bgImageName,
@@ -35,6 +36,7 @@ const Section: React.FC<{
   serverProps,
   keyIcon,
   alt,
+  setModalCoverPageData
 }) => {
   const handleRenderLinks: (elementType: string, size: string) => JSX.Element = (elementType: string, size: string) => {
     let outsourcedLinks = []
@@ -147,6 +149,7 @@ const Section: React.FC<{
             alt={alt}
             isSectionPermitted={isSectionPermitted}
             handleRenderLinks={handleRenderLinks}
+            setModalCoverPageData={setModalCoverPageData}
           />
         </div>
          : 

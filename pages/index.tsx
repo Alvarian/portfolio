@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 React.useLayoutEffect = React.useEffect 
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { FaRegWindowMaximize } from 'react-icons/fa'
+import { VscChromeClose } from 'react-icons/vsc'
+import { Bar } from 'react-chartjs-2';
 
 import Section from 'shared/section'
 import Border from 'sections/Border'
@@ -12,6 +15,7 @@ import { useResize } from 'hooks/'
 import { Content, dataOptions } from 'lib/sections/sections.types'
 import { localMockData, sectionData } from 'lib/sections/sections.data'
 import { rateLimiters } from 'lib/sections/sections.methods'
+import { motion } from 'framer-motion'
 
 
 interface Admissions {
@@ -32,6 +36,7 @@ const Home: NextPage = (props) => {
   const [width] = useResize()
   const [scrollMethodAdmissions, setAdmissions] = useState<Admissions>({})
   const [areEventsLoaded, setAreLoaded] = useState<boolean>(false)
+  const [modalCoverPageData, setModalCoverPageData] = useState<{[key: string]: number} | null>(null)
 
   const hasPropData: dataOptions = props
   const propData: dataOptions = hasPropData.setting === "local" ? localMockData : props
@@ -131,6 +136,18 @@ const Home: NextPage = (props) => {
     }
   }, [scrollMethodAdmissions, handlePermissionsOnScroll, handleAutoRoutingOnScroll])
 
+  const makeProjectBoxFullScreen = (e: any) => {
+    const projectBox = document.querySelector('#project-box') as HTMLDivElement
+    if (projectBox.requestFullscreen) {
+      projectBox.requestFullscreen();
+    } 
+    // else if (projectBox.webkitRequestFullscreen) { /* Safari */
+    //   projectBox.webkitRequestFullscreen();
+    // } else if (projectBox.msRequestFullscreen) { /* IE11 */
+    //   projectBox.msRequestFullscreen();
+    // }
+  }
+
   const handleSectionRendering = () => {
     let sectionList = []
     for (const i in sectionData) {
@@ -144,6 +161,7 @@ const Home: NextPage = (props) => {
         content={section.content}
         isSectionPermitted={scrollMethodAdmissions[section.alt]?.isPermitted}
         bgImageName={section.bgImageName}
+        setModalCoverPageData={setModalCoverPageData}
         keyIcon={section.keyIcon}
         alt={section.alt}
       />)
@@ -178,6 +196,42 @@ const Home: NextPage = (props) => {
       content: `flex w-full flex-1 flex-col items-center text-center`
     }
   }
+
+  const VOptions = {
+	  title: {
+	  	display: true,
+	  	text: "Languages Used",
+	  	fontSize: "25"
+	  },
+	  legend: {
+	  	display: false
+	  },
+	  scales: {
+	    yAxes: [
+	      {
+	        ticks: {
+	          beginAtZero: true
+	        },
+	      },
+	    ],
+	  },
+	  maintainAspectRatio: false
+	};
+
+	const chartData = (stacks: any) => {
+	  return {
+      labels: stacks.map((g: any) => g.x),
+      datasets: [
+        {
+          label: "Percentage",
+          data: stacks.map((g: any) => Math.round((g.y/stacks.total)*10000)/100 ),
+          backgroundColor: getRandomColor(stacks),
+          borderColor: getRandomColor(stacks),
+          borderWidth: 1,
+        }
+      ]
+    }
+	}
   
   return (
     <div className={styles.tailwind.main}>
@@ -196,10 +250,45 @@ const Home: NextPage = (props) => {
 
       <input type="checkbox" id="project-modal" className="modal-toggle" onChange={handleModalTogle.bind(this)} />
       <label htmlFor="project-modal" className="modal cursor-pointer">
-        <label className="modal-box h-2/3 max-w-5xl relative mt-10">
-          <label htmlFor="project-modal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-        
-          <div id="project-box"></div>
+        <label className="modal-box relative mt-10 h-[580px] min-w-[780px] max-w-[780px] flex items-center justify-center">
+          <div className='z-10 absolute right-2 top-2 absolute w-32 flex justify-around'>
+            <label className="border-2 border-white btn btn-sm text-2xl" onClick={makeProjectBoxFullScreen.bind(this)}><FaRegWindowMaximize /></label>
+
+            <label htmlFor="project-modal" className="border-2 border-white btn btn-sm text-2xl"><VscChromeClose /></label>
+          </div>
+
+          <div className='h-full w-full relative'>
+            <div id="project-box" className='w-full h-full'></div>
+
+            {modalCoverPageData && <motion.div className='bg-black absolute top-0 left-0 h-full w-full'
+              variants={{
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    duration: 1
+                  },
+                },
+                hidden: {
+                  opacity: 0,
+                  display: "none"
+                },
+              }}
+              initial="visible"
+						  animate={modalCoverPageData ? "visible" : "hidden"}
+            >
+							<h1 className="chart-title">{modalCoverPageData.title}</h1>
+
+              <div className="chart-details">
+                <Bar
+                  data={chartData(modalCoverPageData.stacks)}
+                  options={VOptions}
+                  height={320}
+                />
+              </div>
+
+						  <button onClick={() => setModalCoverPageData(null)}>Continue</button>
+					  </motion.div>}
+          </div>
         </label>
       </label>
 
@@ -218,3 +307,7 @@ const Home: NextPage = (props) => {
 }
 
 export default Home
+function getRandomColor(stacks: any) {
+  throw new Error('Function not implemented.')
+}
+
