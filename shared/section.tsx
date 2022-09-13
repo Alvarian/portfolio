@@ -26,7 +26,7 @@ const Section: React.FC<{
   } | null,
   keyIcon: string | null,
   alt: string,
-  setModalCoverPageData: Dispatch<React.SetStateAction<{[key: string]: number} | null>>
+  setProjectIndex: React.Dispatch<React.SetStateAction<number>>
 }> = ({
   content,
   bgImageName,
@@ -36,7 +36,7 @@ const Section: React.FC<{
   serverProps,
   keyIcon,
   alt,
-  setModalCoverPageData
+  setProjectIndex
 }) => {
   const handleRenderLinks: (elementType: string, size: string) => JSX.Element = (elementType: string, size: string) => {
     let outsourcedLinks = []
@@ -149,7 +149,7 @@ const Section: React.FC<{
             alt={alt}
             isSectionPermitted={isSectionPermitted}
             handleRenderLinks={handleRenderLinks}
-            setModalCoverPageData={setModalCoverPageData}
+            setProjectIndex={setProjectIndex}
           />
         </div>
          : 
