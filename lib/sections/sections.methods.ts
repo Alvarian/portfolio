@@ -14,7 +14,7 @@ export const reducers = {
   }
 }
 
-const getRandomColor = (arr: Array<any>) => {
+export const getRandomColor = (arr: Array<any>) => {
   if (!arr.length) {
     return ["#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6)]
   }

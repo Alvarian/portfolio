@@ -35,8 +35,8 @@ const ProductImage: FC<{
 
 const index: FC<{
     data: Array<Project>,
-    setModalCoverPageData: Dispatch<SetStateAction<{[key: string]: any} | null>>
-}> = ({ data, setModalCoverPageData }) => {
+    setProjectIndex: Dispatch<SetStateAction<number>>
+}> = ({ data, setProjectIndex }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
     const [primaryProduct, setPrimaryProduct] = useState(data[0])
     const [isGameSet, setGame] = useState(false)
@@ -47,6 +47,8 @@ const index: FC<{
             setGame(!isGameSet)
         }
     }, [])
+
+    const index = data.indexOf(primaryProduct)
 
     const setAsPrimary = (project: Project) =>  {
         const currentProductId = primaryProduct
@@ -69,8 +71,8 @@ const index: FC<{
         return capitalizeFirst(title)
     }
 
-    const handleProjectOpen = (title: string, stacks: {[key: string]: any} | null, payload: {type: string, ref: Array<any> | string}) => {
-        setModalCoverPageData({title, stacks})
+    const handleProjectOpen = (index: number, title: string, stacks: {[key: string]: any} | null, payload: {type: string, ref: Array<any> | string}) => {
+        setProjectIndex(index)
         
         switch (payload.type) {
             case "Service": 
@@ -147,7 +149,7 @@ const index: FC<{
                                 alt=""
                             />
 
-                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, primaryProduct.title, primaryProduct.stacks, primaryProduct.payload)}>OPEN PROJECT</button>
+                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, index, primaryProduct.title, primaryProduct.stacks, primaryProduct.payload)}>OPEN PROJECT</button>
                             {/* <label htmlFor="my-modal-6" className="btn modal-button btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, primaryProduct.payload)}>Open Project</label> */}
                         </div>
 
