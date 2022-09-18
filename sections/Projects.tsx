@@ -1,6 +1,11 @@
+import Chart from "shared/chart";
 import { AnimatePresence, motion } from "framer-motion"
-import { capitalizeFirst, getFormattedDate } from "lib/sections/sections.methods"
+import useModal from "hooks/useModal";
+import { capitalizeFirst, getFormattedDate, getRandomColor } from "lib/sections/sections.methods"
+import React from "react";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
+
+import Modal from "shared/modal";
 
 
 interface Project {
@@ -18,7 +23,7 @@ declare global {
     interface Window { games: any; }
 }
 
-const ProductImage: FC<{
+const ProjectImage: FC<{
     project: Project,
     onExpand: (project: Project) => void
 }> = ({ project, onExpand }) => {
@@ -33,13 +38,142 @@ const ProductImage: FC<{
     )
 }
 
+const ProjectCoverAndContent: FC<{
+    projectData: {[key: string]: any},
+    projectBody: any
+}> = ({projectBody, projectData}) => {
+    const [isCoverOpen, toggleCover] = useState(true)
+  
+console.log(projectData)
+    // const VOptions = {
+    //     title: {
+    //     	display: true,
+    //     	text: "Languages Used",
+    //     	fontSize: "25"
+    //     },
+    //     legend: {
+    //     	display: false
+    //     },
+    //     scales: {
+    //       yAxes: [
+    //         {
+    //           ticks: {
+    //             beginAtZero: true
+    //           },
+    //         },
+    //       ],
+    //     },
+    //     maintainAspectRatio: false
+    //   }
+  
+    // const chartData = (stacks: any) => {
+      //   return {
+    //     labels: stacks.map((g: any) => g.x),
+    //     datasets: [
+    //       {
+    //         label: "Percentage",
+    //         data: stacks.map((g: any) => Math.round((g.y/stacks.total)*10000)/100 ),
+    //         backgroundColor: getRandomColor(stacks),
+    //         borderColor: getRandomColor(stacks),
+    //         borderWidth: 1,
+    //       }
+    //     ]
+    //   }
+      // }
+    
+    const VOptions = {
+        responsive: true,
+        scales: {
+          y: {
+            ticks: {
+              color: 'red',
+              font: {
+                size: 18,
+              }
+            }
+          },
+          x: {
+            ticks: {
+              color: 'red',
+              font: {
+                size: 18
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'bottom' as const,
+          },
+          title: {
+            display: true,
+            padding: 15,
+            color: '#FFFFFF',
+            font: {
+              size: 26
+            },
+            text: capitalizeFirst(projectData.title),
+          },
+        },
+    }
+    
+    const chartData: any = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [
+            {
+                label: 'Dataset 1',
+                data: [12, 19, 3, 31, 2, 3],
+                backgroundColor: [
+                    getRandomColor,
+                    getRandomColor,
+                    getRandomColor,
+                    getRandomColor,
+                    getRandomColor,
+                    getRandomColor,
+                ].map((c: any) => c([])),
+                borderWidth: 1,
+            }
+        ],
+    }
+
+    return isCoverOpen ? (
+        <motion.div className='bg-black h-full w-full flex items-center justify-around flex-col'
+            variants={{
+            visible: {
+                opacity: 1,
+                transition: {
+                duration: 1
+                },
+            },
+            hidden: {
+                opacity: 0,
+                display: "none"
+            },
+            }}
+            initial="visible"
+            animate={isCoverOpen ? "visible" : "hidden"}
+        >
+            <Chart languagesTotal={projectData.stacks} bgStyle={""} />
+
+            <button 
+                className="btn btn-sm border-white border-2 text-xl"
+                onClick={() => toggleCover(false)}
+            >Continue</button>
+        </motion.div>
+    ) : (
+        <div className="h-full w-full" ref={(node) => node?.appendChild(projectBody as HTMLElement)}></div>
+    )
+}
+
 const index: FC<{
-    data: Array<Project>,
-    setProjectIndex: Dispatch<SetStateAction<number>>
-}> = ({ data, setProjectIndex }) => {
+    data: Array<Project>
+}> = ({ data }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
-    const [primaryProduct, setPrimaryProduct] = useState(data[0])
+    const [projectData, setProjectData] = useState(data[0])
+    const [projectBody, setProjectBody] = useState<HTMLElement | null>(null)
     const [isGameSet, setGame] = useState(false)
+    const { isModalOpen, close, open } = useModal()
+    const body = document.querySelector("body") as HTMLBodyElement
 
     useEffect(() => {
         if (!isGameSet) {
@@ -48,16 +182,14 @@ const index: FC<{
         }
     }, [])
 
-    const index = data.indexOf(primaryProduct)
-
     const setAsPrimary = (project: Project) =>  {
-        const currentProductId = primaryProduct
+        const currentProductId = projectData
         const newProductIds = [
             ...productIds.filter((x: Project) => x.id !== project.id),
             currentProductId
         ]
 
-        setPrimaryProduct(project)
+        setProjectData(project)
         setProductIds(newProductIds)
     }
 
@@ -71,9 +203,7 @@ const index: FC<{
         return capitalizeFirst(title)
     }
 
-    const handleProjectOpen = (index: number, title: string, stacks: {[key: string]: any} | null, payload: {type: string, ref: Array<any> | string}) => {
-        setProjectIndex(index)
-        
+    const handleProjectOpen = (title: string, stacks: {[key: string]: any} | null, payload: {type: string, ref: Array<any> | string}) => {        
         switch (payload.type) {
             case "Service": 
                 // open modal
@@ -87,10 +217,6 @@ const index: FC<{
                 break;
             case "Script": 
                 // open modal
-                const projectModal = document.getElementById("project-modal") as HTMLInputElement
-                const projectBox = document.getElementById("project-box") as HTMLDivElement
-                const body = document.querySelector("body") as HTMLBodyElement
-
                 body.style.overflow = "hidden"
                 const game = window.games[capitalizeFirst(title)]
 
@@ -98,11 +224,9 @@ const index: FC<{
                 if (localGame && !game) {
                     eval(localGame)
 
-                    projectBox.appendChild(window.games[capitalizeFirst(title)]())
-                    projectModal.checked = true
+                    setProjectBody(window.games[capitalizeFirst(title)]())
                 } else if (game) {
-                    projectBox.appendChild(game())
-                    projectModal.checked = true
+                    setProjectBody(game())
                 } else {
                     fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
                         .then((res: any) => {
@@ -115,16 +239,14 @@ const index: FC<{
                             eval(script)
 
                             localStorage.setItem(title+"_game", script)
-                            projectBox.appendChild(window.games[capitalizeFirst(title)]())
-                            projectModal.checked = true
+                            setProjectBody(window.games[capitalizeFirst(title)]())
                         })
                         .catch(err => {
                             console.log(err)
                             const script = payload.ref as string
                             eval(script)
                             
-                            window.games[capitalizeFirst(title)]()
-                            projectModal.checked = true
+                            setProjectBody(window.games[capitalizeFirst(title)]())
                         })
                 }
                 break;
@@ -136,27 +258,28 @@ const index: FC<{
             <main className="h-[620px] min-w-[880px] relative mr-[40px]">
                 <AnimatePresence>
                     <motion.div
-                        layoutId={`product-${primaryProduct.id}`}
-                        key={primaryProduct.id}
+                        layoutId={`product-${projectData.id}`}
+                        key={projectData.id}
                         className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black p-8"
                     >
                         <div>
-                            <h2 className="text-4xl">{formatProjectTitle(primaryProduct.title)}</h2>
+                            <h2 className="text-4xl">{formatProjectTitle(projectData.title)}</h2>
 
                             <img
                                 className="h-[400px] m-5"
-                                src={primaryProduct.icon}
+                                src={projectData.icon}
                                 alt=""
                             />
 
-                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, index, primaryProduct.title, primaryProduct.stacks, primaryProduct.payload)}>OPEN PROJECT</button>
-                            {/* <label htmlFor="my-modal-6" className="btn modal-button btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, primaryProduct.payload)}>Open Project</label> */}
+                            {/* <button className="btn btn-accent btn-wide text-2xl" onClick={open}>OPEN PROJECT</button> */}
+                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, projectData.title, projectData.stacks, projectData.payload)}>OPEN PROJECT</button>
+                            {/* <label htmlFor="my-modal-6" className="btn modal-button btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, projectData.payload)}>Open Project</label> */}
                         </div>
 
                         <ul className="w-1/3 h-3/4 text-left flex flex-col justify-around items-center">
-                            <li className="w-full text-xl">{primaryProduct.description}</li>
-                            <li className="w-full"><a className="btn btn-accent btn-xs" href={primaryProduct.repo}>Repository Source</a></li>
-                            <li className="w-full">Last push on {getFormattedDate(primaryProduct.lastUpdate)}</li>
+                            <li className="w-full text-xl">{projectData.description}</li>
+                            <li className="w-full"><a className="btn btn-accent btn-xs" href={projectData.repo}>Repository Source</a></li>
+                            <li className="w-full">Last push on {getFormattedDate(projectData.lastUpdate)}</li>
                         </ul>
                     </motion.div>
                 </AnimatePresence>
@@ -165,10 +288,15 @@ const index: FC<{
             <aside className="flex flex-col flex-wrap h-[620px] w-[220px] overflow-auto mt-0">
                 <AnimatePresence>
                     {productIds.map((project: Project) => (
-                        <ProductImage project={project} key={project.id} onExpand={setAsPrimary} />
+                        <ProjectImage project={project} key={project.id} onExpand={setAsPrimary} />
                     ))}
                 </AnimatePresence>
             </aside>
+
+            <Modal 
+                handleClose={() => {setProjectBody(null); body.style.overflow = "auto"}}
+                hasProject={!!projectBody}
+            ><ProjectCoverAndContent projectBody={projectBody} projectData={projectData} /></Modal>
         </div>
     )
 }

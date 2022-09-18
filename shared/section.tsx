@@ -6,6 +6,7 @@ import Underline from "shared/underline"
 
 import { motion } from 'framer-motion'
 import { Dispatch, useEffect, useState } from 'react'
+import ProjectModal from './modal'
 
 
 const Section: React.FC<{
@@ -25,8 +26,7 @@ const Section: React.FC<{
     badges: Array<Badge>
   } | null,
   keyIcon: string | null,
-  alt: string,
-  setProjectIndex: React.Dispatch<React.SetStateAction<number>>
+  alt: string
 }> = ({
   content,
   bgImageName,
@@ -35,8 +35,7 @@ const Section: React.FC<{
   isSectionPermitted,
   serverProps,
   keyIcon,
-  alt,
-  setProjectIndex
+  alt
 }) => {
   const handleRenderLinks: (elementType: string, size: string) => JSX.Element = (elementType: string, size: string) => {
     let outsourcedLinks = []
@@ -149,7 +148,6 @@ const Section: React.FC<{
             alt={alt}
             isSectionPermitted={isSectionPermitted}
             handleRenderLinks={handleRenderLinks}
-            setProjectIndex={setProjectIndex}
           />
         </div>
          : 
@@ -158,5 +156,6 @@ const Section: React.FC<{
     </section>
   )
 }
+
 
 export default Section
