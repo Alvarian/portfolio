@@ -10,8 +10,7 @@ export interface Content {
   } | null,
   type: string,
   keyIcon: string | null,
-  bgImageName: string,
-  setModalCoverPageData: Dispatch<SetStateAction<{[key: string]: any} | null>>
+  bgImageName: string
 }
 
 export interface Badge {

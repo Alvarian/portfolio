@@ -28,7 +28,7 @@ import Section from 'shared/section'
 import Border from 'sections/Border'
 import Footer from 'sections/Footer'
 import Navbar from 'sections/Navbar'
-import { useResize } from 'hooks/'
+import { useResize } from 'hooks/useResize'
 
 import { Content, dataOptions } from 'lib/sections/sections.types'
 import { localMockData, sectionData } from 'lib/sections/sections.data'
@@ -55,7 +55,6 @@ const Home: NextPage = (props) => {
   const [scrollMethodAdmissions, setAdmissions] = useState<Admissions>({})
   const [areEventsLoaded, setAreLoaded] = useState<boolean>(false)
   const [projectIndex, setProjectIndex] = useState<number>(0)
-  const [isCoverOpen, toggleCover] = useState(true)
 
   const hasPropData: dataOptions = props
   const propData: dataOptions = hasPropData.setting === "local" ? localMockData : props
@@ -67,19 +66,6 @@ const Home: NextPage = (props) => {
 
         break
       }
-    }
-  }
-
-  const handleModalToggle = (e: any) => {
-    const body = document.querySelector("body") as HTMLElement
-    const projectBox = document.getElementById("project-box") as HTMLDivElement
-
-    if (e.target.checked) {
-      body.style.overflow = "hidden"
-    } else {
-      projectBox.innerHTML = ""
-      body.style.overflow = "auto"
-      toggleCover(true)
     }
   }
 
@@ -151,6 +137,14 @@ const Home: NextPage = (props) => {
 
       window.addEventListener('scroll', rateLimiters.debounce(5000, handleAutoRoutingOnScroll.bind(this, navbarlessAdmissionsList)))
       window.addEventListener('scroll', rateLimiters.throttle(300, handlePermissionsOnScroll))
+
+      // const modal = document.querySelector(".modal-box") as HTMLDivElement
+      // modal.addEventListener('mouseover', () => {
+      //   const body = document.querySelector("body") as HTMLElement
+
+      //   body.style.backdrop = "blur(8px)"
+      //   console.log("hovered")
+      // })
       
       setAreLoaded(!areEventsLoaded)
     }
@@ -169,7 +163,6 @@ const Home: NextPage = (props) => {
         content={section.content}
         isSectionPermitted={scrollMethodAdmissions[section.alt]?.isPermitted}
         bgImageName={section.bgImageName}
-        setProjectIndex={setProjectIndex}
         keyIcon={section.keyIcon}
         alt={section.alt}
       />)
@@ -220,14 +213,7 @@ const Home: NextPage = (props) => {
 
       <Footer width={width} />
 
-      <ProjectModal 
-        handleModalToggle={handleModalToggle} 
-        projectData={propData.data.projects[projectIndex]}
-        isCoverOpen={isCoverOpen}
-        toggleCover={toggleCover}
-      />
-
-      <input type="checkbox" id="service-modal" className="modal-toggle" onChange={handleModalToggle.bind(this)} />
+      {/* <input type="checkbox" id="service-modal" className="modal-toggle" onChange={handleModalToggle.bind(this)} />
       <label htmlFor='service-modal' className="modal sm:modal-middle cursor-pointer">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Congratulations random Internet user!</h3>
@@ -236,143 +222,10 @@ const Home: NextPage = (props) => {
             <label htmlFor="service-modal" className="btn">Yay!</label>
           </div>
         </div>
-      </label>
+      </label> */}
     </div>
   )
 }
-
-const ProjectModal: FC<{
-  handleModalToggle: (e: any) => void, 
-  projectData: {[key: string]: any},
-  isCoverOpen: boolean,
-  toggleCover: Dispatch<React.SetStateAction<boolean>>
-}> = ({handleModalToggle, projectData, isCoverOpen, toggleCover}) => {
-  
-  // const VOptions = {
-	//   title: {
-	//   	display: true,
-	//   	text: "Languages Used",
-	//   	fontSize: "25"
-	//   },
-	//   legend: {
-	//   	display: false
-	//   },
-	//   scales: {
-	//     yAxes: [
-	//       {
-	//         ticks: {
-	//           beginAtZero: true
-	//         },
-	//       },
-	//     ],
-	//   },
-	//   maintainAspectRatio: false
-	// }
-
-  // const chartData = (stacks: any) => {
-	//   return {
-  //     labels: stacks.map((g: any) => g.x),
-  //     datasets: [
-  //       {
-  //         label: "Percentage",
-  //         data: stacks.map((g: any) => Math.round((g.y/stacks.total)*10000)/100 ),
-  //         backgroundColor: getRandomColor(stacks),
-  //         borderColor: getRandomColor(stacks),
-  //         borderWidth: 1,
-  //       }
-  //     ]
-  //   }
-	// }
-  
-  const VOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'bottom' as const,
-      },
-      title: {
-        display: true,
-        text: capitalizeFirst(projectData.title),
-      },
-    },
-  }
-
-  const chartData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      {
-        label: 'Dataset 1',
-        data: [34, 23, 5, 8, 89],
-        backgroundColor: getRandomColor([]),
-      },
-      {
-        label: 'Dataset 2',
-        data: [34, 23, 5, 8, 89],
-        backgroundColor: getRandomColor([]),
-      },
-    ],
-  }
-
-  const makeProjectBoxFullScreen = (e: any) => {
-    const projectBox = document.querySelector('#project-box') as HTMLDivElement
-    if (projectBox.requestFullscreen) {
-      projectBox.requestFullscreen();
-    } 
-    // else if (projectBox.webkitRequestFullscreen) { /* Safari */
-    //   projectBox.webkitRequestFullscreen();
-    // } else if (projectBox.msRequestFullscreen) { /* IE11 */
-    //   projectBox.msRequestFullscreen();
-    // }
-  }
-
-  return (
-    <>
-      <input type="checkbox" id="project-modal" className="modal-toggle" onChange={handleModalToggle.bind(this)} />
-      <label htmlFor="project-modal" className="modal cursor-pointer">
-        <label className="modal-box relative mt-10 h-[580px] min-w-[780px] max-w-[780px] flex items-center justify-center">
-          <div className='z-10 absolute right-2 top-2 absolute w-32 flex justify-around'>
-            <label className="border-2 border-white btn btn-sm text-2xl" onClick={makeProjectBoxFullScreen.bind(this)}><FaRegWindowMaximize /></label>
-
-            <label htmlFor="project-modal" className="border-2 border-white btn btn-sm text-2xl"><VscChromeClose /></label>
-          </div>
-
-          <div className='h-full w-full relative'>
-            <div id="project-box" className='w-full h-full'></div>
-
-            {isCoverOpen && <motion.div className='bg-black absolute top-0 left-0 h-full w-full'
-              variants={{
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    duration: 1
-                  },
-                },
-                hidden: {
-                  opacity: 0,
-                  display: "none"
-                },
-              }}
-              initial="visible"
-						  animate={isCoverOpen ? "visible" : "hidden"}
-            >
-              <Bar
-                data={chartData}
-                options={VOptions}
-                // height={320}
-                // width="100%"
-              />
-
-              <button 
-                className="btn btn-sm border-white border-2 tex-xl"
-                onClick={() => toggleCover(false)}
-              >Continue</button>
-					  </motion.div>}
-          </div>
-        </label>
-      </label>
-    </>
-  )
-} 
 
 export default Home
 

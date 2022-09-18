@@ -192,7 +192,7 @@ export const localMockData = {
         lastUpdate: "2021-10-25T20:12:03.473Z",
         payload: {
           type: "Script",
-          ref: "function index(el) {console.log('App1 opened', el)} window.games['Paris'] = index"
+          ref: "function index(el) {const element = document.createElement('div'); element.innerText = 'heymanniceshot'; return element} window.games['Paris'] = index"
         }
       },
       {
