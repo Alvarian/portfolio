@@ -1,9 +1,8 @@
 import Chart from "shared/chart";
 import { AnimatePresence, motion } from "framer-motion"
-import useModal from "hooks/useModal";
 import { capitalizeFirst, getFormattedDate, getRandomColor } from "lib/sections/sections.methods"
 import React from "react";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 
 import Modal from "shared/modal";
 
@@ -40,101 +39,9 @@ const ProjectImage: FC<{
 
 const ProjectCoverAndContent: FC<{
     projectData: {[key: string]: any},
-    projectBody: any
+    projectBody: JSX.Element | null
 }> = ({projectBody, projectData}) => {
     const [isCoverOpen, toggleCover] = useState(true)
-  
-console.log(projectData)
-    // const VOptions = {
-    //     title: {
-    //     	display: true,
-    //     	text: "Languages Used",
-    //     	fontSize: "25"
-    //     },
-    //     legend: {
-    //     	display: false
-    //     },
-    //     scales: {
-    //       yAxes: [
-    //         {
-    //           ticks: {
-    //             beginAtZero: true
-    //           },
-    //         },
-    //       ],
-    //     },
-    //     maintainAspectRatio: false
-    //   }
-  
-    // const chartData = (stacks: any) => {
-      //   return {
-    //     labels: stacks.map((g: any) => g.x),
-    //     datasets: [
-    //       {
-    //         label: "Percentage",
-    //         data: stacks.map((g: any) => Math.round((g.y/stacks.total)*10000)/100 ),
-    //         backgroundColor: getRandomColor(stacks),
-    //         borderColor: getRandomColor(stacks),
-    //         borderWidth: 1,
-    //       }
-    //     ]
-    //   }
-      // }
-    
-    const VOptions = {
-        responsive: true,
-        scales: {
-          y: {
-            ticks: {
-              color: 'red',
-              font: {
-                size: 18,
-              }
-            }
-          },
-          x: {
-            ticks: {
-              color: 'red',
-              font: {
-                size: 18
-              }
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            position: 'bottom' as const,
-          },
-          title: {
-            display: true,
-            padding: 15,
-            color: '#FFFFFF',
-            font: {
-              size: 26
-            },
-            text: capitalizeFirst(projectData.title),
-          },
-        },
-    }
-    
-    const chartData: any = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: [12, 19, 3, 31, 2, 3],
-                backgroundColor: [
-                    getRandomColor,
-                    getRandomColor,
-                    getRandomColor,
-                    getRandomColor,
-                    getRandomColor,
-                    getRandomColor,
-                ].map((c: any) => c([])),
-                borderWidth: 1,
-            }
-        ],
-    }
 
     return isCoverOpen ? (
         <motion.div className='bg-black h-full w-full flex items-center justify-around flex-col'
@@ -153,7 +60,7 @@ console.log(projectData)
             initial="visible"
             animate={isCoverOpen ? "visible" : "hidden"}
         >
-            <Chart languagesTotal={projectData.stacks} bgStyle={""} />
+            <Chart languagesTotal={projectData.stacks} bgStyle={"w-full"} />
 
             <button 
                 className="btn btn-sm border-white border-2 text-xl"
@@ -161,7 +68,19 @@ console.log(projectData)
             >Continue</button>
         </motion.div>
     ) : (
-        <div className="h-full w-full" ref={(node) => node?.appendChild(projectBody as HTMLElement)}></div>
+        <>{projectBody}</>
+    )
+}
+
+const ProjectScriptDOM: FC<{script: any}> = ({script}) => {
+    const handleAppend = (node: HTMLElement | null) => {
+        if (!node) return
+        
+        node.appendChild(script as HTMLElement)
+    }
+    
+    return (
+        <div className="h-full w-full" ref={handleAppend}></div>
     )
 }
 
@@ -170,10 +89,8 @@ const index: FC<{
 }> = ({ data }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
     const [projectData, setProjectData] = useState(data[0])
-    const [projectBody, setProjectBody] = useState<HTMLElement | null>(null)
+    const [projectBody, setProjectBody] = useState<JSX.Element | null>(null)
     const [isGameSet, setGame] = useState(false)
-    const { isModalOpen, close, open } = useModal()
-    const body = document.querySelector("body") as HTMLBodyElement
 
     useEffect(() => {
         if (!isGameSet) {
@@ -203,7 +120,16 @@ const index: FC<{
         return capitalizeFirst(title)
     }
 
+    const handleClose = () => {
+        const body = document.querySelector("body") as HTMLBodyElement
+
+        setProjectBody(null) 
+        body.style.overflow = "auto"
+    }
+
     const handleProjectOpen = (title: string, stacks: {[key: string]: any} | null, payload: {type: string, ref: Array<any> | string}) => {        
+        const body = document.querySelector("body") as HTMLBodyElement
+        
         switch (payload.type) {
             case "Service": 
                 // open modal
@@ -224,9 +150,9 @@ const index: FC<{
                 if (localGame && !game) {
                     eval(localGame)
 
-                    setProjectBody(window.games[capitalizeFirst(title)]())
+                    setProjectBody(<ProjectScriptDOM script={window.games[capitalizeFirst(title)]()} />)
                 } else if (game) {
-                    setProjectBody(game())
+                    setProjectBody(<ProjectScriptDOM script={game()} />)
                 } else {
                     fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
                         .then((res: any) => {
@@ -239,14 +165,14 @@ const index: FC<{
                             eval(script)
 
                             localStorage.setItem(title+"_game", script)
-                            setProjectBody(window.games[capitalizeFirst(title)]())
+                            setProjectBody(<ProjectScriptDOM script={window.games[capitalizeFirst(title)]()} />)
                         })
                         .catch(err => {
                             console.log(err)
                             const script = payload.ref as string
                             eval(script)
                             
-                            setProjectBody(window.games[capitalizeFirst(title)]())
+                            setProjectBody(<ProjectScriptDOM script={window.games[capitalizeFirst(title)]()} />)
                         })
                 }
                 break;
@@ -294,7 +220,7 @@ const index: FC<{
             </aside>
 
             <Modal 
-                handleClose={() => {setProjectBody(null); body.style.overflow = "auto"}}
+                handleClose={handleClose}
                 hasProject={!!projectBody}
             ><ProjectCoverAndContent projectBody={projectBody} projectData={projectData} /></Modal>
         </div>

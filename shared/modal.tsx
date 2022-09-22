@@ -3,7 +3,10 @@ import { FC } from "react"
 import { FaRegWindowMaximize } from "react-icons/fa"
 import { VscChromeClose } from "react-icons/vsc"
 
-const Backdrop: FC<{children: any, onClick: () => void}> = ({ children, onClick }) => {
+const Backdrop: FC<{
+  children: any, 
+  onClick: () => void
+}> = ({ children, onClick }) => {
   return (
     <motion.div
       onClick={onClick}
@@ -38,7 +41,6 @@ const dropIn = {
       opacity: 0,
     },
 }
-  
 
 const Modal: FC<{ 
     hasProject: any,

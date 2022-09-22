@@ -99,8 +99,7 @@ const Chart: React.FC<{
     }
     
     return (
-        // <Doughnut data={chartData} options={options} />
-        <div className={bgStyle+' flex justify-around py-10 text-2xl'}>
+        <div className={bgStyle+' flex justify-around'}>
             <ul id="ratioStats">{ratioStatsList()}</ul>
 
             <div id="ratioGraph" className='h-[300px] w-[300px]'>{renderDonut()}</div>
