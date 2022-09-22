@@ -266,7 +266,7 @@ const Overall: React.FC<{
                     ))}
                 </div>
 
-                <Chart languagesTotal={languagesTotal} bgStyle={"bg-gradient-to-r from-amber-200"} />
+                <Chart languagesTotal={languagesTotal} bgStyle={"bg-gradient-to-r from-amber-200 py-10 text-2xl"} />
             </motion.div>}
         </div>
     ) 
