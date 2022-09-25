@@ -128,7 +128,7 @@ const Section: React.FC<{
       },
     },
     tailwind: {
-      main: `flex justify-center h-screen w-full items-center relative min-h-[900px]`,
+      main: `flex justify-center h-screen w-full items-center relative min-h-[900px] overflow-hidden`,
       background: `bg-no-repeat bg-cover bg-center bg-fixed absolute w-full h-full -z-10`,
       content: `flex justify-center ${content?.isFull ? "h-full w-full" : "h-2/3 w-2/3 rounded-3xl"} items-center`,
       nav: `flex flex-col items-center `

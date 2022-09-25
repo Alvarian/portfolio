@@ -1,7 +1,11 @@
+import { mode } from "crypto-js"
 import { AnimatePresence, motion } from "framer-motion"
-import { FC } from "react"
+import { FC, useEffect, useRef, useState } from "react"
 import { FaRegWindowMaximize } from "react-icons/fa"
 import { VscChromeClose } from "react-icons/vsc"
+
+import Chart from "shared/chart"
+
 
 const Backdrop: FC<{
   children: any, 
@@ -16,6 +20,39 @@ const Backdrop: FC<{
       exit={{ opacity: 0 }}
     >
       {children}
+    </motion.div>
+  )
+}
+
+const Cover: FC<{
+  stacks: Array<any>,
+  isCoverOpen: boolean,
+  toggleCover: any
+}> = ({stacks, isCoverOpen, toggleCover}) => {
+  return (
+    <motion.div className='bg-black h-full w-full flex items-center justify-around flex-col'
+      variants={{
+          visible: {
+              opacity: 1,
+              transition: {
+                  duration: 1
+              },
+          },
+          hidden: {
+              opacity: 0,
+              display: "none"
+          },
+      }}
+      initial="visible"
+      animate={isCoverOpen ? "visible" : "hidden"}
+    >
+      <h1 className="text-2xl font-bold">Languages Makeup</h1>
+      <Chart languagesTotal={stacks} bgStyle={"w-full"} />
+
+      <button 
+          className="btn btn-sm border-white border-2 text-xl"
+          onClick={() => toggleCover(false)}
+      >Continue</button>
     </motion.div>
   )
 }
@@ -42,47 +79,67 @@ const dropIn = {
     },
 }
 
-const Modal: FC<{ 
+const index: FC<{ 
     hasProject: any,
-    handleClose: () => void
-}> = ({ handleClose, hasProject, children }) => {  
-    const makeProjectBoxFullScreen = (e: any) => {
-      const projectBox = document.querySelector('#project-box') as HTMLDivElement
+    handleClose: () => void,
+    setMaxed: any,
+    projectData: {[key: string]: any},
+    isCoverOpen: boolean, 
+    toggleCover: any
+}> = ({ handleClose, hasProject, setMaxed, projectData, isCoverOpen, toggleCover, children }) => {  
+    const modalEl = useRef(null)
+
+    useEffect(() => {
+      if (modalEl.current) {
+        const m = modalEl.current as HTMLDivElement
+
+        m.addEventListener('fullscreenchange', () => !!document.fullscreenElement ? setMaxed(true) : setMaxed(false))
+
+        return () => m.removeEventListener('resize', () => console.log("removed"))
+      }
+    })
+
+    const makeProjectBoxFullScreen = () => {
+      const projectBox = modalEl.current as unknown as HTMLDivElement
       if (projectBox.requestFullscreen) {
-        projectBox.requestFullscreen();
-      } 
-      // else if (projectBox.webkitRequestFullscreen) { /* Safari */
-      //   projectBox.webkitRequestFullscreen();
-      // } else if (projectBox.msRequestFullscreen) { /* IE11 */
-      //   projectBox.msRequestFullscreen();
-      // }
+        projectBox.requestFullscreen()
+      }
     }
   
     return (  
       <AnimatePresence>
         {hasProject ? (
-      
-        <Backdrop onClick={handleClose}>        
-          <motion.div
-            className="p-3 pt-10 flex flex-col items-center justify-around h-[620px] w-[800px] bg-slate-900 rounded-xl"
-            onClick={(e) => e.stopPropagation()}  
-            variants={dropIn}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <div className='z-10 absolute right-2 top-2 absolute w-32 flex justify-around m-1'>
-              <label className="border-2 border-white btn btn-sm text-2xl" onClick={makeProjectBoxFullScreen.bind(this)}><FaRegWindowMaximize /></label>
-          
-              <label className="border-2 border-white btn btn-sm text-2xl" onClick={handleClose}><VscChromeClose /></label>
-            </div>
+          <Backdrop onClick={handleClose}>        
+            <motion.div
+              className="p-3 pt-10 mt-10 flex flex-col items-center justify-around h-[620px] w-[800px] bg-slate-900 rounded-xl"
+              onClick={(e) => e.stopPropagation()}  
+              variants={dropIn}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <div className='z-10 absolute right-2 top-2 absolute w-32 flex justify-around m-1'>
+                <label className="border-2 border-white btn btn-sm text-2xl" onClick={makeProjectBoxFullScreen}><FaRegWindowMaximize /></label>
+            
+                <label className="border-2 border-white btn btn-sm text-2xl" onClick={handleClose}><VscChromeClose /></label>
+              </div>
 
-            <div className="h-full w-full" id="project-box">{children}</div>
-          </motion.div>
-        </Backdrop>
+              <div ref={modalEl} className="h-full w-full" id="project-box">
+                {isCoverOpen ? (
+                  <Cover 
+                    isCoverOpen={isCoverOpen}
+                    toggleCover={toggleCover}
+                    stacks={projectData.stacks}
+                  />
+                ) : (
+                  <>{children}</>
+                )}
+              </div>
+            </motion.div>
+          </Backdrop>
         ) : null}
       </AnimatePresence>
     )
 }
 
-export default Modal
+export default index

@@ -137,14 +137,6 @@ const Home: NextPage = (props) => {
 
       window.addEventListener('scroll', rateLimiters.debounce(5000, handleAutoRoutingOnScroll.bind(this, navbarlessAdmissionsList)))
       window.addEventListener('scroll', rateLimiters.throttle(300, handlePermissionsOnScroll))
-
-      // const modal = document.querySelector(".modal-box") as HTMLDivElement
-      // modal.addEventListener('mouseover', () => {
-      //   const body = document.querySelector("body") as HTMLElement
-
-      //   body.style.backdrop = "blur(8px)"
-      //   console.log("hovered")
-      // })
       
       setAreLoaded(!areEventsLoaded)
     }
