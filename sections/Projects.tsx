@@ -1,10 +1,11 @@
-import Chart from "shared/chart";
+import Chart from "shared/chart"
 import { AnimatePresence, motion } from "framer-motion"
 import { capitalizeFirst, getFormattedDate, getRandomColor } from "lib/sections/sections.methods"
-import React from "react";
+import React, { ReactElement, useRef } from "react";
 import { FC, useEffect, useState } from "react"
 
-import Modal from "shared/modal";
+import Modal from "shared/modal"
+import { divide } from "lodash";
 
 
 interface Project {
@@ -22,7 +23,7 @@ declare global {
     interface Window { games: any; }
 }
 
-const ProjectImage: FC<{
+const ProjectIconImage: FC<{
     project: Project,
     onExpand: (project: Project) => void
 }> = ({ project, onExpand }) => {
@@ -34,41 +35,6 @@ const ProjectImage: FC<{
             className="m-[5px] w-[140px] h-[140px] bg-white rounded-xl border-8 cursor-pointer border-indigo-600"
             layoutId={`product-${project.id}`}
         />
-    )
-}
-
-const ProjectCoverAndContent: FC<{
-    projectData: {[key: string]: any},
-    projectBody: JSX.Element | null
-}> = ({projectBody, projectData}) => {
-    const [isCoverOpen, toggleCover] = useState(true)
-
-    return isCoverOpen ? (
-        <motion.div className='bg-black h-full w-full flex items-center justify-around flex-col'
-            variants={{
-            visible: {
-                opacity: 1,
-                transition: {
-                duration: 1
-                },
-            },
-            hidden: {
-                opacity: 0,
-                display: "none"
-            },
-            }}
-            initial="visible"
-            animate={isCoverOpen ? "visible" : "hidden"}
-        >
-            <Chart languagesTotal={projectData.stacks} bgStyle={"w-full"} />
-
-            <button 
-                className="btn btn-sm border-white border-2 text-xl"
-                onClick={() => toggleCover(false)}
-            >Continue</button>
-        </motion.div>
-    ) : (
-        <>{projectBody}</>
     )
 }
 
@@ -84,6 +50,36 @@ const ProjectScriptDOM: FC<{script: any}> = ({script}) => {
     )
 }
 
+const ProjectServiceDOM: FC<{
+    slides: Array<any>
+}> = ({ slides }) => {
+    return <>{slides.map((slide: any) => (
+        <div className="w-full h-full">{slide.description}</div>
+    ))}</>
+}
+
+const ModalBody: FC<{
+    type: string,
+    projectBody: JSX.Element | null,
+    isModalMaxed: boolean
+}> = ({type, projectBody, isModalMaxed}) => {
+    if (type === "Service") {
+        return (
+            <div className="w-full h-full">
+                {isModalMaxed ? (
+                    <div className="h-full w-full">Abstracted Slideshow</div>
+                ) : (
+                    <div className="h-full w-full">Default Slideshow</div>
+                )}
+            </div>
+        )
+    } else if (type === "Script") {
+        return projectBody
+    } else {
+        return null
+    }
+}
+
 const index: FC<{
     data: Array<Project>
 }> = ({ data }) => {
@@ -91,6 +87,8 @@ const index: FC<{
     const [projectData, setProjectData] = useState(data[0])
     const [projectBody, setProjectBody] = useState<JSX.Element | null>(null)
     const [isGameSet, setGame] = useState(false)
+    const [isCoverOpen, toggleCover] = useState(true)
+    const [isModalMaxed, setMaxed] = useState(false)
 
     useEffect(() => {
         if (!isGameSet) {
@@ -122,21 +120,22 @@ const index: FC<{
 
     const handleClose = () => {
         const body = document.querySelector("body") as HTMLBodyElement
-
+        
         setProjectBody(null) 
+        toggleCover(true)
         body.style.overflow = "auto"
     }
 
-    const handleProjectOpen = (title: string, stacks: {[key: string]: any} | null, payload: {type: string, ref: Array<any> | string}) => {        
+    const handleProjectOpen = (title: string, payload: {type: string, ref: Array<any> | string}) => {        
         const body = document.querySelector("body") as HTMLBodyElement
         
         switch (payload.type) {
             case "Service": 
                 // open modal
-                const serviceModal = document.getElementById("service-modal") as HTMLInputElement
-                serviceModal.checked = true
+                body.style.overflow = "hidden"
+                setProjectBody(<ProjectServiceDOM slides={payload.ref as any[]} />)
 
-                break;
+                break
             case "Site":   
                 window.open(payload.ref as string, '_blank');
                 
@@ -197,9 +196,7 @@ const index: FC<{
                                 alt=""
                             />
 
-                            {/* <button className="btn btn-accent btn-wide text-2xl" onClick={open}>OPEN PROJECT</button> */}
-                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, projectData.title, projectData.stacks, projectData.payload)}>OPEN PROJECT</button>
-                            {/* <label htmlFor="my-modal-6" className="btn modal-button btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, projectData.payload)}>Open Project</label> */}
+                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, projectData.title, projectData.payload)}>OPEN PROJECT</button>
                         </div>
 
                         <ul className="w-1/3 h-3/4 text-left flex flex-col justify-around items-center">
@@ -214,7 +211,7 @@ const index: FC<{
             <aside className="flex flex-col flex-wrap h-[620px] w-[220px] overflow-auto mt-0">
                 <AnimatePresence>
                     {productIds.map((project: Project) => (
-                        <ProjectImage project={project} key={project.id} onExpand={setAsPrimary} />
+                        <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />
                     ))}
                 </AnimatePresence>
             </aside>
@@ -222,7 +219,17 @@ const index: FC<{
             <Modal 
                 handleClose={handleClose}
                 hasProject={!!projectBody}
-            ><ProjectCoverAndContent projectBody={projectBody} projectData={projectData} /></Modal>
+                setMaxed={setMaxed}
+                projectData={projectData}
+                isCoverOpen={isCoverOpen}
+                toggleCover={toggleCover}
+            >
+                <ModalBody 
+                    type={projectData.payload.type}
+                    projectBody={projectBody}
+                    isModalMaxed={isModalMaxed}
+                />
+            </Modal>
         </div>
     )
 }

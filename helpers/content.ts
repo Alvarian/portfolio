@@ -152,14 +152,17 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
     const readmeContentList = (await getAPIjson(`https://raw.githubusercontent.com/Alvarian/${projectName}/master/README.md`, 'text')).replace(/(\r\n|\n|\r)/gm, " ").split(":octocat:")
 
     const instructions = readmeContentList[0].trim()
-    const hasContent = (/\<\!\-\-([^}{]*)\-\-\>/g.exec(readmeContentList[1]))
+    const hasContent = (readmeContentList[1].slice(
+      readmeContentList[1].indexOf("<!--") + 4,
+      readmeContentList[1].lastIndexOf("-->")
+    )).trim().split(" | ")
 
     if (!hasContent) throw "repo does not have slides"
-
+    
     return {
       instructions,
-      icon: hasContent[1].split("|")[0].trim(),
-      content: hasContent[1].split("|")[1].trim()
+      icon: hasContent[0],
+      content: hasContent[1]
     }
   }
 
