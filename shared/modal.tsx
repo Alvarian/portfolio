@@ -80,13 +80,13 @@ const dropIn = {
 }
 
 const index: FC<{ 
-    hasProject: any,
+    isModalOpen: any,
     handleClose: () => void,
     setMaxed: any,
     projectData: {[key: string]: any},
     isCoverOpen: boolean, 
     toggleCover: any
-}> = ({ handleClose, hasProject, setMaxed, projectData, isCoverOpen, toggleCover, children }) => {  
+}> = ({ handleClose, isModalOpen, setMaxed, projectData, isCoverOpen, toggleCover, children }) => {  
     const modalEl = useRef(null)
 
     useEffect(() => {
@@ -108,7 +108,7 @@ const index: FC<{
   
     return (  
       <AnimatePresence>
-        {hasProject ? (
+        {isModalOpen ? (
           <Backdrop onClick={handleClose}>        
             <motion.div
               className="p-3 pt-10 mt-10 flex flex-col items-center justify-around h-[620px] w-[800px] bg-slate-900 rounded-xl"
