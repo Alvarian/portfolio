@@ -38,43 +38,89 @@ const ProjectIconImage: FC<{
     )
 }
 
-const ProjectScriptDOM: FC<{script: any}> = ({script}) => {
-    const handleAppend = (node: HTMLElement | null) => {
-        if (!node) return
+// const ProjectScriptDOM: FC<{script: any}> = ({script}) => {
+//     const handleAppend = (node: HTMLElement | null) => {
+//         if (!node) return
         
-        node.appendChild(script as HTMLElement)
-    }
+//         node.appendChild(script as HTMLElement)
+//     }
     
-    return (
-        <div className="h-full w-full" ref={handleAppend}></div>
-    )
-}
+//     return (
+//         <div className="h-full w-full" ref={handleAppend}></div>
+//     )
+// }
 
-const ProjectServiceDOM: FC<{
-    slides: Array<any>
-}> = ({ slides }) => {
-    return <>{slides.map((slide: any) => (
-        <div className="w-full h-full">{slide.description}</div>
-    ))}</>
-}
+// const ProjectServiceDOM: FC<{
+//     slides: Array<any>
+// }> = ({ slides }) => {
+//     return <>{slides.map((slide: any) => (
+//         <div className="w-full h-full">{slide.description}</div>
+//     ))}</>
+// }
+
+
 
 const ModalBody: FC<{
+    title: string,
     type: string,
-    projectBody: JSX.Element | null,
+    content: any,
     isModalMaxed: boolean
-}> = ({type, projectBody, isModalMaxed}) => {
-    if (type === "Service") {
+}> = ({title, type, isModalMaxed}) => {
+    const getScriptDOM = () => {    
+        const [content, setContent] = useState<any>(null)
+    
+        useEffect(() => {
+            const game = window.games[capitalizeFirst(title)]
+            const localGame = localStorage.getItem(title+"_game")
+            if (localGame && !game) {
+                eval(localGame)
+    
+                setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+            } else if (game) {
+                setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(game())}></div>)
+            } else {
+                fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
+                    .then((res: any) => {
+                        if (res.ok) {
+                            return res.json()
+                        }
+                        throw new Error(res.statusText)
+                    })
+                    .then((script: string) => {
+                        eval(script)
+    
+                        localStorage.setItem(title+"_game", script)
+                        setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        const script = content as string
+                        eval(script)
+                        
+                        setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+                    })
+            }
+        }, [])
+    
+        return content
+    }
+
+    const getServiceDOM = () => {
+        if (isModalMaxed) {
+            return (
+                <div className="h-full w-full">Abstracted Slideshow</div>
+            )
+        }
+
         return (
-            <div className="w-full h-full">
-                {isModalMaxed ? (
-                    <div className="h-full w-full">Abstracted Slideshow</div>
-                ) : (
-                    <div className="h-full w-full">Default Slideshow</div>
-                )}
-            </div>
+            <div className="h-full w-full">Default Slideshow</div>
         )
+    }
+
+    if (type === "Service") {
+        return <>{getServiceDOM()}</>
     } else if (type === "Script") {
-        return projectBody
+        return <>{getScriptDOM()}</>
     } else {
         return null
     }
@@ -85,9 +131,9 @@ const index: FC<{
 }> = ({ data }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
     const [projectData, setProjectData] = useState(data[0])
-    const [projectBody, setProjectBody] = useState<JSX.Element | null>(null)
     const [isGameSet, setGame] = useState(false)
     const [isCoverOpen, toggleCover] = useState(true)
+    const [isModalOpen, setModalOpen] = useState(false)
     const [isModalMaxed, setMaxed] = useState(false)
 
     useEffect(() => {
@@ -118,63 +164,22 @@ const index: FC<{
         return capitalizeFirst(title)
     }
 
-    const handleClose = () => {
+    const handleModalClose = () => {
         const body = document.querySelector("body") as HTMLBodyElement
         
-        setProjectBody(null) 
+        setModalOpen(false) 
         toggleCover(true)
         body.style.overflow = "auto"
     }
 
-    const handleProjectOpen = (title: string, payload: {type: string, ref: Array<any> | string}) => {        
-        const body = document.querySelector("body") as HTMLBodyElement
-        
-        switch (payload.type) {
-            case "Service": 
-                // open modal
-                body.style.overflow = "hidden"
-                setProjectBody(<ProjectServiceDOM slides={payload.ref as any[]} />)
+    const handleModalOpen = (payload: any) => {
+        if (payload.type === "Site") {
+            window.open(payload.ref as string, '_blank')
+        } else {
+            const body = document.querySelector("body") as HTMLBodyElement
+            body.style.overflow = "hidden"
 
-                break
-            case "Site":   
-                window.open(payload.ref as string, '_blank');
-                
-                break;
-            case "Script": 
-                // open modal
-                body.style.overflow = "hidden"
-                const game = window.games[capitalizeFirst(title)]
-
-                const localGame = localStorage.getItem(title+"_game")
-                if (localGame && !game) {
-                    eval(localGame)
-
-                    setProjectBody(<ProjectScriptDOM script={window.games[capitalizeFirst(title)]()} />)
-                } else if (game) {
-                    setProjectBody(<ProjectScriptDOM script={game()} />)
-                } else {
-                    fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
-                        .then((res: any) => {
-                            if (res.ok) {
-                                return res.json()
-                            }
-                            throw new Error(res.statusText)
-                        })
-                        .then((script: string) => {
-                            eval(script)
-
-                            localStorage.setItem(title+"_game", script)
-                            setProjectBody(<ProjectScriptDOM script={window.games[capitalizeFirst(title)]()} />)
-                        })
-                        .catch(err => {
-                            console.log(err)
-                            const script = payload.ref as string
-                            eval(script)
-                            
-                            setProjectBody(<ProjectScriptDOM script={window.games[capitalizeFirst(title)]()} />)
-                        })
-                }
-                break;
+            setModalOpen(true)
         }
     }
 
@@ -196,7 +201,7 @@ const index: FC<{
                                 alt=""
                             />
 
-                            <button className="btn btn-accent btn-wide text-2xl" onClick={handleProjectOpen.bind(this, projectData.title, projectData.payload)}>OPEN PROJECT</button>
+                            <button className="btn btn-accent btn-wide text-2xl" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>
                         </div>
 
                         <ul className="w-1/3 h-3/4 text-left flex flex-col justify-around items-center">
@@ -217,16 +222,17 @@ const index: FC<{
             </aside>
 
             <Modal 
-                handleClose={handleClose}
-                hasProject={!!projectBody}
+                handleClose={handleModalClose}
+                isModalOpen={isModalOpen}
                 setMaxed={setMaxed}
                 projectData={projectData}
                 isCoverOpen={isCoverOpen}
                 toggleCover={toggleCover}
             >
                 <ModalBody 
+                    title={projectData.title}
                     type={projectData.payload.type}
-                    projectBody={projectBody}
+                    content={projectData.payload.ref}
                     isModalMaxed={isModalMaxed}
                 />
             </Modal>
