@@ -1,11 +1,10 @@
-import Chart from "shared/chart"
 import { AnimatePresence, motion } from "framer-motion"
+import { wrap } from "popmotion"
+
 import { capitalizeFirst, getFormattedDate, getRandomColor } from "lib/sections/sections.methods"
-import React, { ReactElement, useRef } from "react";
-import { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 
 import Modal from "shared/modal"
-import { divide } from "lodash";
 
 
 interface Project {
@@ -38,34 +37,12 @@ const ProjectIconImage: FC<{
     )
 }
 
-// const ProjectScriptDOM: FC<{script: any}> = ({script}) => {
-//     const handleAppend = (node: HTMLElement | null) => {
-//         if (!node) return
-        
-//         node.appendChild(script as HTMLElement)
-//     }
-    
-//     return (
-//         <div className="h-full w-full" ref={handleAppend}></div>
-//     )
-// }
-
-// const ProjectServiceDOM: FC<{
-//     slides: Array<any>
-// }> = ({ slides }) => {
-//     return <>{slides.map((slide: any) => (
-//         <div className="w-full h-full">{slide.description}</div>
-//     ))}</>
-// }
-
-
-
 const ModalBody: FC<{
     title: string,
     type: string,
     content: any,
     isModalMaxed: boolean
-}> = ({title, type, isModalMaxed}) => {
+}> = ({title, type, content, isModalMaxed}) => {
     const getScriptDOM = () => {    
         const [content, setContent] = useState<any>(null)
     
@@ -106,14 +83,143 @@ const ModalBody: FC<{
     }
 
     const getServiceDOM = () => {
-        if (isModalMaxed) {
-            return (
-                <div className="h-full w-full">Abstracted Slideshow</div>
-            )
+        // const [imageIndex, setIndex] = useState({
+        //     left: content.length-1,
+        //     center: 0,
+        //     right: 1
+        // })
+        const [[page, direction], setPage] = useState([0, 0])
+        const [imageIndex, setIndex] = useState({
+            left: content.length-1,
+            center: 0,
+            right: 1
+        })
+
+        useEffect(() => {
+            const wrappedIndex = wrap(0, content.length, page)
+
+        //     const requestedIndex = imageIndex+direction
+        //     setDirection(direction)
+
+        //     if (requestedIndex > content.length-1) {
+        //         setIndex({
+        //             left: content.length-1,
+        //             center: 0,
+        //             right: 1
+        //         })
+        //     } else if (requestedIndex < 0) {
+        //         setIndex({
+        //             left: content.length-2,
+        //             center: content.length-1,
+        //             right: 0
+        //         })
+        //     } else {
+        //         setIndex({
+        //             left: requestedIndex-1,
+        //             center: requestedIndex,
+        //             right: requestedIndex+1
+        //         })
+        //     }
+        })
+
+        const variants = {
+            enter: (direction: number) => {
+              return {
+                x: direction > 0 ? 1000 : -1000,
+                opacity: 0
+              };
+            },
+            center: {
+              zIndex: 1,
+              x: 0,
+              opacity: 1
+            },
+            exit: (direction: number) => {
+              return {
+                zIndex: 0,
+                x: direction < 0 ? 1000 : -1000,
+                opacity: 0
+              }
+            }
+        }
+        
+        const swipeConfidenceThreshold = 10000
+        const swipePower = (offset: number, velocity: number) => {
+            return Math.abs(offset) * velocity;
+        }
+
+        const paginate = (newDirection: number) => {
+          setPage([page + newDirection, newDirection]);
         }
 
         return (
-            <div className="h-full w-full">Default Slideshow</div>
+            <div className="h-full flex flex-col justify-around">
+                <div className="relative h-3/4 overflow-hidden">
+                    <AnimatePresence 
+                        initial={false} 
+                        custom={direction}
+                    >
+                        {isModalMaxed ? (<div className="flex items-center justify-center h-full w-full">
+                            <motion.img 
+                                key={`image_${imageIndex}`}
+                                className="h-[330px]" src={content[imageIndex.left].image} 
+                            />
+
+                            <motion.img 
+                                key={`image_${imageIndex}`}
+                                className="h-[330px] scale-[2]" src={content[imageIndex.center].image} 
+                            />
+
+                            <motion.img 
+                                key={`image_${imageIndex}`}
+                                className="h-[330px]" src={content[imageIndex.right].image} 
+                            />
+                        </div>) : (<motion.div
+                            key={`slide_${imageIndex}`}
+                            custom={direction}
+                            variants={variants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{
+                                x: { 
+                                    type: "spring", 
+                                    stiffness: 300, 
+                                    damping: 30 
+                                },
+                                opacity: { duration: 0.2 }
+                            }}
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }}
+                            dragElastic={1}
+                            onDragEnd={(e, { offset, velocity }) => {
+                                const swipe = swipePower(offset.x, velocity.x);
+                    
+                                if (swipe < -swipeConfidenceThreshold) {
+                                    paginate(1);
+                                } else if (swipe > swipeConfidenceThreshold) {
+                                    paginate(-1);
+                                }
+                            }}
+                            className="absolute flex justify-around items-center w-full h-full mt-5"
+                        >
+                            <div>{content[imageIndex.center].description}</div>
+                            
+                            <img className="h-[100%]" src={content[imageIndex.center].image} />
+                        </motion.div>)}
+                    </AnimatePresence>
+                </div>
+
+                <div className="flex justify-around w-full z-10">
+                    <div className="prev" onClick={() => paginate(-1)}>
+                        {"<"}
+                    </div>
+
+                    <div className="next" onClick={() => paginate(1)}>
+                        {">"}
+                    </div>
+                </div>
+            </div>
         )
     }
 
