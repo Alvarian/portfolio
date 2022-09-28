@@ -208,15 +208,15 @@ export const localMockData = {
           ref: [
             {
               description: "Slide 1",
-              slide: "/images/img_clouds.jpg"
+              image: "/images/img_bridge1.jpg"
             },
             {
               description: "Slide 2",
-              slide: "/images/img_clouds.jpg"
+              image: "/images/img_clouds.jpg"
             },
             {
               description: "Slide 3",
-              slide: "/images/img_clouds.jpg"
+              image: "/images/img_clock1-min.jpg"
             }
           ]
         }
