@@ -83,11 +83,6 @@ const ModalBody: FC<{
     }
 
     const getServiceDOM = () => {
-        // const [imageIndex, setIndex] = useState({
-        //     left: content.length-1,
-        //     center: 0,
-        //     right: 1
-        // })
         const [[page, direction], setPage] = useState([0, 0])
         const [imageIndex, setIndex] = useState({
             left: content.length-1,
@@ -97,30 +92,74 @@ const ModalBody: FC<{
 
         useEffect(() => {
             const wrappedIndex = wrap(0, content.length, page)
+            const directedIndex = wrappedIndex+(direction*2)
 
-        //     const requestedIndex = imageIndex+direction
-        //     setDirection(direction)
+            switch (wrappedIndex) {
+                case 0: 
+                    setIndex({
+                        left: content.length-1,
+                        center: 0,
+                        right: 1
+                    })
+                    break
+                case 1: 
+                    setIndex({
+                        left: 0,
+                        center: 1,
+                        right: 2
+                    })
+                    break
+                default: 
+                    if (wrappedIndex+2 > content.length-1) {
+                        setIndex({
+                            left: wrappedIndex-1,
+                            center: wrappedIndex,
+                            right: 0
+                        })
+                    } else {
+                        setIndex({
+                            left: wrappedIndex-1,
+                            center: wrappedIndex,
+                            right: wrappedIndex+1
+                        })
+                    }
+            }
+            // if (directedIndex >= 2 || directedIndex <= -2) {
+            //     setIndex({
+            //         left: content.length-1,
+            //         center: 0,
+            //         right: 1
+            //     })
+            // } else if (directedIndex >= content.length-1) {
+                // if (directedIndex === 2 || directedIndex === 0) {
+                    // setIndex({
+                    //     left: content.length-1,
+                    //     center: 0,
+                    //     right: 1
+                    // })
+                // } else {
+                    // setIndex({
+                    //     left: content.length-1,
+                    //     center: 0,
+                    //     right: content.length-1
+                    // })
+                // }
+            // } else if (directedIndex < 0 && directedIndex > content.length-2) {
+            //     setIndex({
+            //         left: content.length-2,
+            //         center: content.length-1,
+            //         right: 0
+            //     })
+            // } else {
+            //     setIndex({
+            //         left: wrappedIndex-1,
+            //         center: wrappedIndex,
+            //         right: wrappedIndex+1
+            //     })
+            // }
+            console.log(imageIndex)
 
-        //     if (requestedIndex > content.length-1) {
-        //         setIndex({
-        //             left: content.length-1,
-        //             center: 0,
-        //             right: 1
-        //         })
-        //     } else if (requestedIndex < 0) {
-        //         setIndex({
-        //             left: content.length-2,
-        //             center: content.length-1,
-        //             right: 0
-        //         })
-        //     } else {
-        //         setIndex({
-        //             left: requestedIndex-1,
-        //             center: requestedIndex,
-        //             right: requestedIndex+1
-        //         })
-        //     }
-        })
+        }, [page])
 
         const variants = {
             enter: (direction: number) => {
@@ -155,59 +194,67 @@ const ModalBody: FC<{
         return (
             <div className="h-full flex flex-col justify-around">
                 <div className="relative h-3/4 overflow-hidden">
-                    <AnimatePresence 
-                        initial={false} 
-                        custom={direction}
-                    >
-                        {isModalMaxed ? (<div className="flex items-center justify-center h-full w-full">
-                            <motion.img 
-                                key={`image_${imageIndex}`}
-                                className="h-[330px]" src={content[imageIndex.left].image} 
-                            />
-
-                            <motion.img 
-                                key={`image_${imageIndex}`}
-                                className="h-[330px] scale-[2]" src={content[imageIndex.center].image} 
-                            />
-
-                            <motion.img 
-                                key={`image_${imageIndex}`}
-                                className="h-[330px]" src={content[imageIndex.right].image} 
-                            />
-                        </div>) : (<motion.div
-                            key={`slide_${imageIndex}`}
-                            custom={direction}
-                            variants={variants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{
-                                x: { 
-                                    type: "spring", 
-                                    stiffness: 300, 
-                                    damping: 30 
-                                },
-                                opacity: { duration: 0.2 }
-                            }}
-                            drag="x"
-                            dragConstraints={{ left: 0, right: 0 }}
-                            dragElastic={1}
-                            onDragEnd={(e, { offset, velocity }) => {
-                                const swipe = swipePower(offset.x, velocity.x);
                     
-                                if (swipe < -swipeConfidenceThreshold) {
-                                    paginate(1);
-                                } else if (swipe > swipeConfidenceThreshold) {
-                                    paginate(-1);
-                                }
-                            }}
-                            className="absolute flex justify-around items-center w-full h-full mt-5"
-                        >
-                            <div>{content[imageIndex.center].description}</div>
+                        {isModalMaxed ? (<div className="flex items-center justify-center h-full w-full">
+                            <AnimatePresence 
+                                initial={false} 
+                                custom={direction}
+                            >
+                                <motion.img 
+                                    key={`image_${imageIndex.left}`}
+                                    className="h-[350px]" src={content[imageIndex.left].image} 
+                                />
+
+                                <motion.img 
+                                    key={`image_${imageIndex.center}`}
+                                    className="h-[350px] scale-[2.2]" src={content[imageIndex.center].image} 
+                                />
+
+                                <motion.img 
+                                    key={`image_${imageIndex.right}`}
+                                    className="h-[350px]" src={content[imageIndex.right].image} 
+                                />
+                            </AnimatePresence>
+                        </div>) : (<>
+                            <AnimatePresence 
+                                initial={false} 
+                                custom={direction}
+                            >
+                                <motion.div
+                                    key={`slide_${imageIndex.center}`}
+                                    custom={direction}
+                                    variants={variants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    transition={{
+                                        x: { 
+                                            type: "spring", 
+                                            stiffness: 300, 
+                                            damping: 30 
+                                        },
+                                        opacity: { duration: 0.2 }
+                                    }}
+                                    drag="x"
+                                    dragConstraints={{ left: 0, right: 0 }}
+                                    dragElastic={1}
+                                    onDragEnd={(e, { offset, velocity }) => {
+                                        const swipe = swipePower(offset.x, velocity.x);
                             
-                            <img className="h-[100%]" src={content[imageIndex.center].image} />
-                        </motion.div>)}
-                    </AnimatePresence>
+                                        if (swipe < -swipeConfidenceThreshold) {
+                                            paginate(1);
+                                        } else if (swipe > swipeConfidenceThreshold) {
+                                            paginate(-1);
+                                        }
+                                    }}
+                                    className="absolute flex justify-around items-center w-full h-full mt-5"
+                                >
+                                    <div>{content[imageIndex.center].description}</div>
+                                    
+                                    <img className="h-[100%]" src={content[imageIndex.center].image} />
+                                </motion.div>                    
+                            </AnimatePresence>
+                        </>)}
                 </div>
 
                 <div className="flex justify-around w-full z-10">
