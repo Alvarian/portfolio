@@ -109,7 +109,11 @@ const Icon: React.FC<IconInter> = ({
                 )
             case "button":
                 return (
-                    <motion.button className={"m-7 w-full "+mappedIconPositions[position].parent+" "+custom?.parent} onClick={() => {kind.callback()}}
+                    <motion.button 
+                        className={"m-7 w-full "+mappedIconPositions[position].parent+" "+custom?.parent} 
+                        onMouseDown={(e) => {e.currentTarget.style.scale = "0.7"}} 
+                        onMouseUp={(e) => {e.currentTarget.style.scale = "1"}} 
+                        onClick={() => {kind.callback()}}
                         whileHover={{ scale: 1.2 }}
                         onHoverStart={e => {}}
                         onHoverEnd={e => {}}
