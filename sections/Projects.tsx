@@ -5,6 +5,7 @@ import { capitalizeFirst, getFormattedDate, getRandomColor } from "lib/sections/
 import React, { FC, useEffect, useState } from "react"
 
 import Modal from "shared/modal"
+import Icon from "shared/icon"
 
 
 interface Project {
@@ -92,7 +93,6 @@ const ModalBody: FC<{
 
         useEffect(() => {
             const wrappedIndex = wrap(0, content.length, page)
-            const directedIndex = wrappedIndex+(direction*2)
 
             switch (wrappedIndex) {
                 case 0: 
@@ -124,41 +124,6 @@ const ModalBody: FC<{
                         })
                     }
             }
-            // if (directedIndex >= 2 || directedIndex <= -2) {
-            //     setIndex({
-            //         left: content.length-1,
-            //         center: 0,
-            //         right: 1
-            //     })
-            // } else if (directedIndex >= content.length-1) {
-                // if (directedIndex === 2 || directedIndex === 0) {
-                    // setIndex({
-                    //     left: content.length-1,
-                    //     center: 0,
-                    //     right: 1
-                    // })
-                // } else {
-                    // setIndex({
-                    //     left: content.length-1,
-                    //     center: 0,
-                    //     right: content.length-1
-                    // })
-                // }
-            // } else if (directedIndex < 0 && directedIndex > content.length-2) {
-            //     setIndex({
-            //         left: content.length-2,
-            //         center: content.length-1,
-            //         right: 0
-            //     })
-            // } else {
-            //     setIndex({
-            //         left: wrappedIndex-1,
-            //         center: wrappedIndex,
-            //         right: wrappedIndex+1
-            //     })
-            // }
-            console.log(imageIndex)
-
         }, [page])
 
         const variants = {
@@ -188,83 +153,128 @@ const ModalBody: FC<{
         }
 
         const paginate = (newDirection: number) => {
-          setPage([page + newDirection, newDirection]);
+            setPage([page + newDirection, newDirection]);
         }
 
         return (
             <div className="h-full flex flex-col justify-around">
                 <div className="relative h-3/4 overflow-hidden">
-                    
-                        {isModalMaxed ? (<div className="flex items-center justify-center h-full w-full">
-                            <AnimatePresence 
-                                initial={false} 
-                                custom={direction}
-                            >
-                                <motion.img 
-                                    key={`image_${imageIndex.left}`}
-                                    className="h-[350px]" src={content[imageIndex.left].image} 
-                                />
+                    {isModalMaxed ? (<div className="flex items-center justify-center h-full w-full">
+                        <motion.img 
+                            key={`key_${imageIndex.left}`}
+                            layoutId={`layout-${imageIndex.left}`}
+                            transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
+                            className="h-[350px] w-[500px]" src={content[imageIndex.left].image} 
+                        />
 
-                                <motion.img 
-                                    key={`image_${imageIndex.center}`}
-                                    className="h-[350px] scale-[2.2]" src={content[imageIndex.center].image} 
-                                />
-
-                                <motion.img 
-                                    key={`image_${imageIndex.right}`}
-                                    className="h-[350px]" src={content[imageIndex.right].image} 
-                                />
-                            </AnimatePresence>
-                        </div>) : (<>
-                            <AnimatePresence 
-                                initial={false} 
+                        <main 
+                            key={`key_${imageIndex.center}`}
+                            className="scale-[2.2] z-10 h-[350px] max-w-[500px] min-w-[500px] flex justify-center items-center"
+                        >
+                            <motion.img 
+                                key={`key_${imageIndex.center}`}
+                                layoutId={`layout-${imageIndex.center}`}
                                 custom={direction}
+                                variants={variants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{
+                                    x: { 
+                                        type: "spring", 
+                                        stiffness: 300, 
+                                        damping: 30 
+                                    },
+                                    opacity: { duration: 0.2 }
+                                }}
+                                className="h-full" src={content[imageIndex.center].image} 
+                            />
+                        </main>
+
+                        <motion.img 
+                            key={`key_${imageIndex.right}`}
+                            layoutId={`layout-${imageIndex.right}`}
+                            transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
+                            className="h-[350px] w-[500px]" src={content[imageIndex.right].image} 
+                        />
+                    </div>) : (<>
+                        <AnimatePresence 
+                            initial={false} 
+                            custom={direction}
+                        >
+                            <motion.div
+                                key={`slide_${imageIndex.center}`}
+                                custom={direction}
+                                variants={variants}
+                                initial="enter"
+                                animate="center"
+                                exit="exit"
+                                transition={{
+                                    x: { 
+                                        type: "spring", 
+                                        stiffness: 300, 
+                                        damping: 30 
+                                    },
+                                    opacity: { duration: 0.2 }
+                                }}
+                                drag="x"
+                                dragConstraints={{ left: 0, right: 0 }}
+                                dragElastic={1}
+                                onDragEnd={(e, { offset, velocity }) => {
+                                    const swipe = swipePower(offset.x, velocity.x);
+                        
+                                    if (swipe < -swipeConfidenceThreshold) {
+                                        paginate(1);
+                                    } else if (swipe > swipeConfidenceThreshold) {
+                                        paginate(-1);
+                                    }
+                                }}
+                                className="absolute flex justify-around items-center w-full h-full mt-5"
                             >
-                                <motion.div
-                                    key={`slide_${imageIndex.center}`}
-                                    custom={direction}
-                                    variants={variants}
-                                    initial="enter"
-                                    animate="center"
-                                    exit="exit"
-                                    transition={{
-                                        x: { 
-                                            type: "spring", 
-                                            stiffness: 300, 
-                                            damping: 30 
-                                        },
-                                        opacity: { duration: 0.2 }
-                                    }}
-                                    drag="x"
-                                    dragConstraints={{ left: 0, right: 0 }}
-                                    dragElastic={1}
-                                    onDragEnd={(e, { offset, velocity }) => {
-                                        const swipe = swipePower(offset.x, velocity.x);
-                            
-                                        if (swipe < -swipeConfidenceThreshold) {
-                                            paginate(1);
-                                        } else if (swipe > swipeConfidenceThreshold) {
-                                            paginate(-1);
-                                        }
-                                    }}
-                                    className="absolute flex justify-around items-center w-full h-full mt-5"
-                                >
-                                    <div>{content[imageIndex.center].description}</div>
-                                    
-                                    <img className="h-[100%]" src={content[imageIndex.center].image} />
-                                </motion.div>                    
-                            </AnimatePresence>
-                        </>)}
+                                <div>{content[imageIndex.center].description}</div>
+                                
+                                <img className="h-full min-w-[600px] max-w-[600px]" src={content[imageIndex.center].image} />
+                            </motion.div>                    
+                        </AnimatePresence>
+                    </>)}
                 </div>
 
                 <div className="flex justify-around w-full z-10">
-                    <div className="prev" onClick={() => paginate(-1)}>
-                        {"<"}
-                    </div>
+                    <Icon 
+                        name="arrow"
+                        position="left"
+                        src="/icons/up-arrow-svgrepo-com.svg"
+                        size="lg"
+                        content="-1"
+                        kind={{
+                            type: "button",
+                            content: "",
+                            callback: () => paginate(-1)
+                        }}
+                        custom={{
+                            parent: "",
+                            img: "-rotate-90",
+                            content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
+                        }}
+                    />
 
-                    <div className="next" onClick={() => paginate(1)}>
-                        {">"}
-                    </div>
+                    <Icon 
+                        name="arrow"
+                        position="right"
+                        src="/icons/up-arrow-svgrepo-com.svg"
+                        size="lg"
+                        content="+1"
+                        kind={{
+                            type: "button",
+                            content: "",
+                            callback: () => paginate(1)
+                        }}
+                        custom={{
+                            parent: "",
+                            img: "rotate-90",
+                            content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
+                        }}
+                    />
                 </div>
             </div>
         )
