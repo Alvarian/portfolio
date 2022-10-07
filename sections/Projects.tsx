@@ -90,6 +90,7 @@ const ModalBody: FC<{
             center: 0,
             right: 1
         })
+        const [pagColors, setColors] = useState(getRandomColor(content))
 
         useEffect(() => {
             const wrappedIndex = wrap(0, content.length, page)
@@ -109,12 +110,19 @@ const ModalBody: FC<{
                         right: 2
                     })
                     break
+                case content.length-1:
+                    setIndex({
+                        left: wrappedIndex-1,
+                        center: wrappedIndex,
+                        right: 0
+                    })
+                    break
                 default: 
                     if (wrappedIndex+2 > content.length-1) {
                         setIndex({
                             left: wrappedIndex-1,
                             center: wrappedIndex,
-                            right: 0
+                            right: content.length-1
                         })
                     } else {
                         setIndex({
@@ -153,13 +161,13 @@ const ModalBody: FC<{
         }
 
         const paginate = (newDirection: number) => {
-            setPage([page + newDirection, newDirection]);
+            setPage([page + newDirection, newDirection])
         }
 
         return (
-            <div className="h-full flex flex-col justify-around">
-                <div className="relative h-3/4 overflow-hidden">
-                    {isModalMaxed ? (<div className="flex items-center justify-center h-full w-full">
+            <>
+                {isModalMaxed ? (<div className="flex flex-col items-center justify-around h-full w-full">
+                    <div className="flex items-center justify-center relative h-3/4 w-full">
                         <motion.img 
                             key={`key_${imageIndex.left}`}
                             layoutId={`layout-${imageIndex.left}`}
@@ -197,7 +205,32 @@ const ModalBody: FC<{
                             transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
                             className="h-[350px] w-[500px]" src={content[imageIndex.right].image} 
                         />
-                    </div>) : (<>
+                    </div>
+
+                    <div className="flex justify-around w-1/2 z-10">
+                        {content.map((slide: any, index: number) => (
+                            <motion.button
+                                className="rounded-full h-5 w-5"
+                                style={{
+                                    backgroundColor: "#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6), 
+                                    border: (index === page) ? "3px solid white" : "none",
+                                    scale: (index === page) ? 2 : 1
+                                }}
+                                onClick={e => {
+                                    if (index < page) {
+                                        setPage([index, -1])
+                                    } else {
+                                        setPage([index, +1])
+                                    }
+                                }}
+                                // whileHover={{ scale: 1.5 }}
+                                // onHoverStart={e => {}}
+                                // onHoverEnd={e => {}}
+                            ></motion.button>
+                        ))}
+                    </div>
+                </div>) : (<div className="h-full flex flex-col justify-around overflow-hidden">
+                    <div className="relative h-3/4">
                         <AnimatePresence 
                             initial={false} 
                             custom={direction}
@@ -236,47 +269,47 @@ const ModalBody: FC<{
                                 <img className="h-full min-w-[600px] max-w-[600px]" src={content[imageIndex.center].image} />
                             </motion.div>                    
                         </AnimatePresence>
-                    </>)}
-                </div>
+                    </div>
 
-                <div className="flex justify-around w-full z-10">
-                    <Icon 
-                        name="arrow"
-                        position="left"
-                        src="/icons/up-arrow-svgrepo-com.svg"
-                        size="lg"
-                        content="-1"
-                        kind={{
-                            type: "button",
-                            content: "",
-                            callback: () => paginate(-1)
-                        }}
-                        custom={{
-                            parent: "",
-                            img: "-rotate-90",
-                            content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
-                        }}
-                    />
+                    <div className="flex justify-around w-full z-10">
+                        <Icon 
+                            name="arrow"
+                            position="left"
+                            src="/icons/up-arrow-svgrepo-com.svg"
+                            size="lg"
+                            content="-1"
+                            kind={{
+                                type: "button",
+                                content: "",
+                                callback: () => paginate(-1)
+                            }}
+                            custom={{
+                                parent: "",
+                                img: "-rotate-90",
+                                content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
+                            }}
+                        />
 
-                    <Icon 
-                        name="arrow"
-                        position="right"
-                        src="/icons/up-arrow-svgrepo-com.svg"
-                        size="lg"
-                        content="+1"
-                        kind={{
-                            type: "button",
-                            content: "",
-                            callback: () => paginate(1)
-                        }}
-                        custom={{
-                            parent: "",
-                            img: "rotate-90",
-                            content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
-                        }}
-                    />
-                </div>
-            </div>
+                        <Icon 
+                            name="arrow"
+                            position="right"
+                            src="/icons/up-arrow-svgrepo-com.svg"
+                            size="lg"
+                            content="+1"
+                            kind={{
+                                type: "button",
+                                content: "",
+                                callback: () => paginate(1)
+                            }}
+                            custom={{
+                                parent: "",
+                                img: "rotate-90",
+                                content: "text-2xl text-center bg-gradient-to-r from-yellow-300 h-12 p-3"
+                            }}
+                        />
+                    </div>
+                </div>)}
+            </>
         )
     }
 

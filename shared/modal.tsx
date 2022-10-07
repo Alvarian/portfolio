@@ -1,6 +1,5 @@
-import { mode } from "crypto-js"
 import { AnimatePresence, motion } from "framer-motion"
-import { FC, useEffect, useRef, useState } from "react"
+import { FC, useEffect, useRef } from "react"
 import { FaRegWindowMaximize } from "react-icons/fa"
 import { VscChromeClose } from "react-icons/vsc"
 

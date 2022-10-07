@@ -217,6 +217,10 @@ export const localMockData = {
             {
               description: "Slide 3",
               image: "/images/img_clock1-min.jpg"
+            },
+            {
+              description: "Slide 4",
+              image: "/images/library-min.jpg"
             }
           ]
         }
