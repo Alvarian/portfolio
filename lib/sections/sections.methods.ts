@@ -19,7 +19,7 @@ export const getRandomColor = (arr: Array<any>) => {
     return ["#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6)]
   }
   return arr.map(() => {
-    return "#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6);
+    return "#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6)
   });
 };
 
