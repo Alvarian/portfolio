@@ -220,5 +220,3 @@ const Home: NextPage = (props) => {
 }
 
 export default Home
-
-
