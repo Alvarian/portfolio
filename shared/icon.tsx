@@ -62,7 +62,7 @@ const Icon: React.FC<IconInter> = ({
 
     const mappedIconPositions: dataOptions = {
         left: {
-            parent: `ml-5 items-center flex justify-center`,
+            parent: `items-center flex justify-center`,
             child: {
                 display: "flex",
                 justifyContent: "center",
@@ -70,13 +70,13 @@ const Icon: React.FC<IconInter> = ({
             }
         },
         center: {
-            parent: `relative ml-5 items-center flex justify-center flex-col`,
+            parent: `relative items-center flex justify-center flex-col`,
             child: {
                 position: "absolute"
             }
         },
         right: {
-            parent: `ml-5 items-center flex justify-center flex-row-reverse`,
+            parent: `items-center flex justify-center flex-row-reverse`,
             child: {
                 display: "flex",
                 justifyContent: "center",
@@ -109,7 +109,11 @@ const Icon: React.FC<IconInter> = ({
                 )
             case "button":
                 return (
-                    <motion.button className={"m-7 w-full "+mappedIconPositions[position].parent+" "+custom?.parent} onClick={() => {kind.callback()}}
+                    <motion.button 
+                        className={"w-full "+mappedIconPositions[position].parent+" "+custom?.parent} 
+                        onMouseDown={(e) => {e.currentTarget.style.scale = "0.7"}} 
+                        onMouseUp={(e) => {e.currentTarget.style.scale = "1"}} 
+                        onClick={() => {kind.callback()}}
                         whileHover={{ scale: 1.2 }}
                         onHoverStart={e => {}}
                         onHoverEnd={e => {}}

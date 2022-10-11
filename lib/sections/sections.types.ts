@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 type Nullable<T> = T | null;
 
 export interface Content {

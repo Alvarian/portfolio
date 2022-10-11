@@ -1,8 +1,0 @@
-auto designate scroll
-
-vertical parallax
-horizontal parallax?
-
-locked navbar
-    change solid black when not top
-    disappear when bottom
