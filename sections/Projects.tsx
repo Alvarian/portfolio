@@ -42,8 +42,9 @@ const ModalBody: FC<{
     title: string,
     type: string,
     content: any,
+    isWidthMobile: boolean,
     isModalMaxed: boolean
-}> = ({title, type, content, isModalMaxed}) => {
+}> = ({title, type, content, isWidthMobile, isModalMaxed}) => {
     const getScriptDOM = () => {    
         const [content, setContent] = useState<any>(null)
     
@@ -172,12 +173,19 @@ const ModalBody: FC<{
                             key={`key_${imageIndex.left}`}
                             layoutId={`layout-${imageIndex.left}`}
                             transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
-                            className="h-[350px] w-[500px]" src={content[imageIndex.left].image} 
+                            className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white" src={content[imageIndex.left].image} 
+                            onClick={e => {
+                                if (imageIndex.left < page) {
+                                    setPage([imageIndex.left, -1])
+                                } else {
+                                    setPage([imageIndex.left, +1])
+                                }
+                            }}
                         />
 
                         <main 
                             key={`key_${imageIndex.center}`}
-                            className="scale-[2.2] z-10 h-[350px] max-w-[500px] min-w-[500px] flex justify-center items-center"
+                            className="relative scale-[2.2] h-[350px] max-w-[350px] min-w-[350px] z-10 flex justify-center items-center"
                         >
                             <motion.img 
                                 key={`key_${imageIndex.center}`}
@@ -197,19 +205,42 @@ const ModalBody: FC<{
                                 }}
                                 className="h-full" src={content[imageIndex.center].image} 
                             />
+
+                            <motion.div
+                                className="absolute backdrop-blur z-10 h-full w-full flex justify-center items-center text-sm"
+                                initial={{
+                                    opacity: 0,
+                                    scale: 0.95
+                                }}
+                                whileHover={{
+                                    opacity: 1,
+                                    scale: 1,
+                                    transition: { duration: 0.6 },
+                                }}
+                            >
+                                <span>{content[imageIndex.center].description}</span>
+                            </motion.div>
                         </main>
 
                         <motion.img 
                             key={`key_${imageIndex.right}`}
                             layoutId={`layout-${imageIndex.right}`}
                             transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
-                            className="h-[350px] w-[500px]" src={content[imageIndex.right].image} 
+                            className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white" src={content[imageIndex.right].image} 
+                            onClick={e => {
+                                if (imageIndex.right < page) {
+                                    setPage([imageIndex.right, -1])
+                                } else {
+                                    setPage([imageIndex.right, +1])
+                                }
+                            }}
                         />
                     </div>
 
                     <div className="flex justify-around w-1/2 z-10">
                         {content.map((slide: any, index: number) => (
                             <motion.button
+                                key={`pagkey_${index}`}
                                 className="rounded-full h-5 w-5"
                                 style={{
                                     backgroundColor: "#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6), 
@@ -223,9 +254,6 @@ const ModalBody: FC<{
                                         setPage([index, +1])
                                     }
                                 }}
-                                // whileHover={{ scale: 1.5 }}
-                                // onHoverStart={e => {}}
-                                // onHoverEnd={e => {}}
                             ></motion.button>
                         ))}
                     </div>
@@ -262,21 +290,21 @@ const ModalBody: FC<{
                                         paginate(-1);
                                     }
                                 }}
-                                className="absolute flex justify-around items-center w-full h-full mt-5"
+                                className={`absolute flex ${isWidthMobile ? "flex-col-reverse" : ""} justify-around items-center w-full h-full`}
                             >
-                                <div>{content[imageIndex.center].description}</div>
+                                <div className={`${isWidthMobile ? "" : "h-full"}`}>{content[imageIndex.center].description}</div>
                                 
-                                <img className="h-full min-w-[600px] max-w-[600px]" src={content[imageIndex.center].image} />
+                                <img className={`${isWidthMobile ? "h-[465px]" : "h-full"} min-w-[600px] max-w-[600px]`} src={content[imageIndex.center].image} />
                             </motion.div>                    
                         </AnimatePresence>
                     </div>
 
-                    <div className="flex justify-around w-full z-10">
+                    <div className="flex justify-around w-full z-10 mb-5">
                         <Icon 
                             name="arrow"
                             position="left"
                             src="/icons/up-arrow-svgrepo-com.svg"
-                            size="lg"
+                            size={isWidthMobile ? "md" : "lg"}
                             content="-1"
                             kind={{
                                 type: "button",
@@ -286,7 +314,7 @@ const ModalBody: FC<{
                             custom={{
                                 parent: "",
                                 img: "-rotate-90",
-                                content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
+                                content: "text-xl text-center bg-gradient-to-r from-yellow-300 h-10 p-3"
                             }}
                         />
 
@@ -294,7 +322,7 @@ const ModalBody: FC<{
                             name="arrow"
                             position="right"
                             src="/icons/up-arrow-svgrepo-com.svg"
-                            size="lg"
+                            size={isWidthMobile ? "md" : "lg"}
                             content="+1"
                             kind={{
                                 type: "button",
@@ -304,7 +332,7 @@ const ModalBody: FC<{
                             custom={{
                                 parent: "",
                                 img: "rotate-90",
-                                content: "text-2xl text-center bg-gradient-to-r from-yellow-300 h-12 p-3"
+                                content: "text-xl text-center bg-gradient-to-l from-yellow-300 h-10 p-3"
                             }}
                         />
                     </div>
@@ -323,8 +351,9 @@ const ModalBody: FC<{
 }
 
 const index: FC<{
-    data: Array<Project>
-}> = ({ data }) => {
+    data: Array<Project>,
+    width: number
+}> = ({ data, width }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
     const [projectData, setProjectData] = useState(data[0])
     const [isGameSet, setGame] = useState(false)
@@ -424,11 +453,13 @@ const index: FC<{
                 projectData={projectData}
                 isCoverOpen={isCoverOpen}
                 toggleCover={toggleCover}
+                isWidthMobile={width < 900}
             >
                 <ModalBody 
                     title={projectData.title}
                     type={projectData.payload.type}
                     content={projectData.payload.ref}
+                    isWidthMobile={width < 900}
                     isModalMaxed={isModalMaxed}
                 />
             </Modal>

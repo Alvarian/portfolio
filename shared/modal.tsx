@@ -29,7 +29,7 @@ const Cover: FC<{
   toggleCover: any
 }> = ({stacks, isCoverOpen, toggleCover}) => {
   return (
-    <motion.div className='bg-black h-full w-full flex items-center justify-around flex-col'
+    <motion.div className='bg-black h-full w-full flex items-center justify-around flex-col mt-4'
       variants={{
           visible: {
               opacity: 1,
@@ -84,8 +84,9 @@ const index: FC<{
     setMaxed: any,
     projectData: {[key: string]: any},
     isCoverOpen: boolean, 
-    toggleCover: any
-}> = ({ handleClose, isModalOpen, setMaxed, projectData, isCoverOpen, toggleCover, children }) => {  
+    toggleCover: any,
+    isWidthMobile: boolean
+}> = ({ handleClose, isModalOpen, setMaxed, projectData, isCoverOpen, toggleCover, isWidthMobile, children }) => {  
     const modalEl = useRef(null)
 
     useEffect(() => {
@@ -110,7 +111,7 @@ const index: FC<{
         {isModalOpen ? (
           <Backdrop onClick={handleClose}>        
             <motion.div
-              className="p-3 pt-10 mt-10 flex flex-col items-center justify-around h-[620px] w-[800px] bg-slate-900 rounded-xl"
+              className={`flex flex-col items-center justify-around ${isWidthMobile ? "w-[620px] h-5/6 mt-20 px-7" : "h-[620px] min-w-[900px] w-3/4 mt-10 pt-10"} bg-slate-900 rounded-xl`}
               onClick={(e) => e.stopPropagation()}  
               variants={dropIn}
               initial="hidden"

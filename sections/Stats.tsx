@@ -147,7 +147,7 @@ const Overall: React.FC<{
                 position: "right",
                 content: null,
                 custom: {
-                    parent:"bg-red-700 border hover:invert",
+                    parent:"bg-red-700 border hover:invert ml-4",
                     img: "",
                     content: ""
                 }
@@ -164,7 +164,7 @@ const Overall: React.FC<{
                 position: "center",
                 content: mappedPayload["Rank"],
                 custom: {
-                    parent:"",
+                    parent:"ml-5",
                     img: "",
                     content: ""
                 }    
@@ -181,7 +181,7 @@ const Overall: React.FC<{
                 position: "center",
                 content: mappedPayload["Completed"],
                 custom: {
-                    parent: "",
+                    parent: "ml-2",
                     img: "",
                     content: ""
                 }    
@@ -302,7 +302,7 @@ const index: React.FC<{
     position: "right",
     content: "Most Recent Challenge",
     custom: {
-      parent: "",
+      parent: "m-7",
       img: "rotate-90",
       content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
     }
@@ -310,7 +310,7 @@ const index: React.FC<{
     position: "left",
     content: "Overall Challenges",
     custom: {
-      parent: "",
+      parent: "m-7",
       img: "-rotate-90",
       content: "text-2xl text-center bg-gradient-to-r from-yellow-300 p-3 h-12"
     }
