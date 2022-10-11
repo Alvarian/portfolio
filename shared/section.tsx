@@ -5,6 +5,8 @@ import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 import Underline from "shared/underline"
 
 import { motion } from 'framer-motion'
+import { Dispatch, useEffect, useState } from 'react'
+import ProjectModal from './modal'
 
 
 const Section: React.FC<{
@@ -24,7 +26,7 @@ const Section: React.FC<{
     badges: Array<Badge>
   } | null,
   keyIcon: string | null,
-  alt: string,
+  alt: string
 }> = ({
   content,
   bgImageName,
@@ -33,7 +35,7 @@ const Section: React.FC<{
   isSectionPermitted,
   serverProps,
   keyIcon,
-  alt,
+  alt
 }) => {
   const handleRenderLinks: (elementType: string, size: string) => JSX.Element = (elementType: string, size: string) => {
     let outsourcedLinks = []
@@ -126,7 +128,7 @@ const Section: React.FC<{
       },
     },
     tailwind: {
-      main: `flex justify-center h-screen w-full items-center relative min-h-[900px]`,
+      main: `flex justify-center h-screen w-full items-center relative min-h-[900px] overflow-hidden`,
       background: `bg-no-repeat bg-cover bg-center bg-fixed absolute w-full h-full -z-10`,
       content: `flex justify-center ${content?.isFull ? "h-full w-full" : "h-2/3 w-2/3 rounded-3xl"} items-center`,
       nav: `flex flex-col items-center `
@@ -145,7 +147,7 @@ const Section: React.FC<{
             width={width} 
             alt={alt}
             isSectionPermitted={isSectionPermitted}
-            handleRenderLinks={handleRenderLinks} 
+            handleRenderLinks={handleRenderLinks}
           />
         </div>
          : 
@@ -154,5 +156,6 @@ const Section: React.FC<{
     </section>
   )
 }
+
 
 export default Section

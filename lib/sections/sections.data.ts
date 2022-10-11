@@ -4,6 +4,8 @@ import Stats from 'sections/Stats'
 
 import { Content } from 'lib/sections/sections.types'
 import UnderConstruction from 'shared/underConstruction'
+import Projects from 'sections/Projects'
+
 
 export const sectionData: Array<Content> = [
   {
@@ -41,8 +43,8 @@ export const sectionData: Array<Content> = [
   {
     alt: "projects",
     content: {
-      body: UnderConstruction,
-      isFull: false
+      body: Projects,
+      isFull: true
     },
     type: "default",
     keyIcon: "",
@@ -83,56 +85,6 @@ export const localMockData = {
       }
     },
     knowledge: {
-      gifFrames: [
-        '/images/badgeCoat/frame_000_delay-0.03s.gif',
-        '/images/badgeCoat/frame_001_delay-0.04s.gif',
-        '/images/badgeCoat/frame_002_delay-0.03s.gif',
-        '/images/badgeCoat/frame_003_delay-0.03s.gif',
-        '/images/badgeCoat/frame_004_delay-0.04s.gif',
-        '/images/badgeCoat/frame_005_delay-0.03s.gif',
-        '/images/badgeCoat/frame_006_delay-0.04s.gif',
-        '/images/badgeCoat/frame_007_delay-0.03s.gif',
-        '/images/badgeCoat/frame_008_delay-0.03s.gif',
-        '/images/badgeCoat/frame_009_delay-0.04s.gif',
-        '/images/badgeCoat/frame_010_delay-0.03s.gif',
-        '/images/badgeCoat/frame_011_delay-0.03s.gif',
-        '/images/badgeCoat/frame_012_delay-0.04s.gif',
-        '/images/badgeCoat/frame_013_delay-0.03s.gif',
-        '/images/badgeCoat/frame_014_delay-0.04s.gif',
-        '/images/badgeCoat/frame_015_delay-0.03s.gif',
-        '/images/badgeCoat/frame_016_delay-0.03s.gif',
-        '/images/badgeCoat/frame_017_delay-0.04s.gif',
-        '/images/badgeCoat/frame_018_delay-0.03s.gif',
-        '/images/badgeCoat/frame_019_delay-0.03s.gif',
-        '/images/badgeCoat/frame_020_delay-0.04s.gif',
-        '/images/badgeCoat/frame_021_delay-0.03s.gif',
-        '/images/badgeCoat/frame_022_delay-0.04s.gif',
-        '/images/badgeCoat/frame_023_delay-0.03s.gif',
-        '/images/badgeCoat/frame_024_delay-0.03s.gif',
-        '/images/badgeCoat/frame_025_delay-0.04s.gif',
-        '/images/badgeCoat/frame_026_delay-0.03s.gif',
-        '/images/badgeCoat/frame_027_delay-0.03s.gif',
-        '/images/badgeCoat/frame_028_delay-0.04s.gif',
-        '/images/badgeCoat/frame_029_delay-0.03s.gif',
-        '/images/badgeCoat/frame_030_delay-0.04s.gif',
-        '/images/badgeCoat/frame_031_delay-0.03s.gif',
-        '/images/badgeCoat/frame_032_delay-0.03s.gif',
-        '/images/badgeCoat/frame_033_delay-0.04s.gif',
-        '/images/badgeCoat/frame_034_delay-0.03s.gif',
-        '/images/badgeCoat/frame_035_delay-0.03s.gif',
-        '/images/badgeCoat/frame_036_delay-0.04s.gif',
-        '/images/badgeCoat/frame_037_delay-0.03s.gif',
-        '/images/badgeCoat/frame_038_delay-0.04s.gif',
-        '/images/badgeCoat/frame_039_delay-0.03s.gif',
-        '/images/badgeCoat/frame_040_delay-0.03s.gif',
-        '/images/badgeCoat/frame_041_delay-0.04s.gif',
-        '/images/badgeCoat/frame_042_delay-0.03s.gif',
-        '/images/badgeCoat/frame_043_delay-0.03s.gif',
-        '/images/badgeCoat/frame_044_delay-0.04s.gif',
-        '/images/badgeCoat/frame_045_delay-0.03s.gif',
-        '/images/badgeCoat/frame_046_delay-0.04s.gif',
-        '/images/badgeCoat/frame_047_delay-0.03s.gif'
-      ],
       badges: [
         {
           "issuedOn": "2022-06-05T04:06:47Z",
@@ -215,7 +167,78 @@ export const localMockData = {
           "tags": [ 'App Development', 'HTML', 'JavaScript' ]
         },
       ]
-    }
+    },
+    projects: [
+      {
+        id: 1,
+        icon: "/images/trifecta.png",
+        title: "rails",
+        description: "Qui ad tempor qui deserunt enim tempor ullamco aliqua cillum elit. Ut laboris pariatur ullamco occaecat officia proident ea. Voluptate veniam quis dolore eu ullamco consequat sit aute ullamco. Eu et nulla ipsum et labore Lorem. Minim duis dolor tempor ex ipsum deserunt tempor id eiusmod quis sint ut duis.",
+        stacks: ["javascript", "rust"],
+        repo: "https://github.com/Alvarian/mock-trade-wallet",
+        lastUpdate: "2021-10-25T20:12:03.473Z",
+        payload: {
+          type: "Site",
+          ref: "http://localhost:3000/"
+        }
+      },
+      {
+        id: 2,
+        icon: "/images/trifecta.png",
+        title: "paris",
+        description: "Reprehenderit enim voluptate cupidatat voluptate nulla deserunt eiusmod commodo. Amet veniam adipisicing exercitation ullamco duis aute aliqua eu dolore nisi. Esse anim anim aute in sunt laborum quis. Do Lorem mollit officia pariatur. Et Lorem mollit cupidatat ex laborum quis. Eu sunt dolore cupidatat consequat aute irure sit est.",
+        stacks: ["javascript", "rust"],
+        repo: "https://github.com/Alvarian/mock-trade-wallet",
+        lastUpdate: "2021-10-25T20:12:03.473Z",
+        payload: {
+          type: "Script",
+          ref: "function index(el) {const element = document.createElement('div'); element.innerText = 'heymanniceshot'; return element} window.games['Paris'] = index"
+        }
+      },
+      {
+        id: 3,
+        icon: "/images/trifecta.png",
+        title: "everest",
+        description: "Nisi incididunt deserunt minim ut ex adipisicing velit excepteur sint pariatur Lorem sit esse. Proident non ut ex nostrud incididunt laborum anim amet cillum labore ut aliqua. Adipisicing ipsum anim amet qui incididunt anim aliqua veniam nisi cupidatat laboris exercitation laboris.",
+        stacks: ["javascript", "rust"],
+        repo: "https://github.com/Alvarian/mock-trade-wallet",
+        lastUpdate: "2021-10-25T20:12:03.473Z",
+        payload: {
+          type: "Service",
+          ref: [
+            {
+              description: "Slide 1",
+              image: "/images/img_bridge1.jpg"
+            },
+            {
+              description: "Slide 2",
+              image: "/images/img_clouds.jpg"
+            },
+            {
+              description: "Slide 3",
+              image: "/images/img_clock1-min.jpg"
+            },
+            {
+              description: "Slide 4",
+              image: "/images/library-min.jpg"
+            }
+          ]
+        }
+      },
+      {
+        id: 4,
+        icon: "/images/trifecta.png",
+        title: "town",
+        description: "Adipisicing labore reprehenderit velit ex exercitation Lorem sint duis id ipsum ut. Anim cillum adipisicing et ad minim incididunt incididunt aute officia laboris incididunt aliquip sit et. Sunt elit mollit fugiat quis eu cupidatat duis magna. Culpa commodo fugiat exercitation ullamco amet minim irure dolore amet est excepteur nulla.",
+        stacks: ["javascript", "rust"],
+        repo: "https://github.com/Alvarian/mock-trade-wallet",
+        lastUpdate: "2021-10-25T20:12:03.473Z",
+        payload: {
+          type: "Script",
+          ref: "function index(el) {console.log('App1 opened', el)} window.games['Town'] = index"
+        }
+      }
+    ]
   }
 }
 
