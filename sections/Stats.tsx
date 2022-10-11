@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from "react"
 
 import { motion } from "framer-motion"
-import {Chart, ArcElement, Tooltip} from 'chart.js'
-Chart.register(ArcElement, Tooltip);
-import { Doughnut } from 'react-chartjs-2';
 import CountUp from 'react-countup';
 
 import SlideShow from "shared/slideshow";
 import { dataOptions, MostrecentPayload, OverallPayload } from "lib/sections/sections.types";
 import Icon, { IconInter } from "shared/icon"
+import { getFormattedDate } from "lib/sections/sections.methods";
+import Chart from "shared/chart";
 
-
-interface LanguageValue {
-    titles: Array<string>,
-    colors: Array<string>,
-    ratios: Array<number>
-}
 
 const MostRecent: React.FC<{
   payload: MostrecentPayload,
@@ -74,7 +67,6 @@ const MostRecent: React.FC<{
       
       for (let i = 0; i < solutions.languages.length; i++) {
           const snippet = solutions.languages[i]
-          const language = snippet.language
 
           const styles = {
               button: `${tailwind.snippetTab} ${currentSnippet === snippet.language ? "tab-active bg-slate-700" : "bg-slate-200"}`,
@@ -92,17 +84,6 @@ const MostRecent: React.FC<{
               {languageSnippets}
           </div>
       )
-  }
-
-  const getFormattedDate = (blob: string) => {
-      const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-
-      const d = new Date(blob)
-      let monthName = month[d.getMonth()]
-      let day = d.getDay()
-      let year = d.getFullYear()
-
-      return `${monthName} ${day}, ${year}`
   }
 
   return (
@@ -152,116 +133,70 @@ const Overall: React.FC<{
     isSectionPermitted,
     width
 }) => {
-  const overallMenuData: (mappedPayload: dataOptions) => Array<IconInter> = (mappedPayload: dataOptions) => {
-    return [
-        {
-            name: "Profile",
-            size: "sm",
-            kind: {
-                type: "link",
-                content: "https://www.codewars.com/users/Alvarian_",
-                callback: () => {}
+    const overallMenuData: (mappedPayload: dataOptions) => Array<IconInter> = (mappedPayload: dataOptions) => {
+        return [
+            {
+                name: "Profile",
+                size: "sm",
+                kind: {
+                    type: "link",
+                    content: "https://www.codewars.com/users/Alvarian_",
+                    callback: () => {}
+                },
+                src: "/icons/codewars.svg",
+                position: "right",
+                content: null,
+                custom: {
+                    parent:"bg-red-700 border hover:invert ml-4",
+                    img: "",
+                    content: ""
+                }
             },
-            src: "/icons/codewars.svg",
-            position: "right",
-            content: null,
-            custom: {
-                parent:"bg-red-700 border hover:invert",
-                img: "",
-                content: ""
+            {
+                name: "Rank",
+                size: "md",
+                kind: {
+                    type: "",
+                    content: "",
+                    callback: () => {}
+                },
+                src: "/icons/star-svgrepo-com.svg",
+                position: "center",
+                content: mappedPayload["Rank"],
+                custom: {
+                    parent:"ml-5",
+                    img: "",
+                    content: ""
+                }    
+            },
+            {
+                name: "Completed",
+                size: "md",
+                kind: {
+                    type: "",
+                    content: "",
+                    callback: () => {}
+                },
+                src: "/icons/fire-svgrepo-com.svg",
+                position: "center",
+                content: mappedPayload["Completed"],
+                custom: {
+                    parent: "ml-2",
+                    img: "",
+                    content: ""
+                }    
             }
-        },
-        {
-            name: "Rank",
-            size: "md",
-            kind: {
-                type: "",
-                content: "",
-                callback: () => {}
-            },
-            src: "/icons/star-svgrepo-com.svg",
-            position: "center",
-            content: mappedPayload["Rank"],
-            custom: {
-                parent:"",
-                img: "",
-                content: ""
-            }    
-        },
-        {
-            name: "Completed",
-            size: "md",
-            kind: {
-                type: "",
-                content: "",
-                callback: () => {}
-            },
-            src: "/icons/fire-svgrepo-com.svg",
-            position: "center",
-            content: mappedPayload["Completed"],
-            custom: {
-                parent: "",
-                img: "",
-                content: ""
-            }    
-        }
-    ]
-}
+        ]
+    }
 
     const {     
         leaderBoardScore,
         languagesTotal,
         totalCompleted
     } = payload
-    const reset = {
-        titles: [],
-        colors: [],
-        ratios: []
-    }
-
-    const [languagesListValues, setValues] = useState<LanguageValue>(reset)
     
-    useEffect(() => {
-        const languageValues: LanguageValue = reset
-
-        let totalCounter: number = 0
-
-        for (let language in languagesTotal) {
-            totalCounter += languagesTotal[language]
-        }
-
-        for (let language in languagesTotal) {
-            const ratio = (languagesTotal[language] / totalCounter) * 100
-
-            languageValues.titles.push(language)
-            languageValues.ratios.push(ratio)
-            languageValues.colors.push("#" + ("FFFFFF" + Math.floor(Math.random() * Math.pow(16, 6)).toString(16)).slice(-6))
-        }
-
-        setValues({...languageValues})
-    }, [])
-
     const roundThousandsOrGetDefault = (num: number) => {
         return Math.abs(num) > 999 ? (Math.sign(num)*Math.abs(num)/1000).toFixed(1) + 'k' : Math.sign(num)*Math.abs(num)
-    }
-
-    const renderDonut = () => {
-        const data = {
-            labels: languagesListValues.titles,
-            datasets: [
-                {
-                    label: "Percentage",
-                    data: languagesListValues.ratios,
-                    backgroundColor: languagesListValues.colors,
-                    borderColor: languagesListValues.colors,
-                    borderWidth: 2,
-                }
-            ],
-        }
-        
-        return (
-            <Doughnut data={data} />
-        )
     }
 
     const { css, tailwind } = width > 900 ? {
@@ -286,23 +221,6 @@ const Overall: React.FC<{
             donutContainer: `bg-gradient-to-r from-amber-200 flex justify-around py-5 text-md`,
             donut: `h-[200px] w-[200px]`
         }
-    }
-    
-    const ratioStatsList = () => {
-        const list = []
-        for (let i = 0; i < languagesListValues.titles.length; i++) {
-            const title = languagesListValues.titles[i]
-            const ratio = languagesListValues.ratios[i]
-            const color = languagesListValues.colors[i]
-
-            list.push(
-                <li className="text-left m-1" key={title}>
-                    <span className="w-6" style={{backgroundColor: color}}>[&#8594;]</span> {title}: {Math.round(ratio * 10) / 10}%
-                </li>
-            )
-        }
-        
-        return list
     }
 
     return (
@@ -348,11 +266,7 @@ const Overall: React.FC<{
                     ))}
                 </div>
 
-                <div className={tailwind.donutContainer}>
-                    <ul id="ratioStats">{ratioStatsList()}</ul>
-
-                    <div id="ratioGraph" className={tailwind.donut}>{renderDonut()}</div>
-                </div>
+                <Chart languagesTotal={languagesTotal} bgStyle={"bg-gradient-to-r from-amber-200 py-10 text-2xl"} />
             </motion.div>}
         </div>
     ) 
@@ -388,7 +302,7 @@ const index: React.FC<{
     position: "right",
     content: "Most Recent Challenge",
     custom: {
-      parent: "",
+      parent: "m-7",
       img: "rotate-90",
       content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
     }
@@ -396,7 +310,7 @@ const index: React.FC<{
     position: "left",
     content: "Overall Challenges",
     custom: {
-      parent: "",
+      parent: "m-7",
       img: "-rotate-90",
       content: "text-2xl text-center bg-gradient-to-r from-yellow-300 p-3 h-12"
     }

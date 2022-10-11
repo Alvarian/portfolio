@@ -1,17 +1,39 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, FC, Dispatch } from 'react'
 React.useLayoutEffect = React.useEffect 
 import type { NextPage } from 'next'
 import Head from 'next/head'
+
+import { FaRegWindowMaximize } from 'react-icons/fa'
+import { VscChromeClose } from 'react-icons/vsc'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import { Bar } from 'react-chartjs-2'
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+)
 
 import Section from 'shared/section'
 import Border from 'sections/Border'
 import Footer from 'sections/Footer'
 import Navbar from 'sections/Navbar'
-import { useResize } from 'hooks/'
+import { useResize } from 'hooks/useResize'
 
-import { Badge, Content, dataOptions, OverallPayload } from 'lib/sections/sections.types'
+import { Content, dataOptions } from 'lib/sections/sections.types'
 import { localMockData, sectionData } from 'lib/sections/sections.data'
-import { rateLimiters, formatDate } from 'lib/sections/sections.methods'
+import { rateLimiters, getRandomColor, capitalizeFirst } from 'lib/sections/sections.methods'
+import { motion } from 'framer-motion'
 
 
 interface Admissions {
@@ -32,10 +54,11 @@ const Home: NextPage = (props) => {
   const [width] = useResize()
   const [scrollMethodAdmissions, setAdmissions] = useState<Admissions>({})
   const [areEventsLoaded, setAreLoaded] = useState<boolean>(false)
+  const [projectIndex, setProjectIndex] = useState<number>(0)
 
   const hasPropData: dataOptions = props
   const propData: dataOptions = hasPropData.setting === "local" ? localMockData : props
-
+  
   const handleAutoRoutingOnScroll = (list: Admissions) => {
     for (let key in list) {
       if (list[key].isPermitted) {
@@ -181,6 +204,17 @@ const Home: NextPage = (props) => {
       </main>
 
       <Footer width={width} />
+
+      {/* <input type="checkbox" id="service-modal" className="modal-toggle" onChange={handleModalToggle.bind(this)} />
+      <label htmlFor='service-modal' className="modal sm:modal-middle cursor-pointer">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Congratulations random Internet user!</h3>
+          <p className="py-4">A service goes in here</p>
+          <div className="modal-action">
+            <label htmlFor="service-modal" className="btn">Yay!</label>
+          </div>
+        </div>
+      </label> */}
     </div>
   )
 }
