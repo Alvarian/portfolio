@@ -218,7 +218,7 @@ const ModalBody: FC<{
                                     transition: { duration: 0.6 },
                                 }}
                             >
-                                <span>{content[imageIndex.center].description}</span>
+                                <span className="bg-black/50">{content[imageIndex.center].description}</span>
                             </motion.div>
                         </main>
 
