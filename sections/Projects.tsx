@@ -292,9 +292,9 @@ const ModalBody: FC<{
                                 }}
                                 className={`absolute flex ${isWidthMobile ? "flex-col-reverse" : ""} justify-around items-center w-full h-full`}
                             >
-                                <div className={`${isWidthMobile ? "" : "h-full"}`}>{content[imageIndex.center].description}</div>
+                                <div className={`${isWidthMobile ? "" : "h-full px-10"}`}>{content[imageIndex.center].description}</div>
                                 
-                                <img className={`${isWidthMobile ? "h-[465px]" : "h-full"} min-w-[600px] max-w-[600px]`} src={content[imageIndex.center].image} />
+                                <img className={`${isWidthMobile ? "h-[465px]" : "h-full pr-7"} min-w-[600px] max-w-[600px]`} src={content[imageIndex.center].image} />
                             </motion.div>                    
                         </AnimatePresence>
                     </div>
