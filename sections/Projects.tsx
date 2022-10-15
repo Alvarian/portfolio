@@ -54,9 +54,9 @@ const ModalBody: FC<{
             if (localGame && !game) {
                 eval(localGame)
     
-                setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+                setContent(<div className="h-full w-full p-5" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
             } else if (game) {
-                setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(game())}></div>)
+                setContent(<div className="h-full w-full p-5" ref={(node: HTMLElement | null) => node?.appendChild(game())}></div>)
             } else {
                 fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
                     .then((res: any) => {
@@ -69,14 +69,14 @@ const ModalBody: FC<{
                         eval(script)
     
                         localStorage.setItem(title+"_game", script)
-                        setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+                        setContent(<div className="h-full w-full p-5" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
                     })
                     .catch(err => {
                         console.log(err)
                         const script = content as string
                         eval(script)
                         
-                        setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+                        setContent(<div className="h-full w-full p-5" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
                     })
             }
         }, [])
