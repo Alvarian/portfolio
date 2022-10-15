@@ -426,7 +426,7 @@ const index: FC<{
                                 alt=""
                             />
 
-                            <button className="btn btn-accent btn-wide text-2xl" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>
+                            {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent btn-wide text-2xl" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
                         </div>
 
                         <ul className="w-1/3 h-3/4 text-left flex flex-col justify-around items-center">
