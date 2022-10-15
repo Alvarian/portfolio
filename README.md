@@ -1,41 +1,53 @@
-# [Portfolio V2](https://alvarian-portfolio-v2.netlify.app/)
-react.js, rocket.rs
+# Using this app
 
-## Deploy to Heroku
-git subtree push --prefix path/to/app-subdir heroku master
+## Starting setups
 
-## Deploy using docker-compose
-docker-compose up at root
+[`Create your own AWS account for console access to S3 and cloudfront.`](https://aws.amazon.com/console/) and [`do the same for upstash to have a redis instance.`](https://upstash.com/) Again set up a [`badgr account.`](https://badgr.com) And finally make sure your device has terminal access to [npm](https://docs.npmjs.com/cli/init). 
 
-## Environmental Variables
-### Client
-REACT_APP_CONTENT_API_URL= URL to /api/v1/projects
+## How to use
 
-REACT_APP_BUCKET_ROOT= Base URL name pointing to AWS bucket root
+When done with setups run:
 
-REACT_APP_CONTACT_API_URL= URL to /api/v1/contact
+```bash
+cp templateEnv.txt .env
 
-### Server
-MAIL_SERVER= Mailing server used for the rust lettre library
+npm install
+```
 
-MAIL_USERNAME= Email used to receive contact payload
+Fill out all variables and run:
 
-MAIL_PASSWORD= Create app password through service. For example: [Gmail](https://support.google.com/accounts/answer/185833?hl=en)
+```bash
+npm run dev
+```
 
-PORTFOLIO_URL= URL of client to be whitelisted into cors
+## For the project section feature (optional)
 
-HEROKU_POSTGRESQL_IVORY_URL= Cloud or local URL based connection parameter to init postgres into app
+Please refer to the 'Project integrations' section in [`my github main page`](https://github.com/Alvarian) to get the key for the last environmental variable 'NEXT_PUBLIC_CRYPTION_KEY'.
 
-REDIS_URL= Cloud or local URL based connection parameter to init redis into app
+# Next.js + Tailwind CSS Example
 
-BUCKET_ROOT= Base URL name pointing to AWS bucket root
+This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
 
-ACCESS_SECRET_KEY= Generated AWS Secret Key required to connect to AWS client
+## Deploy your own
 
-ACCESS_KEY_ID= Generated AWS Access Key Id required to connect to AWS client
+Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
 
-BUCKET_NAME= Name of bucket for portfolio projects
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
 
-BUCKET_REGION= Region provided by your AWS bucket on creation, required to connect to AWS client
+## How to use
 
+Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
 
+```bash
+npx create-next-app --example with-tailwindcss with-tailwindcss-app
+# or
+yarn create next-app --example with-tailwindcss with-tailwindcss-app
+# or
+pnpm create next-app -- --example with-tailwindcss with-tailwindcss-app
+```
+
+Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+
+:octocat:
+
+<!-- https://dvj70ijwahy8c.cloudfront.net/Portfolio/icon | # -->
