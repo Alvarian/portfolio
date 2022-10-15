@@ -1,6 +1,20 @@
-# [Portfolio V2](https://alvarian-portfolio-v2.netlify.app/)
+# Using this app
 
-react.js, rocket.rs
+## Starting setups
+
+[`Create your own AWS account for console access to S3 and cloudfront.`](https://aws.amazon.com/console/) Then make sure your device has terminal access to [npm](https://docs.npmjs.com/cli/init).
+
+## How to use
+
+When done with setups run:
+
+```bash
+cp templateEnv.txt .env
+
+npm install
+
+npm run dev
+```
 
 # Next.js + Tailwind CSS Example
 
