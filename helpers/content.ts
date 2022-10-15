@@ -152,7 +152,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
     const readmeContentList = (await getAPIjson(`https://raw.githubusercontent.com/Alvarian/${projectName}/master/README.md`, 'text')).replace(/(\r\n|\n|\r)/gm, " ").split(":octocat:")
 
     const instructions = readmeContentList[0].trim()
-    const hasContent = (readmeContentList[1].slice(
+    const hasContent = (readmeContentList[readmeContentList.length-1].slice(
       readmeContentList[1].indexOf("<!--") + 4,
       readmeContentList[1].lastIndexOf("-->")
     )).trim().split(" | ")
