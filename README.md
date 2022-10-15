@@ -2,7 +2,7 @@
 
 ## Starting setups
 
-[`Create your own AWS account for console access to S3 and cloudfront.`](https://aws.amazon.com/console/) Then make sure your device has terminal access to [npm](https://docs.npmjs.com/cli/init).
+[`Create your own AWS account for console access to S3 and cloudfront.`](https://aws.amazon.com/console/) and [`do the same for upstash to have a redis instance.`](https://upstash.com/) Again set up a [`badgr account.`](https://badgr.com) And finally make sure your device has terminal access to [npm](https://docs.npmjs.com/cli/init). 
 
 ## How to use
 
@@ -12,9 +12,17 @@ When done with setups run:
 cp templateEnv.txt .env
 
 npm install
+```
 
+Fill out all variables and run:
+
+```bash
 npm run dev
 ```
+
+## For the project section feature (optional)
+
+Please refer to the 'Project integrations' section in [`my github main page`](https://github.com/Alvarian) to get the key for the last environmental variable 'NEXT_PUBLIC_CRYPTION_KEY'.
 
 # Next.js + Tailwind CSS Example
 
