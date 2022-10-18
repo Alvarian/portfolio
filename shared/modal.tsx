@@ -29,7 +29,7 @@ const Cover: FC<{
   toggleCover: any
 }> = ({stacks, isCoverOpen, toggleCover}) => {
   return (
-    <motion.div className='bg-black h-full w-full flex items-center justify-around flex-col mt-4'
+    <motion.div className='bg-black h-full w-full flex items-center justify-around flex-col'
       variants={{
           visible: {
               opacity: 1,
@@ -111,7 +111,7 @@ const index: FC<{
         {isModalOpen ? (
           <Backdrop onClick={handleClose}>        
             <motion.div
-              className={`flex flex-col items-center justify-around ${isWidthMobile ? "w-[620px] h-5/6 mt-20 px-7" : "h-[620px] min-w-[900px] w-3/4 mt-10 pt-10"} bg-slate-900 rounded-xl`}
+              className={`flex flex-col items-center justify-around ${isWidthMobile ? "w-[620px] h-5/6 mt-16" : "h-[80%] min-h-[700px] min-w-[900px] w-3/4 mt-20"} bg-slate-900 rounded-xl`}
               onClick={(e) => e.stopPropagation()}  
               variants={dropIn}
               initial="hidden"
@@ -124,7 +124,7 @@ const index: FC<{
                 <label className="border-2 border-white btn btn-sm text-2xl" onClick={handleClose}><VscChromeClose /></label>
               </div>
 
-              <div ref={modalEl} className="h-full w-full" id="project-box">
+              <div ref={modalEl} className="h-full w-full p-5 pt-14 inline-block" id="project-box">
                 {isCoverOpen ? (
                   <Cover 
                     isCoverOpen={isCoverOpen}
