@@ -40,4 +40,8 @@ module.exports = {
     require('daisyui'),
     [backfaceVisibility]
   ],
+  variants: {
+    'margin': ['hover'],
+    'margin': ['responsive', 'hover'],
+  }
 }
