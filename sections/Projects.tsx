@@ -458,7 +458,12 @@ const index: FC<{
                 </AnimatePresence>
             </main>
 
-            <aside className="flex flex-col flex-wrap h-[620px] w-[220px] overflow-auto mt-0">
+            <aside className="flex flex-col flex-wrap h-[620px] w-[280px] overflow-auto mt-0" style={{
+                WebkitMaskImage: "linear-gradient(to right, #000, #0000)",
+                maskImage: "linear-gradient(to right, #000, #0000)",
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat"
+            }}>
                 <AnimatePresence>
                     {productIds.map((project: Project) => (
                         <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />

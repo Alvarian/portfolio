@@ -7,3 +7,4 @@ html {
   min-width: 600px;
 }
 
+::-webkit-scrollbar {display:none;}
