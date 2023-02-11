@@ -182,7 +182,7 @@ const ModalBody: FC<{
         const paginate = (newDirection: number) => {
             setPage([page + newDirection, newDirection])
         }
-        console.log(imageIndex)
+        
         return (
             <>
                 {isModalMaxed ? (<div className="flex flex-col items-center justify-around h-full w-full">
@@ -203,7 +203,7 @@ const ModalBody: FC<{
 
                         <main 
                             key={`key_${imageIndex.center}`}
-                            className="relative scale-[2.2] h-[350px] max-w-[350px] min-w-[350px] z-10 flex justify-center items-center"
+                            className="relative scale-[2.2] z-10 flex justify-center items-center"
                         >
                             <motion.img 
                                 key={`key_${imageIndex.center}`}
@@ -221,11 +221,11 @@ const ModalBody: FC<{
                                     },
                                     opacity: { duration: 0.2 }
                                 }}
-                                className="h-full" src={content[imageIndex.center].image} 
+                                className="h-full h-[350px] max-w-[500px] min-w-[500px]" src={content[imageIndex.center].image} 
                             />
 
                             <motion.div
-                                className="absolute backdrop-blur z-10 h-full w-full flex justify-center items-center text-sm"
+                                className="absolute backdrop-blur z-10 h-full max-w-[500px] min-w-[500px] flex justify-center items-center text-sm mx-4"
                                 initial={{
                                     opacity: 0,
                                     scale: 0.95
@@ -275,7 +275,7 @@ const ModalBody: FC<{
                             ></motion.button>
                         ))}
                     </div>
-                </div>) : (<div className="h-full flex flex-col justify-around overflow-hidden">
+                </div>) : (<div className="bg-black h-full flex flex-col justify-around overflow-hidden">
                     <div className="relative h-3/4">
                         <AnimatePresence 
                             initial={false} 
@@ -310,9 +310,9 @@ const ModalBody: FC<{
                                 }}
                                 className={`absolute flex ${isWidthMobile ? "flex-col-reverse" : ""} justify-around items-center w-full h-full`}
                             >
-                                <div className={`${isWidthMobile ? "" : "h-full px-10"}`}>{content[imageIndex.center].description}</div>
+                                <div className={`${isWidthMobile ? "max-w-[790px]" : "h-full"} px-3 w-full min-w-[260px]`}>{content[imageIndex.center].description}</div>
                                 
-                                <img className={`${isWidthMobile ? "h-[465px]" : "h-full pr-7"} min-w-[600px] max-w-[600px]`} src={content[imageIndex.center].image} />
+                                <img className={`${isWidthMobile ? "h-[465px]" : "h-full pr-7"} min-w-[300px] w-full max-w-[800px]`} src={content[imageIndex.center].image} />
                             </motion.div>                    
                         </AnimatePresence>
                     </div>
@@ -336,6 +336,8 @@ const ModalBody: FC<{
                             }}
                         />
 
+                        <p>Slide {imageIndex.center+1}</p>
+                        
                         <Icon 
                             name="arrow"
                             position="right"
@@ -471,13 +473,15 @@ const index: FC<{
                 projectData={projectData}
                 isCoverOpen={isCoverOpen}
                 toggleCover={toggleCover}
-                isWidthMobile={width < 900}
+                // isWidthMobile={true}
+                isWidthMobile={width < 1020}
             >
                 <ModalBody 
                     title={projectData.title}
                     type={projectData.payload.type}
                     content={projectData.payload.ref}
-                    isWidthMobile={width < 900}
+                    isWidthMobile={true}
+                    // isWidthMobile={width < 1020}
                     isModalMaxed={isModalMaxed}
                 />
             </Modal>

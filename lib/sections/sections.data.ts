@@ -237,6 +237,45 @@ export const localMockData = {
           type: "Script",
           ref: "function index(el) {console.log('App1 opened', el)} window.games['Town'] = index"
         }
+      },
+      {
+        id: 5,
+        icon: "/images/trifecta.png",
+        title: "town",
+        description: "Adipisicing labore reprehenderit velit ex exercitation Lorem sint duis id ipsum ut. Anim cillum adipisicing et ad minim incididunt incididunt aute officia laboris incididunt aliquip sit et. Sunt elit mollit fugiat quis eu cupidatat duis magna. Culpa commodo fugiat exercitation ullamco amet minim irure dolore amet est excepteur nulla.",
+        stacks: ["javascript", "rust"],
+        repo: "https://github.com/Alvarian/mock-trade-wallet",
+        lastUpdate: "2021-10-25T20:12:03.473Z",
+        payload: {
+          type: "Script",
+          ref: "function index(el) {console.log('App1 opened', el)} window.games['Town'] = index"
+        }
+      },
+      {
+        id: 6,
+        icon: "/images/trifecta.png",
+        title: "town",
+        description: "Adipisicing labore reprehenderit velit ex exercitation Lorem sint duis id ipsum ut. Anim cillum adipisicing et ad minim incididunt incididunt aute officia laboris incididunt aliquip sit et. Sunt elit mollit fugiat quis eu cupidatat duis magna. Culpa commodo fugiat exercitation ullamco amet minim irure dolore amet est excepteur nulla.",
+        stacks: ["javascript", "rust"],
+        repo: "https://github.com/Alvarian/mock-trade-wallet",
+        lastUpdate: "2021-10-25T20:12:03.473Z",
+        payload: {
+          type: "Script",
+          ref: "function index(el) {console.log('App1 opened', el)} window.games['Town'] = index"
+        }
+      },
+      {
+        id: 7,
+        icon: "/images/trifecta.png",
+        title: "town",
+        description: "Adipisicing labore reprehenderit velit ex exercitation Lorem sint duis id ipsum ut. Anim cillum adipisicing et ad minim incididunt incididunt aute officia laboris incididunt aliquip sit et. Sunt elit mollit fugiat quis eu cupidatat duis magna. Culpa commodo fugiat exercitation ullamco amet minim irure dolore amet est excepteur nulla.",
+        stacks: ["javascript", "rust"],
+        repo: "https://github.com/Alvarian/mock-trade-wallet",
+        lastUpdate: "2021-10-25T20:12:03.473Z",
+        payload: {
+          type: "Script",
+          ref: "function index(el) {console.log('App1 opened', el)} window.games['Town'] = index"
+        }
       }
     ]
   }
