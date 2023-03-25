@@ -17,7 +17,7 @@ export const sectionData: Array<Content> = [
     },
     type: "default",
     keyIcon: "mainFace-min.jpg",
-    bgImageName: "img_class-min.jpg"
+    bgImageName: "/images/img_class-min.jpg"
   },
   {
     alt: "stats",
@@ -28,7 +28,7 @@ export const sectionData: Array<Content> = [
     },
     type: "default",
     keyIcon: "",
-    bgImageName: "img_bridge3-min.jpg"
+    bgImageName: "/images/img_bridge3-min.jpg"
   },
   {
     alt: "knowledge",
@@ -38,7 +38,7 @@ export const sectionData: Array<Content> = [
     },
     type: "default",
     keyIcon: "",
-    bgImageName: "img_clock1-min.jpg"
+    bgImageName: "/images/img_clock1-min.jpg"
   },
   {
     alt: "projects",
@@ -48,7 +48,7 @@ export const sectionData: Array<Content> = [
     },
     type: "default",
     keyIcon: "",
-    bgImageName: "img_highest-min.jpg"
+    bgImageName: "/images/img_highest-min.jpg"
   }
 ]
 

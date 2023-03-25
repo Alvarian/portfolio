@@ -428,7 +428,7 @@ const index: FC<{
         }
     }
 
-    return (
+    return width > 800 ? (
         <div className="m-auto flex flex-row items-center h-[620px]">
             <main className="h-[620px] min-w-[880px] relative mr-[40px]">
                 <AnimatePresence>
@@ -459,6 +459,69 @@ const index: FC<{
             </main>
 
             <aside className="flex flex-col flex-wrap h-[620px] w-[280px] overflow-auto mt-0" style={{
+                WebkitMaskImage: "linear-gradient(to right, #000, #0000)",
+                maskImage: "linear-gradient(to right, #000, #0000)",
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat"
+            }}>
+                <AnimatePresence>
+                    {productIds.map((project: Project) => (
+                        <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />
+                    ))}
+                </AnimatePresence>
+            </aside>
+
+            <Modal 
+                handleClose={handleModalClose}
+                isModalOpen={isModalOpen}
+                setMaxed={setMaxed}
+                projectData={projectData}
+                isCoverOpen={isCoverOpen}
+                toggleCover={toggleCover}
+                // isWidthMobile={true}
+                isWidthMobile={width < 1020}
+            >
+                <ModalBody 
+                    title={projectData.title}
+                    type={projectData.payload.type}
+                    content={projectData.payload.ref}
+                    isWidthMobile={true}
+                    // isWidthMobile={width < 1020}
+                    isModalMaxed={isModalMaxed}
+                />
+            </Modal>
+        </div>
+    ) : (
+        <div className="m-auto flex flex-col justify-around items-center h-[720px]">
+            <main className="h-full min-w-[520px] relative mr-[50px] my-[50px]">
+                <AnimatePresence>
+                    <motion.div
+                        layoutId={`product-${projectData.id}`}
+                        key={projectData.id}
+                        className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black pt-6"
+                    >
+                        <div className="flex flex-col items-center">
+                            <h2 className="text-4xl">{formatProjectTitle(projectData.title)}</h2>
+
+                            <img
+                                className="h-[200px] m-5"
+                                src={projectData.icon}
+                                alt=""
+                            />
+
+                            {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent text-xl btn-sm" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
+                        </div>
+
+                        <ul className="w-2/4 h-3/4 text-left flex flex-col justify-around items-center">
+                            <li className="w-full text-xl">{projectData.description}</li>
+                            <li className="w-full"><a className="btn btn-accent btn-xs" href={projectData.repo}>Repository Source</a></li>
+                            <li className="w-full">Last push on {getFormattedDate(projectData.lastUpdate)}</li>
+                        </ul>
+                    </motion.div>
+                </AnimatePresence>
+            </main>
+
+            <aside className="flex flex-col flex-wrap h-[280px] w-[500px] overflow-auto mt-0" style={{
                 WebkitMaskImage: "linear-gradient(to right, #000, #0000)",
                 maskImage: "linear-gradient(to right, #000, #0000)",
                 WebkitMaskRepeat: "no-repeat",

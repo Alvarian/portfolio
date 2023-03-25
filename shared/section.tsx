@@ -123,7 +123,7 @@ const Section: React.FC<{
   const styles = {
     css: {
       background: {
-        backgroundImage: "url(./images/" + bgImageName + ")",
+        backgroundImage: "url(" + bgImageName + ")",
         filter: `blur(2px)`
       },
     },
