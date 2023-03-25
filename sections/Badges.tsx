@@ -106,10 +106,12 @@ const BadgeCoat: React.FC<{
 const BadgeIcons: React.FC<{
     badges: Array<Badge>,
     reset: Badge,
+    width: number,
     handleBadgeDetails: (details: Badge) => void
 }> = ({
     badges,
     reset,
+    width,
     handleBadgeDetails
 }) => {
     const renderBadges: () => Array<Badge> = () => {
@@ -192,7 +194,7 @@ const BadgeIcons: React.FC<{
       <div className="h-full w-96 grid grid-cols-3 grid-rows-5">
         {renderBadges().map((badge: Badge, index: number) => badge.name ? (
           <div key={index} className="relative flex justify-end items-center h-36 w-36">
-            <motion.a 
+            {width > 780 ? (<motion.a 
               target="_blank"
               className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
               style={{borderStyle: "outset"}}
@@ -211,8 +213,27 @@ const BadgeIcons: React.FC<{
                 boxShadow: "5px 5px 15px black"
               }}
             >
-              <img src={badge.image} width={130} height={130} />
-            </motion.a>
+              <Image src={badge.image} width={130} height={130} priority />
+              </motion.a>) : (<motion.div
+                className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
+                style={{borderStyle: "outset"}}
+                onClick={handleBadgeDetails.bind(this, badge)}
+                // onMouseOut={handleBadgeDetails.bind(this, reset)}
+                initial={{
+                  rotateX: badge.rotations.horizontal,
+                  rotateY: badge.rotations.vertical
+                }}
+                whileHover={{
+                  scale: 1.7,
+                  rotateX: 0,
+                  rotateY: 0,
+                  zIndex: 10,
+                  boxShadow: "5px 5px 15px black"
+                }}
+              >
+                <Image src={badge.image} width={130} height={130} priority />
+              </motion.div>)
+            }
           </div>
         ) : (
           <div key={index}></div>
@@ -325,7 +346,7 @@ const index: React.FC<{
     rotations: {
       horizontal: 0,
       vertical: 0
-    }
+    },
   }
   const [badgeDetails, setDetails] = useState<Badge>(reset)
   
@@ -347,7 +368,7 @@ const index: React.FC<{
       image,
       evidence,
       description,
-      rotations
+      rotations,
     })
   }
 
@@ -393,12 +414,14 @@ const index: React.FC<{
             <h2 className="text-4xl">{badgeDetails.name}</h2>
             <p className="text-2xl">{badgeDetails.issuedOn}</p>
             <div className="flex justify-around">{renderTags()}</div>
+
           </div>
         </div>}
 
         <BadgeIcons
           badges={badges}
           handleBadgeDetails={handleBadgeDetails}
+          width={width}
           reset={reset}
         />
 
@@ -415,6 +438,7 @@ const index: React.FC<{
             <h2 className="text-4xl">{badgeDetails.name}</h2>
             <p className="text-2xl">{badgeDetails.issuedOn}</p>
             <div className="flex justify-around">{renderTags()}</div>
+            <a className="text-2xl" href={badgeDetails.evidence[0].url}>{badgeDetails.evidence[0].url && (<>&#60; VIST PROOF &#62;</>)}</a>
           </div>}
         </div>
       </motion.div>}               

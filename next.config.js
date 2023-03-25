@@ -3,7 +3,7 @@ module.exports = {
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
   images: {
-    domains: ['images.credly.com'],
+    domains: ['images.credly.com', "media.badgr.com"],
     formats: ['image/avif', 'image/webp'],
   },
   webpack: (config) => {

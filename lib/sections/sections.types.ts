@@ -23,7 +23,7 @@ export interface Badge {
   rotations: {
     horizontal: number,
     vertical: number
-  }
+  },
 }
 
 export interface OverallPayload {      
