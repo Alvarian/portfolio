@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 import { motion } from "framer-motion"
 import { formatDate } from "lib/sections/sections.methods"
 import { Badge } from "lib/sections/sections.types"
@@ -78,11 +80,23 @@ const BadgeCoat: React.FC<{
     
     switch (coatPhase) {
       case "start":
-        return (<img src="/images/badgeCoat/frame_000.gif" alt="coat" style={styles} />)
+        return (
+          <div style={styles}>
+            <Image src="/images/badgeCoat/frame_000.gif" alt="coat" layout="fill" priority />
+          </div>
+        )
       case "run":
-        return (<img src={`/images/badgeCoat/frame_0${frames.toString().length === 1 ? "0" + frames.toString() : frames.toString()}.gif`} alt="coat" style={styles} />)
+        return (
+          <div style={styles}>
+            <Image src={`/images/badgeCoat/frame_0${frames.toString().length === 1 ? "0" + frames.toString() : frames.toString()}.gif`} alt="coat" style={styles} layout="fill" priority />
+          </div>
+          )
       case "end":
-        return (<img src="/images/badgeCoat/frame_047.gif" alt="coat" style={styles} />)
+        return (
+          <div style={styles}>
+            <Image src="/images/badgeCoat/frame_047.gif" alt="coat" style={styles} layout="fill" priority />
+          </div>
+        )
     }
   }
 
