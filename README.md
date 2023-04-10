@@ -90,4 +90,4 @@ async function handleRequest(scheduledDate) {
 
 :octocat:
 
-<!-- https://dvj70ijwahy8c.cloudfront.net/Portfolio/icon | # -->
+<!-- https://dvj70ijwahy8c.cloudfront.net/portfolio/icon | # -->
