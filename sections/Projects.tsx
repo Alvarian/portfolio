@@ -6,7 +6,6 @@ import React, { FC, useEffect, useState } from "react"
 
 import Modal from "shared/modal"
 import Icon from "shared/icon"
-import dynamic from "next/dynamic"
 import Image from "next/image"
 
 
