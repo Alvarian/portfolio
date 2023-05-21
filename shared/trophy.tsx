@@ -16,7 +16,7 @@ const Trophy: React.FC<{
     return (
         <div className={styles.tailwind.main}>
             <div className="absolute">    
-                <Image src="/icons/star-svgrepo-com.svg" height={size} width={size} />
+                <Image alt="" src="/icons/star-svgrepo-com.svg" height={size} width={size} />
             </div>
 
             <div className="absolute text-xl font-bold">{content}</div>

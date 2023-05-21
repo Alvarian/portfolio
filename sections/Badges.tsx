@@ -8,54 +8,38 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 
 const BadgeCoat: React.FC<{
   isSectionPermitted: boolean,
-  // gifFrames: Array<string>,
   setIfEnded: Dispatch<SetStateAction<boolean>>,
   width: number
 }> = ({
   isSectionPermitted,
-  // gifFrames,
   setIfEnded,
   width
 }) => {
-  const [coatPhase, setCoatPhase] = useState<string>("start")
-  // const [coatProperties, setProperties] = useState<{length: number, sources: Array<string>}>({length: 0, sources: []})
-  const [frames, incrementFrame] = useState(0)
+  const [frame, setFrame] = useState(0)
   let runFrames: NodeJS.Timeout
 
   useEffect(() => { 
     if (isSectionPermitted) {
-      if (coatPhase === "start") {
-        // if (!coatProperties.length) {
-        //   setProperties({
-        //     length: gifFrames.length,
-        //     sources: gifFrames
-        //   })
-        // }
-        
-        setCoatPhase("run")
-      }
-
       let counter = 0
       runFrames = setInterval(() => {
+        counter++
+
         if (counter >= 46) {
           clearInterval(runFrames)
           
           setIfEnded(true)
-          setCoatPhase("end")
         }
         
-        counter++
-        incrementFrame((oldCount) => oldCount + 1)
+        setFrame((oldCount) => oldCount + 1)
       }, 60)
       
       return () => clearInterval(runFrames)
     } else {
       clearInterval(runFrames)
 
-      incrementFrame(0)
+      setFrame(0)
       
       setIfEnded(false)
-      setCoatPhase("start")
     }
   }, [isSectionPermitted])
 
@@ -78,26 +62,13 @@ const BadgeCoat: React.FC<{
       position: "absolute" as "absolute"
     }
     
-    switch (coatPhase) {
-      case "start":
-        return (
-          <div style={styles}>
-            <Image src="/images/badgeCoat/frame_000.gif" alt="coat" layout="fill" priority />
-          </div>
-        )
-      case "run":
-        return (
-          <div style={styles}>
-            <Image src={`/images/badgeCoat/frame_0${frames.toString().length === 1 ? "0" + frames.toString() : frames.toString()}.gif`} alt="coat" style={styles} layout="fill" priority />
-          </div>
-          )
-      case "end":
-        return (
-          <div style={styles}>
-            <Image src="/images/badgeCoat/frame_047.gif" alt="coat" style={styles} layout="fill" priority />
-          </div>
-        )
-    }
+    return isSectionPermitted ? <>{Array.from({length:47}).map((_, index) => (
+      <div key={index} style={styles} className={(index == frame) ? 'inline' : `hidden`}>
+        <Image src={`/images/badgeCoat/frame_0${index.toString().length === 1 ? "0" + index.toString() : index.toString()}.gif`} alt="coat" sizes="100%" fill priority />
+      </div>
+    ))}</> : <div style={styles}>
+      <Image src="/images/badgeCoat/frame_000.gif" alt="coat" sizes="100%" fill priority />
+    </div>
   }
 
   return (<>{renderCoatPhase()}</>)
@@ -213,7 +184,7 @@ const BadgeIcons: React.FC<{
                 boxShadow: "5px 5px 15px black"
               }}
             >
-              <Image src={badge.image} width={130} height={130} priority />
+              <Image alt="" src={badge.image} width={130} height={130} priority />
               </motion.a>) : (<motion.div
                 className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
                 style={{borderStyle: "outset"}}
@@ -231,7 +202,7 @@ const BadgeIcons: React.FC<{
                   boxShadow: "5px 5px 15px black"
                 }}
               >
-                <Image src={badge.image} width={130} height={130} priority />
+                <Image alt="" src={badge.image} width={130} height={130} priority />
               </motion.div>)
             }
           </div>
@@ -254,10 +225,6 @@ const index: React.FC<{
   width,
   data
 }) => {
-  const { 
-    // gifFrames, 
-    badges 
-  } = data
   const [isFrameEnded, setIfEnded] = useState(false)
 
   const { tailwind, css } = (() => { 
@@ -419,7 +386,7 @@ const index: React.FC<{
         </div>}
 
         <BadgeIcons
-          badges={badges}
+          badges={data.badges}
           handleBadgeDetails={handleBadgeDetails}
           width={width}
           reset={reset}

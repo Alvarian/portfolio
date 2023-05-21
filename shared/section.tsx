@@ -5,8 +5,6 @@ import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 import Underline from "shared/underline"
 
 import { motion } from 'framer-motion'
-import { Dispatch, useEffect, useState } from 'react'
-import ProjectModal from './modal'
 
 
 const Section: React.FC<{
@@ -76,7 +74,7 @@ const Section: React.FC<{
             whileInView="visible"
             variants={defaultVariants.fallUp(++queDuration)}
             key={index}
-          ><Link href={"#"+section.alt}><li><a className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link></motion.div>)
+          ><Link href={"#"+section.alt}><li className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</li></Link></motion.div>)
 
           break
         default:
@@ -85,7 +83,7 @@ const Section: React.FC<{
             whileInView="visible"
             variants={defaultVariants.fallUp(++queDuration)}
             key={index}
-          ><Link href={"#"+section.alt}><li><a className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link></motion.div>)
+          ><Link href={"#"+section.alt}><li className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</li></Link></motion.div>)
 
           break
       }
@@ -123,13 +121,14 @@ const Section: React.FC<{
   const styles = {
     css: {
       background: {
-        backgroundImage: "url(" + bgImageName + ")",
+        // backgroundImage: "url(" + bgImageName + ")",
         filter: `blur(2px)`
       },
     },
     tailwind: {
       main: `flex justify-center h-screen w-full items-center relative min-h-[900px] overflow-hidden`,
-      background: `bg-no-repeat bg-cover bg-center bg-fixed absolute w-full h-full -z-10`,
+      background: `fixed w-full h-full -z-10`,
+      // background: `bg-no-repeat bg-cover bg-center bg-fixed absolute w-full h-full -z-10`,
       content: `flex justify-center ${content?.isFull ? "h-full w-full" : "h-2/3 w-2/3 rounded-3xl"} items-center`,
       nav: `flex flex-col items-center `
     }
@@ -137,7 +136,13 @@ const Section: React.FC<{
   
   return (
     <section className={styles.tailwind.main} id={alt} ref={setRef}>
-      <div className={styles.tailwind.background} style={styles.css.background}></div>
+      {/* <div className={styles.tailwind.background} style={styles.css.background}>
+        <Image 
+          src={bgImageName}
+          layout="fill"
+          priority
+        />
+      </div> */}
 
       {content?.body ? 
         <div className={styles.tailwind.content}>

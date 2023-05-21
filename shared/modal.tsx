@@ -85,7 +85,8 @@ const index: FC<{
     projectData: {[key: string]: any},
     isCoverOpen: boolean, 
     toggleCover: any,
-    isWidthMobile: boolean
+    isWidthMobile: boolean,
+    children: React.ReactNode
 }> = ({ handleClose, isModalOpen, setMaxed, projectData, isCoverOpen, toggleCover, isWidthMobile, children }) => {  
     const modalEl = useRef(null)
 

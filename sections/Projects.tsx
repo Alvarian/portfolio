@@ -1,11 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { wrap } from "popmotion"
 
-import { capitalizeFirst, getFormattedDate, getRandomColor } from "lib/sections/sections.methods"
+import { capitalizeFirst, getFormattedDate } from "lib/sections/sections.methods"
 import React, { FC, useEffect, useState } from "react"
 
 import Modal from "shared/modal"
 import Icon from "shared/icon"
+import dynamic from "next/dynamic"
+import Image from "next/image"
 
 
 interface Project {
@@ -28,15 +30,39 @@ const ProjectIconImage: FC<{
     onExpand: (project: Project) => void
 }> = ({ project, onExpand }) => {
     return (
-        <motion.img
-            src={project.icon}
-            alt=""
+        <motion.div
             onClick={() => onExpand(project)}
-            className="m-[5px] w-[140px] h-[140px] bg-white rounded-xl border-8 cursor-pointer border-indigo-600"
+            className="m-[5px] w-[140px] h-[140px] bg-white rounded-xl border-8 cursor-pointer border-indigo-600 relative"
             layoutId={`product-${project.id}`}
-        />
+        >
+            <Image
+                src={project.icon}
+                fill
+                alt=""
+                sizes="(max-width: 768px) 100%, (max-width: 1200px) 100%, 100%"
+            />
+        </motion.div>
     )
 }
+
+// export const MyComponent: FC<{filePath: string}> = ({ filePath }) => {
+//     // Use the file path to perform the import dynamically
+//     const ScriptCanvas = dynamic(() => import(filePath), {
+//         loading: () => <div>Loading...</div>,
+//         ssr: false, // Set to false if you don't want to do server-side rendering
+//       });
+//     // const importedModule = require(filePath);
+//     // ... use the imported module as needed
+    
+//     return (
+//       <div>
+//         <h2>MyComponent</h2>
+//         <ScriptCanvas />
+//         {/* Render component content here */}
+//       </div>
+//     );
+//   };
+  
 
 const ModalBody: FC<{
     title: string,
@@ -49,36 +75,33 @@ const ModalBody: FC<{
         const [content, setContent] = useState<any>(null)
     
         useEffect(() => {
-            const game = window.games[capitalizeFirst(title)]
-            const localGame = localStorage.getItem(title+"_game")
-            if (localGame && !game) {
-                eval(localGame)
-    
-                setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
-            } else if (game) {
-                setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(game())}></div>)
-            } else {
-                fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
-                    .then((res: any) => {
-                        if (res.ok) {
-                            return res.json()
+            fetch(`/api/projects/getProject?keyName=${title}%2Fcore`)
+                .then((res: any) => {
+                    if (res.ok) {
+                        return res.json()
+                    }
+                    throw new Error(res.statusText)
+                })
+                .then((script: string) => {
+                    console.log("run")
+                    var scriptElement = document.createElement( "script" );
+                    scriptElement.setAttribute( 'type', 'module' );
+                    scriptElement.innerHTML = `${script} (async function() {
+                        try {
+                            await init()
+                        } catch (e) {
+                            console.log("error caught", e)
                         }
-                        throw new Error(res.statusText)
-                    })
-                    .then((script: string) => {
-                        eval(script)
-    
-                        localStorage.setItem(title+"_game", script)
-                        setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
-                    })
-                    .catch(err => {
-                        console.log(err)
-                        const script = content as string
-                        eval(script)
-                        
-                        setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
-                    })
-            }
+                    })()`;
+                    document.body.appendChild( scriptElement );
+                })
+                .catch(err => {
+                    console.log("script error",err)
+                    const script = content as string
+                    eval(script)
+                    
+                    setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+                })
         }, [])
     
         return content
@@ -187,25 +210,34 @@ const ModalBody: FC<{
             <>
                 {isModalMaxed ? (<div className="flex flex-col items-center justify-around h-full w-full">
                     <div className="flex items-center justify-center relative h-3/4 w-full">
-                        {content[imageIndex.left] && <motion.img 
-                            key={`key_${imageIndex.left}`}
-                            layoutId={`layout-${imageIndex.left}`}
-                            transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
-                            className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white" src={content[imageIndex.left].image} 
-                            onClick={e => {
-                                if (imageIndex.left < page) {
-                                    setPage([imageIndex.left, -1])
-                                } else {
-                                    setPage([imageIndex.left, +1])
-                                }
-                            }}
-                        />}
+                        {content[imageIndex.left] && (
+                            <motion.div
+                                key={`key_${imageIndex.left}`}
+                                layoutId={`layout-${imageIndex.left}`}
+                                transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
+                                className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white relative" 
+                                onClick={e => {
+                                    if (imageIndex.left < page) {
+                                        setPage([imageIndex.left, -1])
+                                    } else {
+                                        setPage([imageIndex.left, +1])
+                                    }
+                                }}
+                            >
+                                <Image
+                                    src={content[imageIndex.left].image} 
+                                    alt=""
+                                    fill
+                                    priority
+                                />
+                            </motion.div>
+                        )}
 
                         <main 
                             key={`key_${imageIndex.center}`}
                             className="relative scale-[2.2] z-10 flex justify-center items-center"
                         >
-                            <motion.img 
+                            <motion.div
                                 key={`key_${imageIndex.center}`}
                                 layoutId={`layout-${imageIndex.center}`}
                                 custom={direction}
@@ -221,8 +253,15 @@ const ModalBody: FC<{
                                     },
                                     opacity: { duration: 0.2 }
                                 }}
-                                className="h-full h-[350px] max-w-[500px] min-w-[500px]" src={content[imageIndex.center].image} 
-                            />
+                                className="h-full h-[350px] max-w-[500px] min-w-[500px] relative" 
+                            >
+                                <Image
+                                    alt=""
+                                    src={content[imageIndex.center].image} 
+                                    priority
+                                    fill
+                                />
+                            </motion.div>
 
                             <motion.div
                                 className="absolute backdrop-blur z-10 h-full max-w-[500px] min-w-[500px] flex justify-center items-center text-sm mx-4"
@@ -240,19 +279,27 @@ const ModalBody: FC<{
                             </motion.div>
                         </main>
 
-                        {content[imageIndex.right] && <motion.img 
-                            key={`key_${imageIndex.right}`}
-                            layoutId={`layout-${imageIndex.right}`}
-                            transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
-                            className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white" src={content[imageIndex.right].image} 
-                            onClick={e => {
-                                if (imageIndex.right < page) {
-                                    setPage([imageIndex.right, -1])
-                                } else {
-                                    setPage([imageIndex.right, +1])
-                                }
-                            }}
-                        />}
+                        {content[imageIndex.right] && (
+                            <motion.div
+                                onClick={e => {
+                                    if (imageIndex.right < page) {
+                                        setPage([imageIndex.right, -1])
+                                    } else {
+                                        setPage([imageIndex.right, +1])
+                                    }
+                                }}
+                                key={`key_${imageIndex.right}`}
+                                layoutId={`layout-${imageIndex.right}`}
+                                transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
+                                className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white relative" 
+                            >
+                                <Image
+                                    src={content[imageIndex.right].image} 
+                                    alt=""
+                                    fill
+                                />
+                            </motion.div>                            
+                        )}
                     </div>
 
                     <div className="flex justify-around w-1/2 z-10">
@@ -278,6 +325,7 @@ const ModalBody: FC<{
                 </div>) : (<div className="bg-black h-full flex flex-col justify-around overflow-hidden">
                     <div className="relative h-3/4">
                         <AnimatePresence 
+                            exitBeforeEnter={false}
                             initial={false} 
                             custom={direction}
                         >
@@ -364,7 +412,10 @@ const ModalBody: FC<{
     if (type === "Service") {
         return <>{getServiceDOM()}</>
     } else if (type === "Script") {
-        return <>{getScriptDOM()}</>
+        return <>
+            <canvas className="h-full w-full" id="wasmProject"></canvas>
+            {getScriptDOM()}
+        </>
     } else {
         return null
     }
@@ -374,12 +425,19 @@ const index: FC<{
     data: Array<Project>,
     width: number
 }> = ({ data, width }) => {
-    const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
-    const [projectData, setProjectData] = useState(data[0])
+    const [productIds, setProductIds] = useState<Project[]>([])
+    const [projectData, setProjectData] = useState<Project | null>(null)
     const [isGameSet, setGame] = useState(false)
     const [isCoverOpen, toggleCover] = useState(true)
     const [isModalOpen, setModalOpen] = useState(false)
     const [isModalMaxed, setMaxed] = useState(false)
+
+    useEffect(() => {
+        if (!data) return
+
+        setProductIds(data.filter((x: Project) => data.indexOf(x) !== 0))
+        setProjectData(data[0])
+    }, [data])
 
     useEffect(() => {
         if (!isGameSet) {
@@ -393,7 +451,7 @@ const index: FC<{
         const newProductIds = [
             ...productIds.filter((x: Project) => x.id !== project.id),
             currentProductId
-        ]
+        ] as Project[]
 
         setProjectData(project)
         setProductIds(newProductIds)
@@ -428,133 +486,143 @@ const index: FC<{
         }
     }
 
-    return width > 800 ? (
-        <div className="m-auto flex flex-row items-center h-[620px]">
-            <main className="h-[620px] min-w-[880px] relative mr-[40px]">
-                <AnimatePresence>
-                    <motion.div
-                        layoutId={`product-${projectData.id}`}
-                        key={projectData.id}
-                        className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black p-8"
-                    >
-                        <div>
-                            <h2 className="text-4xl">{formatProjectTitle(projectData.title)}</h2>
+    return !!projectData ? <>
+        {width > 800 && (
+            <div className="m-auto flex flex-row items-center h-[620px]">
+                <main className="h-[620px] min-w-[880px] relative mr-[40px]">
+                    <AnimatePresence>
+                        <motion.div
+                            layoutId={`product-${projectData.id}`}
+                            key={projectData.id}
+                            className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black p-8"
+                        >
+                            <div>
+                                <h2 className="text-4xl">{formatProjectTitle(projectData.title)}</h2>
 
-                            <img
-                                className="h-[400px] m-5"
-                                src={projectData.icon}
-                                alt=""
-                            />
+                                <div className="h-[400px] w-[400px] relative m-5">
+                                    <Image
+                                        fill
+                                        sizes="100%"
+                                        src={projectData.icon}
+                                        alt=""
+                                        priority
+                                    />
+                                </div>
 
-                            {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent btn-wide text-2xl" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
-                        </div>
+                                {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent btn-wide text-2xl" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
+                            </div>
 
-                        <ul className="w-1/3 h-3/4 text-left flex flex-col justify-around items-center">
-                            <li className="w-full text-xl">{projectData.description}</li>
-                            <li className="w-full"><a className="btn btn-accent btn-xs" href={projectData.repo}>Repository Source</a></li>
-                            <li className="w-full">Last push on {getFormattedDate(projectData.lastUpdate)}</li>
-                        </ul>
-                    </motion.div>
-                </AnimatePresence>
-            </main>
+                            <ul className="w-1/3 h-3/4 text-left flex flex-col justify-around items-center">
+                                <li className="w-full text-xl">{projectData.description}</li>
+                                <li className="w-full"><a className="btn btn-accent btn-xs" href={projectData.repo}>Repository Source</a></li>
+                                <li className="w-full">Last push on {getFormattedDate(projectData.lastUpdate)}</li>
+                            </ul>
+                        </motion.div>
+                    </AnimatePresence>
+                </main>
 
-            <aside className="flex flex-col flex-wrap h-[620px] w-[280px] overflow-auto mt-0" style={{
-                WebkitMaskImage: "linear-gradient(to right, #000, #0000)",
-                maskImage: "linear-gradient(to right, #000, #0000)",
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat"
-            }}>
-                <AnimatePresence>
-                    {productIds.map((project: Project) => (
-                        <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />
-                    ))}
-                </AnimatePresence>
-            </aside>
+                <aside className="flex flex-col flex-wrap h-[620px] w-[280px] overflow-auto mt-0" style={{
+                    WebkitMaskImage: "linear-gradient(to right, #000, #0000)",
+                    maskImage: "linear-gradient(to right, #000, #0000)",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskRepeat: "no-repeat"
+                }}>
+                    <AnimatePresence exitBeforeEnter={false}>
+                        {productIds.map((project: Project) => (
+                            <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />
+                        ))}
+                    </AnimatePresence>
+                </aside>
 
-            <Modal 
-                handleClose={handleModalClose}
-                isModalOpen={isModalOpen}
-                setMaxed={setMaxed}
-                projectData={projectData}
-                isCoverOpen={isCoverOpen}
-                toggleCover={toggleCover}
-                // isWidthMobile={true}
-                isWidthMobile={width < 1020}
-            >
-                <ModalBody 
-                    title={projectData.title}
-                    type={projectData.payload.type}
-                    content={projectData.payload.ref}
-                    isWidthMobile={true}
-                    // isWidthMobile={width < 1020}
-                    isModalMaxed={isModalMaxed}
-                />
-            </Modal>
-        </div>
-    ) : (
-        <div className="m-auto flex flex-col justify-around items-center h-[720px]">
-            <main className="h-full min-w-[520px] relative mr-[50px] my-[50px]">
-                <AnimatePresence>
-                    <motion.div
-                        layoutId={`product-${projectData.id}`}
-                        key={projectData.id}
-                        className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black pt-6"
-                    >
-                        <div className="flex flex-col items-center">
-                            <h2 className="text-4xl">{formatProjectTitle(projectData.title)}</h2>
+                <Modal 
+                    handleClose={handleModalClose}
+                    isModalOpen={isModalOpen}
+                    setMaxed={setMaxed}
+                    projectData={projectData}
+                    isCoverOpen={isCoverOpen}
+                    toggleCover={toggleCover}
+                    // isWidthMobile={true}
+                    isWidthMobile={width < 1020}
+                >
+                    <ModalBody 
+                        title={projectData.title}
+                        type={projectData.payload.type}
+                        content={projectData.payload.ref}
+                        isWidthMobile={true}
+                        // isWidthMobile={width < 1020}
+                        isModalMaxed={isModalMaxed}
+                    />
+                </Modal>
+            </div>
+        )}  
+        {width <= 800 && (
+            <div className="m-auto flex flex-col justify-around items-center h-[720px]">
+                <main className="h-full min-w-[520px] relative mr-[50px] my-[50px]">
+                    <AnimatePresence>
+                        <motion.div
+                            layoutId={`product-${projectData.id}`}
+                            key={projectData.id}
+                            className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black pt-6"
+                        >
+                            <div className="flex flex-col items-center">
+                                <h2 className="text-4xl">{formatProjectTitle(projectData.title)}</h2>
 
-                            <img
-                                className="h-[200px] m-5"
-                                src={projectData.icon}
-                                alt=""
-                            />
+                                <div className="h-[200px] m-5">
+                                    <Image
+                                        src={projectData.icon}
+                                        fill
+                                        alt=""
+                                    />
+                                </div>
 
-                            {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent text-xl btn-sm" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
-                        </div>
+                                {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent text-xl btn-sm" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
+                            </div>
 
-                        <ul className="w-2/4 h-3/4 text-left flex flex-col justify-around items-center">
-                            <li className="w-full text-xl">{projectData.description}</li>
-                            <li className="w-full"><a className="btn btn-accent btn-xs" href={projectData.repo}>Repository Source</a></li>
-                            <li className="w-full">Last push on {getFormattedDate(projectData.lastUpdate)}</li>
-                        </ul>
-                    </motion.div>
-                </AnimatePresence>
-            </main>
+                            <ul className="w-2/4 h-3/4 text-left flex flex-col justify-around items-center">
+                                <li className="w-full text-xl">{projectData.description}</li>
+                                <li className="w-full"><a className="btn btn-accent btn-xs" href={projectData.repo}>Repository Source</a></li>
+                                <li className="w-full">Last push on {getFormattedDate(projectData.lastUpdate)}</li>
+                            </ul>
+                        </motion.div>
+                    </AnimatePresence>
+                </main>
 
-            <aside className="flex flex-col flex-wrap h-[280px] w-[500px] overflow-auto mt-0" style={{
-                WebkitMaskImage: "linear-gradient(to right, #000, #0000)",
-                maskImage: "linear-gradient(to right, #000, #0000)",
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat"
-            }}>
-                <AnimatePresence>
-                    {productIds.map((project: Project) => (
-                        <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />
-                    ))}
-                </AnimatePresence>
-            </aside>
+                <aside className="flex flex-col flex-wrap h-[280px] w-[500px] overflow-auto mt-0" style={{
+                    WebkitMaskImage: "linear-gradient(to right, #000, #0000)",
+                    maskImage: "linear-gradient(to right, #000, #0000)",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskRepeat: "no-repeat"
+                }}>
+                    <AnimatePresence 
+                        exitBeforeEnter={false}>
+                        {productIds.map((project: Project) => (
+                            <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />
+                        ))}
+                    </AnimatePresence>
+                </aside>
 
-            <Modal 
-                handleClose={handleModalClose}
-                isModalOpen={isModalOpen}
-                setMaxed={setMaxed}
-                projectData={projectData}
-                isCoverOpen={isCoverOpen}
-                toggleCover={toggleCover}
-                // isWidthMobile={true}
-                isWidthMobile={width < 1020}
-            >
-                <ModalBody 
-                    title={projectData.title}
-                    type={projectData.payload.type}
-                    content={projectData.payload.ref}
-                    isWidthMobile={true}
-                    // isWidthMobile={width < 1020}
-                    isModalMaxed={isModalMaxed}
-                />
-            </Modal>
-        </div>
-    )
+                <Modal 
+                    handleClose={handleModalClose}
+                    isModalOpen={isModalOpen}
+                    setMaxed={setMaxed}
+                    projectData={projectData}
+                    isCoverOpen={isCoverOpen}
+                    toggleCover={toggleCover}
+                    // isWidthMobile={true}
+                    isWidthMobile={width < 1020}
+                >
+                    <ModalBody 
+                        title={projectData.title}
+                        type={projectData.payload.type}
+                        content={projectData.payload.ref}
+                        isWidthMobile={true}
+                        // isWidthMobile={width < 1020}
+                        isModalMaxed={isModalMaxed}
+                    />
+                </Modal>
+            </div>
+        )} 
+    </> : <div>Loading...</div>
 }
 
 export default index

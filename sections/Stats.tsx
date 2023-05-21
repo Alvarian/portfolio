@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
 import { motion } from "framer-motion"
 import CountUp from 'react-countup';
@@ -188,7 +188,7 @@ const Overall: React.FC<{
             }
         ]
     }
-
+    
     const {     
         leaderBoardScore,
         languagesTotal,
@@ -222,7 +222,7 @@ const Overall: React.FC<{
             donut: `h-[200px] w-[200px]`
         }
     }
-
+    
     return (
         <div className={tailwind.main}>
             {isSectionPermitted && <motion.div
@@ -286,6 +286,8 @@ const index: React.FC<{
 }) => {
   const [isVisible, setVisible] = useState(true)
 
+  if (!data) return null
+  
   const { overallStatsPayload, mostRecentPayload } = data
 
   const handleVisible: () => void = () => {

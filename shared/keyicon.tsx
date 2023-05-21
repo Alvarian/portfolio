@@ -1,8 +1,8 @@
 import Image from "next/image"
 
-import { Content } from 'lib/sections/sections.types'
-import { sectionData } from 'lib/sections/sections.data'
-import { IconInter } from "./icon"
+// import { Content } from 'lib/sections/sections.types'
+// import { sectionData } from 'lib/sections/sections.data'
+// import { IconInter } from "./icon"
 
 
 const KeyIcon: React.FC<{
@@ -23,6 +23,7 @@ const KeyIcon: React.FC<{
         width={size}
         height={size}
         style={{borderRadius: "100%"}}
+        priority
       />
     </div>
   )

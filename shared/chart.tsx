@@ -3,7 +3,7 @@ import {
     ArcElement,
     Tooltip,
 } from 'chart.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 ChartJS.register(ArcElement, Tooltip);
 import { Doughnut } from 'react-chartjs-2';
 
@@ -26,7 +26,7 @@ const Chart: React.FC<{
 
     const [languagesListValues, setValues] = useState<LanguageValue>(reset)
     
-    useEffect(() => {
+    useMemo(() => {
         const languageValues: LanguageValue = reset
 
         if (!Object.entries(languagesTotal).length) {
@@ -51,7 +51,7 @@ const Chart: React.FC<{
 
         setValues({...languageValues})
     }, [])
-
+    
     const renderDonut = () => {
         const data = {
             labels: languagesListValues.titles,

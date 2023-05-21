@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState, FC, Dispatch } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 React.useLayoutEffect = React.useEffect 
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Image from 'next/image'
 
-import { FaRegWindowMaximize } from 'react-icons/fa'
-import { VscChromeClose } from 'react-icons/vsc'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,7 +13,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js'
-import { Bar } from 'react-chartjs-2'
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,9 +31,7 @@ import { useResize } from 'hooks/useResize'
 
 import { Content, dataOptions } from 'lib/sections/sections.types'
 import { localMockData, sectionData } from 'lib/sections/sections.data'
-import { rateLimiters, getRandomColor, capitalizeFirst } from 'lib/sections/sections.methods'
-import { motion } from 'framer-motion'
-
+import { rateLimiters } from 'lib/sections/sections.methods'
 
 interface Admissions {
   [key: string]: {
@@ -43,21 +40,36 @@ interface Admissions {
   }
 }
 
-export async function getServerSideProps (ctx: any) {
-  const payload = await (await fetch("http://"+ctx.req.headers.host+'/api/cache/getAllContentOnly')).json()
+// export async function getServerSideProps (ctx: any) {
+//   const payload = await (await fetch("http://"+ctx.req.headers.host+'/api/cache/getAllContentOnly')).json()
 
-  return {props: payload}
+//   return {props: payload}
+// }
+
+async function getData() {
+  const payload = await (await fetch("http://localhost:3000/api/cache/getAllContentOnly")).json()
+
+  return payload
 }
 
-const Home: NextPage = (props) => {
+const Home: NextPage = () => {
   const beginning = useRef<HTMLElement>(null)
   const [width] = useResize()
   const [scrollMethodAdmissions, setAdmissions] = useState<Admissions>({})
   const [areEventsLoaded, setAreLoaded] = useState<boolean>(false)
-  const [projectIndex, setProjectIndex] = useState<number>(0)
+  const [propData, setPropData] = useState<dataOptions>({setting: "local", data: {}})
 
-  const hasPropData: dataOptions = props
-  const propData: dataOptions = hasPropData.setting === "local" ? localMockData : props
+  // const hasPropData: dataOptions = use(getData());
+  // const propData: dataOptions = hasPropData.setting === "local" ? localMockData : hasPropData
+  useEffect(() => {
+    getData().then((data) => {
+      if (data.setting === "local") {
+        setPropData(localMockData)
+      } else {
+        setPropData(data)
+      }
+    })
+  }, [])
   
   const handleAutoRoutingOnScroll = (list: Admissions) => {
     for (let key in list) {
@@ -140,7 +152,7 @@ const Home: NextPage = (props) => {
       
       setAreLoaded(!areEventsLoaded)
     }
-  }, [scrollMethodAdmissions, handlePermissionsOnScroll, handleAutoRoutingOnScroll])
+  }, [scrollMethodAdmissions, handlePermissionsOnScroll, handleAutoRoutingOnScroll]);
 
   const handleSectionRendering = () => {
     let sectionList = []
@@ -182,7 +194,14 @@ const Home: NextPage = (props) => {
 
   const styles = {
     css: {
-      minWidth: '600px'
+      main: {
+        filter: "blur(2px)",
+        backgroundImage: "url('/images/img_class-min.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        zIndex: -10
+      }
     },
     tailwind: {
       main: `flex flex-col items-center text-white`,
@@ -195,26 +214,31 @@ const Home: NextPage = (props) => {
       <Head>
         <title id="title">Ivan Alvarez</title>
         <link rel="icon" href="/images/favicon-16x16.png" />
+        <meta name="description" content="Ivan Alvarez's personal website" />
+        <meta name="keywords" content="Ivan Alvarez, Ivan, Alvarez, ivan, alvarez, ivan alvarez, ivan alvarez's personal website, ivan alvarez's website, ivan alvarez's personal site, ivan alvarez's site, ivan alvarez's personal page, ivan alvarez's page, ivan alvarez's personal, ivan alvarez's, ivan alvarez personal website, ivan alvarez website, ivan alvarez personal site, ivan alvarez site, ivan alvarez personal page, ivan alvarez page, ivan alvarez personal, ivan alvarez, ivan alvarez's personal website, ivan alvarez's website, ivan alvarez's personal site, ivan alvarez's site, ivan alvarez's personal page, ivan alvarez's page, ivan alvarez's personal, ivan alvarez's, ivan alvarez personal website, ivan alvarez website, ivan alvarez personal site, ivan alvarez site, ivan alvarez personal page, ivan alvarez page, ivan alvarez personal, ivan alvarez, ivan alvarez's personal website, ivan alvarez's website, ivan alvarez's personal site, ivan alvarez's site, ivan alvarez's personal page, ivan alvarez's page, ivan alvarez's personal, ivan alvarez's, ivan alvarez personal website, ivan alvarez website, ivan alvarez personal site, ivan alvarez site, ivan alvarez personal page, ivan alvarez page, ivan alvarez personal, ivan alvarez" />
+        <meta name="author" content="Ivan Alvarez" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
       <main className={styles.tailwind.content}>
         <Navbar navVisible={scrollMethodAdmissions['navbar']?.isPermitted || false} width={width} />
 
+        <div 
+          className="fixed w-full h-full -z-10" 
+          style={{
+            filter: "blur(2px)",
+            backgroundImage: "url('/images/img_class-min.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            zIndex: -10
+          }}
+        ></div>
+
         {handleSectionRendering()}
       </main>
 
       <Footer width={width} />
-
-      {/* <input type="checkbox" id="service-modal" className="modal-toggle" onChange={handleModalToggle.bind(this)} />
-      <label htmlFor='service-modal' className="modal sm:modal-middle cursor-pointer">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Congratulations random Internet user!</h3>
-          <p className="py-4">A service goes in here</p>
-          <div className="modal-action">
-            <label htmlFor="service-modal" className="btn">Yay!</label>
-          </div>
-        </div>
-      </label> */}
     </div>
   )
 }

@@ -5,6 +5,7 @@ import Underline from "shared/underline"
 
 import { motion } from "framer-motion"
 import { defaultVariants } from "lib/sections/sections.data"
+import Link from "next/link"
 
 
 const Header: React.FC<{
@@ -69,16 +70,17 @@ const Header: React.FC<{
           <Underline width="100%" />
 
           <div className="flex flex-row">
-            <motion.a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"
+            <motion.div className={styles.tailwind.content.buttons.links}
               initial="hidden"
               whileInView="visible"
               variants={defaultVariants.fallLeft(5)}
-            ><Image width={45} height={45} src="/icons/github.svg" /></motion.a>
-            <motion.a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"
+            ><Link rel="noopener noreferrer" href="https://github.com/Alvarian/" target="_blank"><Image alt="" width={45} height={45} src="/icons/github.svg" /></Link></motion.div>
+            
+            <motion.div className={styles.tailwind.content.buttons.links}
               initial="hidden"
               whileInView="visible"
               variants={defaultVariants.fallLeft(6)}
-            ><Image width={30} height={30} src="/icons/linkedin.svg" /></motion.a>
+            ><Link rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" target="_blank"><Image alt="" width={30} height={30} src="/icons/linkedin.svg" /></Link></motion.div>
           </div>
         </div>
       </div>

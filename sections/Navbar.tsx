@@ -66,26 +66,26 @@ const Navbar: React.FC<{
       </div>
 
       <div className="navbar-center">
-        <a href="/" className="btn btn-ghost normal-case text-4xl">Ivan Alvarez</a>
+        <Link href="/" className="btn btn-ghost normal-case text-4xl">Ivan Alvarez</Link>
       </div>
 
       <div className="navbar-end">
         {width > 900 ?
           <ul className="menu menu-horizontal shadow bg-black pr-10">
-            <li><a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={45} height={45} src="/icons/github.svg" /></a></li>
+            <li><Link rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={45} height={45} src="/icons/github.svg" /></Link></li>
             
-            <li><a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={30} height={30} src="/icons/linkedin.svg" /></a></li>
+            <li><Link rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={30} height={30} src="/icons/linkedin.svg" /></Link></li>
           </ul>
           :
           <div className="dropdown dropdown-end pr-10">
             <label tabIndex={0} className="btn btn-ghost btn-circle bg-white hover:invert">
-              <Image width={40} height={40} src="/icons/social-media.svg" />
+              <Image alt='' width={40} height={40} src="/icons/social-media.svg" />
             </label>
 
             <ul className="menu menu-compact dropdown-content rounded-box shadow bg-black mt-9 p-3">
-              <li><a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={45} height={45} src="/icons/github.svg" /></a></li>
+              <li><Link rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={45} height={45} src="/icons/github.svg" /></Link></li>
               
-              <li><a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image width={30} height={30} src="/icons/linkedin.svg" /></a></li>
+              <li><Link rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={30} height={30} src="/icons/linkedin.svg" /></Link></li>
             </ul>
           </div>
         }

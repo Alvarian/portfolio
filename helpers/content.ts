@@ -170,7 +170,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
   for (let it of projectsResponse) {
     const projectType = it.description?.split("|")[1].trim().split(" ")[2].trim()
     const {icon, instructions, content} = await getContentFromReadMe(it.name)
-    
+
     switch (projectType) {
       case "Service": projects.push({
         id: it.id,
