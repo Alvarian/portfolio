@@ -5,6 +5,7 @@ import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 import Underline from "shared/underline"
 
 import { motion } from 'framer-motion'
+import { useEffect } from 'react'
 
 
 const Section: React.FC<{
@@ -15,6 +16,7 @@ const Section: React.FC<{
   bgImageName: string,
   width: number,
   setRef: React.RefObject<HTMLElement> | null,
+  setCurrentSection: React.Dispatch<React.SetStateAction<string>>,
   isSectionPermitted: boolean | null,
   serverProps: {
     overallStatsPayload: OverallPayload,
@@ -30,6 +32,7 @@ const Section: React.FC<{
   bgImageName,
   width,
   setRef,
+  setCurrentSection,
   isSectionPermitted,
   serverProps,
   keyIcon,
@@ -133,6 +136,12 @@ const Section: React.FC<{
       nav: `flex flex-col items-center `
     }
   }
+
+  useEffect(() => {
+    if (isSectionPermitted) {
+      setCurrentSection(alt)
+    }
+  }, [isSectionPermitted])
   
   return (
     <section className={styles.tailwind.main} id={alt} ref={setRef}>
