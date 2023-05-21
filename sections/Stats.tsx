@@ -1,13 +1,13 @@
 import React, { useState } from "react"
 
 import { motion } from "framer-motion"
-import CountUp from 'react-countup';
 
 import SlideShow from "shared/slideshow";
 import { dataOptions, MostrecentPayload, OverallPayload } from "lib/sections/sections.types";
 import Icon, { IconInter } from "shared/icon"
 import { getFormattedDate } from "lib/sections/sections.methods";
 import Chart from "shared/chart";
+import Counter from "shared/counter";
 
 
 const MostRecent: React.FC<{
@@ -248,7 +248,7 @@ const Overall: React.FC<{
                 <div className={tailwind.rankings}>
                     {overallMenuData({
                         Rank: roundThousandsOrGetDefault(leaderBoardScore),
-                        Completed: <CountUp duration={4} end={totalCompleted} /> 
+                        Completed: <Counter duration={4} end={totalCompleted} /> 
                     }).map((item: IconInter) => (
                         <div className={tailwind.rankIcons} key={item.name}>
                             <span>{item.name}: </span>

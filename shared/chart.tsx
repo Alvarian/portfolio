@@ -3,7 +3,7 @@ import {
     ArcElement,
     Tooltip,
 } from 'chart.js';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 ChartJS.register(ArcElement, Tooltip);
 import { Doughnut } from 'react-chartjs-2';
 
