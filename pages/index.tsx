@@ -47,7 +47,7 @@ interface Admissions {
 // }
 
 async function getData() {
-  const payload = await (await fetch("http://localhost:3000/api/cache/getAllContentOnly")).json()
+  const payload = await (await fetch("/api/cache/getAllContentOnly")).json()
 
   return payload
 }
