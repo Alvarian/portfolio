@@ -239,12 +239,12 @@ export const getBadges = async (makeDifferenceTrue: () => void, cachedData: {bad
   }
   
   const getBadgrAuthTokens = async () => {
-    const hasAccessToken = await redis.get('portfolioAccess')
-    const hasRefreshToken = await redis.get('portfolioRefresh')
+    const hasAccessToken: string = await redis.get('portfolioAccess')
+    const hasRefreshToken: string = await redis.get('portfolioRefresh')
   
     if (!hasRefreshToken || !hasAccessToken) {
       const response: {
-        [key: string]: string | number
+        [key: string]: string 
       } = await (await fetch('https://api.badgr.io/o/token', {
         method: 'POST',
         headers: {

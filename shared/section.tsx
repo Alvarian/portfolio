@@ -1,30 +1,20 @@
 import Link from 'next/link'
 
-import { Badge, Content, dataOptions, MostrecentPayload, OverallPayload } from 'lib/sections/sections.types'
+import type { Content, Badge, OverallPayload, MostrecentPayload } from 'lib/sections/sections.types'
 import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 import Underline from "shared/underline"
 
 import { motion } from 'framer-motion'
-import { Dispatch, useEffect, useState } from 'react'
-import ProjectModal from './modal'
+import { Project, ServerPropsData, ServerPropsMedia } from './types'
 
 
 const Section: React.FC<{
-  content: {
-    body: React.FC<any>,
-    isFull: boolean
-  } | null,
+  content: Content["content"],
   bgImageName: string,
   width: number,
   setRef: React.RefObject<HTMLElement> | null,
   isSectionPermitted: boolean | null,
-  serverProps: {
-    overallStatsPayload: OverallPayload,
-    mostRecentPayload: MostrecentPayload,
-  } | {
-    gifFrames: Array<string>,
-    badges: Array<Badge>
-  } | null,
+  serverProps: Project[] | Badge[] | { overallStatsPayload: OverallPayload; mostRecentPayload: MostrecentPayload; },
   keyIcon: string | null,
   alt: string
 }> = ({
@@ -41,7 +31,7 @@ const Section: React.FC<{
     let outsourcedLinks = []
     let defaultLinks = []
     
-    const stylesMapping: dataOptions = {
+    const stylesMapping = {
       footer: {
         default: {
           header: "text-3xl",
@@ -65,9 +55,11 @@ const Section: React.FC<{
     }
 
     let queDuration = 5;
+    const styleMap = stylesMapping[elementType as keyof typeof stylesMapping]
+    const styles = styleMap[size as keyof typeof styleMap]
+
     for (const index in sectionData) {
       const section: Content = sectionData[index]
-      const styles = stylesMapping[elementType][size] && stylesMapping[elementType][size]["link"]
 
       switch (section.type) {
         case "outsourced": 
@@ -76,7 +68,7 @@ const Section: React.FC<{
             whileInView="visible"
             variants={defaultVariants.fallUp(++queDuration)}
             key={index}
-          ><Link href={"#"+section.alt}><div className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</div></Link></motion.div>)
+          ><Link href={"#"+section.alt}><div className={styles["link"]}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</div></Link></motion.div>)
 
           break
         default:
@@ -85,7 +77,7 @@ const Section: React.FC<{
             whileInView="visible"
             variants={defaultVariants.fallUp(++queDuration)}
             key={index}
-          ><Link href={"#"+section.alt}><div className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</div></Link></motion.div>)
+          ><Link href={"#"+section.alt}><div className={styles["link"]}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</div></Link></motion.div>)
 
           break
       }
@@ -93,8 +85,8 @@ const Section: React.FC<{
 
     return (
       <div className="flex flex-row justify-around w-full">
-        {defaultLinks.length ? <div className={styles.tailwind.nav}>
-          <motion.h1 className={stylesMapping[elementType][size] && stylesMapping[elementType][size]["header"]}
+        {defaultLinks.length ? <div className={customStyles.tailwind.nav}>
+          <motion.h1 className={styles["header"]}
             initial="hidden"
             whileInView="visible"
             variants={defaultVariants.fallUp(1)}
@@ -105,8 +97,8 @@ const Section: React.FC<{
           {defaultLinks}
         </div> : ""}
 
-        {outsourcedLinks.length ? <div className={styles.tailwind.nav}>
-          <motion.h1 className={stylesMapping[elementType][size] && stylesMapping[elementType][size]["header"]}
+        {outsourcedLinks.length ? <div className={customStyles.tailwind.nav}>
+          <motion.h1 className={styles["header"]}
             initial="hidden"
             whileInView="visible"
             variants={defaultVariants.fallUp(1)}
@@ -120,7 +112,7 @@ const Section: React.FC<{
     )
   }
   
-  const styles = {
+  const customStyles = {
     css: {
       background: {
         backgroundImage: "url(./images/" + bgImageName + ")",
@@ -136,11 +128,11 @@ const Section: React.FC<{
   }
   
   return (
-    <section className={styles.tailwind.main} id={alt} ref={setRef}>
-      <div className={styles.tailwind.background} style={styles.css.background}></div>
+    <section className={customStyles.tailwind.main} id={alt} ref={setRef}>
+      <div className={customStyles.tailwind.background} style={customStyles.css.background}></div>
 
       {content?.body ? 
-        <div className={styles.tailwind.content}>
+        <div className={customStyles.tailwind.content}>
           <content.body 
             data={serverProps} 
             icon={keyIcon} 

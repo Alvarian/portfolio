@@ -172,7 +172,7 @@ const ModalBody: FC<{
         const paginate = (newDirection: number) => {
             setPage([page + newDirection, newDirection])
         }
-        console.log(imageIndex)
+        
         return (
             <>
                 {isModalMaxed ? (<div className="flex flex-col items-center justify-around h-full w-full">
@@ -359,7 +359,7 @@ const ModalBody: FC<{
 }
 
 const index: FC<{
-    data: Array<Project>,
+    data: Project[],
     width: number
 }> = ({ data, width }) => {
     const [productIds, setProductIds] = useState(data.filter((x: Project) => data.indexOf(x) !== 0))
