@@ -6,10 +6,10 @@ import nextConnect from 'next-connect';
 const upload = multer({ dest: "" })
 
 const apiRoute = nextConnect({
-    onError(error, req, res: any) {
+    onError: (error, req, res: any) => {
       res.status(501).json({ error: `Sorry something Happened! ${error.message}` });
     },
-    onNoMatch(req, res) {
+    onNoMatch: (req, res) => {
       res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
     },
 });
