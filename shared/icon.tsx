@@ -1,5 +1,4 @@
-import { motion } from "framer-motion"
-import { dataOptions } from "lib/sections/sections.types"
+import { MotionStyle, motion } from "framer-motion"
 import Image from "next/image"
 
 
@@ -27,7 +26,7 @@ const Icon: React.FC<IconInter> = ({
     custom,
     kind
 }) => {
-    const mappedIconSizes: dataOptions = {
+    const mappedIconSizes = {
         sm: {
             parent: {
                 height: "30px",
@@ -58,9 +57,9 @@ const Icon: React.FC<IconInter> = ({
                 content: "text-2xl"
             }
         }
-    }
+    }[size]!;
 
-    const mappedIconPositions: dataOptions = {
+    const mappedIconPositions = {
         left: {
             parent: `items-center flex justify-center`,
             child: {
@@ -83,16 +82,19 @@ const Icon: React.FC<IconInter> = ({
                 alignItems: "center"
             }
         }
-    }
+    }[position]!;
 
     const renderParentIcon = (img: JSX.Element) => {
         switch (kind.type) {
             case "link":
                 return (
-                    <div className={"w-full "+mappedIconPositions[position].parent+" "+custom?.parent} style={mappedIconSizes[size].parent}>            
+                    <div className={"w-full "+mappedIconPositions.parent+" "+custom?.parent} style={mappedIconSizes.parent}>            
                     
-                        <motion.a href={kind.content} className={"rounded-full "+custom?.img} style={mappedIconPositions[position].child}
-                            animate={{ 
+                        <motion.a
+                            href={kind.content}
+                            className={"rounded-full " + custom?.img}
+                            style={mappedIconPositions.child as MotionStyle}
+                            animate={{
                                 rotate: 360,
                             }}
                             transition={{
@@ -102,15 +104,17 @@ const Icon: React.FC<IconInter> = ({
                                 repeat: Infinity,
                                 repeatType: 'reverse'
                             }}
-                        >{img}</motion.a>
-                        {content && <span className={mappedIconSizes[size].child.content+" "+custom?.content} style={mappedIconPositions[position].child}>{content}</span>}
+                        >
+                            {img}
+                        </motion.a>
+                        {content && <span className={mappedIconSizes.child.content+" "+custom?.content} style={{...mappedIconPositions.child, position: undefined}}>{content}</span>}
 
                     </div>
                 )
             case "button":
                 return (
                     <motion.button 
-                        className={"w-full "+mappedIconPositions[position].parent+" "+custom?.parent} 
+                        className={"w-full "+mappedIconPositions.parent+" "+custom?.parent} 
                         onMouseDown={(e) => {e.currentTarget.style.scale = "0.7"}} 
                         onMouseUp={(e) => {e.currentTarget.style.scale = "1"}} 
                         onClick={() => {kind.callback()}}
@@ -119,17 +123,17 @@ const Icon: React.FC<IconInter> = ({
                         onHoverEnd={e => {}}
                     >
                         
-                        <span className={custom?.img} style={mappedIconPositions[position].child}>{img}</span>
-                        {content && <span className={mappedIconSizes[size].child.content+" "+custom?.content} style={mappedIconPositions[position].child}>{content}</span>}
+                        <span className={custom?.img} style={{...mappedIconPositions.child, position: undefined}}>{img}</span>
+                        {content && <span className={mappedIconSizes.child.content+" "+custom?.content} style={{...mappedIconPositions.child, position: undefined}}>{content}</span>}
 
                     </motion.button>
                 )
             default:
                 return (
-                    <div className={"w-full "+mappedIconPositions[position].parent+" "+custom?.parent} style={mappedIconSizes[size].parent}>            
+                    <div className={"w-full "+mappedIconPositions.parent+" "+custom?.parent} style={mappedIconSizes.parent}>            
 
-                        <span className={custom?.img} style={mappedIconPositions[position].child}>{img}</span>
-                        {content && <span className={mappedIconSizes[size].child.content+" "+custom?.content} style={mappedIconPositions[position].child}>{content}</span>}
+                        <span className={custom?.img} style={{...mappedIconPositions.child, position: undefined}}>{img}</span>
+                        {content && <span className={mappedIconSizes.child.content+" "+custom?.content} style={{...mappedIconPositions.child, position: undefined}}>{content}</span>}
 
                     </div>
                 )
@@ -139,8 +143,8 @@ const Icon: React.FC<IconInter> = ({
     return renderParentIcon(<Image 
         alt={name}
         src={src}
-        height={mappedIconSizes[size].child.img}
-        width={mappedIconSizes[size].child.img}
+        height={mappedIconSizes.child.img}
+        width={mappedIconSizes.child.img}
     />)
 }
 

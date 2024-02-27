@@ -3,6 +3,7 @@ import {
     ArcElement,
     Tooltip,
 } from 'chart.js';
+import { OverallPayload } from 'lib/sections/sections.types';
 import { useEffect, useState } from 'react';
 ChartJS.register(ArcElement, Tooltip);
 import { Doughnut } from 'react-chartjs-2';
@@ -15,7 +16,7 @@ interface LanguageValue {
 }
 
 const Chart: React.FC<{
-    languagesTotal: any,
+    languagesTotal: OverallPayload["languagesTotal"],
     bgStyle: string
 }> = ({ languagesTotal, bgStyle }) => {
     const reset = {

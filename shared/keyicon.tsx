@@ -6,11 +6,10 @@ import { IconInter } from "./icon"
 
 
 const KeyIcon: React.FC<{
-  position: any,
   size: number,
   icon: string
 }> = ({
-  position,
+  // position,
   size,
   icon
 }) => {

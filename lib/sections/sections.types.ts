@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from "react";
-import { Project } from "shared/types";
 
 type Nullable<T> = T | null;
 
@@ -47,10 +46,6 @@ export interface MostrecentPayload {
   }
 }
 
-// export type dataOptions = {
-//   [key: string]: any
-// }
-
 export type Data = {
   setting: string,
   data: {
@@ -63,5 +58,30 @@ export type Data = {
   }
 }
 
+export interface Project {
+  id: number,
+  title: string,
+  icon: string,
+  description: string,
+  stacks: Array<string>,
+  repo: string,
+  lastUpdate: string,
+  payload: {type: string, ref: ContentFromREADME}
+}
+
+export type ContentFromREADME = {
+  description: string,
+  image: string,
+}[] | string
+
+export interface ServerPropsData {
+  overallStatsPayload: OverallPayload,
+  mostRecentPayload: MostrecentPayload,
+} 
+
+export interface ServerPropsMedia {
+  gifFrames: string[],
+  badges: Badge[]
+}
 
 export const specific = <T>() => <U extends T>(argument: U) => argument;

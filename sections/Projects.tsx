@@ -6,11 +6,11 @@ import React, { FC, useEffect, useState } from "react"
 
 import Modal from "shared/modal"
 import Icon from "shared/icon"
-import { Project } from "shared/types"
+import { ContentFromREADME, Project } from "lib/sections/sections.types"
 
 
 declare global {
-    interface Window { games: any; }
+    interface Window { games: Record<string, () => Node> }
 }
 
 const ProjectIconImage: FC<{
@@ -31,12 +31,12 @@ const ProjectIconImage: FC<{
 const ModalBody: FC<{
     title: string,
     type: string,
-    content: any,
+    content: ContentFromREADME,
     isWidthMobile: boolean,
     isModalMaxed: boolean
 }> = ({title, type, content, isWidthMobile, isModalMaxed}) => {
     const getScriptDOM = () => {    
-        const [content, setContent] = useState<any>(null)
+        const [scriptContent, setContent] = useState<JSX.Element|null>(null)
     
         useEffect(() => {
             const game = window.games[capitalizeFirst(title)]
@@ -49,7 +49,7 @@ const ModalBody: FC<{
                 setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(game())}></div>)
             } else {
                 fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
-                    .then((res: any) => {
+                    .then((res) => {
                         if (res.ok) {
                             return res.json()
                         }
@@ -71,13 +71,14 @@ const ModalBody: FC<{
             }
         }, [])
     
-        return content
+        return scriptContent
     }
 
     const getServiceDOM = () => {
         const [[page, direction], setPage] = useState([0, 0])
+        const parsedContent = content as { description: string; image: string; }[]
         const [imageIndex, setIndex] = useState({
-            left: content.length-1,
+            left: parsedContent.length-1,
             center: 0,
             right: 1
         })
@@ -177,19 +178,22 @@ const ModalBody: FC<{
             <>
                 {isModalMaxed ? (<div className="flex flex-col items-center justify-around h-full w-full">
                     <div className="flex items-center justify-center relative h-3/4 w-full">
-                        {content[imageIndex.left] && <motion.img 
-                            key={`key_${imageIndex.left}`}
-                            layoutId={`layout-${imageIndex.left}`}
-                            transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
-                            className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white" src={content[imageIndex.left].image} 
-                            onClick={e => {
-                                if (imageIndex.left < page) {
-                                    setPage([imageIndex.left, -1])
-                                } else {
-                                    setPage([imageIndex.left, +1])
-                                }
-                            }}
-                        />}
+                        {content[imageIndex.left] && (
+                            <motion.img 
+                                key={`key_${imageIndex.left}`}
+                                layoutId={`layout-${imageIndex.left}`}
+                                transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
+                                className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white" 
+                                src={parsedContent[imageIndex.left].image} 
+                                onClick={e => {
+                                    if (imageIndex.left < page) {
+                                        setPage([imageIndex.left, -1])
+                                    } else {
+                                        setPage([imageIndex.left, +1])
+                                    }
+                                }}
+                            />
+                        )}
 
                         <main 
                             key={`key_${imageIndex.center}`}
@@ -211,7 +215,7 @@ const ModalBody: FC<{
                                     },
                                     opacity: { duration: 0.2 }
                                 }}
-                                className="h-full" src={content[imageIndex.center].image} 
+                                className="h-full" src={parsedContent[imageIndex.center].image} 
                             />
 
                             <motion.div
@@ -226,7 +230,7 @@ const ModalBody: FC<{
                                     transition: { duration: 0.6 },
                                 }}
                             >
-                                <span className="bg-black/50">{content[imageIndex.center].description}</span>
+                                <span className="bg-black/50">{parsedContent[imageIndex.center].description}</span>
                             </motion.div>
                         </main>
 
@@ -234,7 +238,7 @@ const ModalBody: FC<{
                             key={`key_${imageIndex.right}`}
                             layoutId={`layout-${imageIndex.right}`}
                             transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
-                            className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white" src={content[imageIndex.right].image} 
+                            className="h-[350px] w-[500px] cursor-pointer hover:border-4 border-white" src={parsedContent[imageIndex.right].image} 
                             onClick={e => {
                                 if (imageIndex.right < page) {
                                     setPage([imageIndex.right, -1])
@@ -246,7 +250,7 @@ const ModalBody: FC<{
                     </div>
 
                     <div className="flex justify-around w-1/2 z-10">
-                        {content.map((slide: any, index: number) => (
+                        {parsedContent.map((slide, index) => (
                             <motion.button
                                 key={`pagkey_${index}`}
                                 className="rounded-full h-5 w-5"
@@ -300,9 +304,9 @@ const ModalBody: FC<{
                                 }}
                                 className={`absolute flex ${isWidthMobile ? "flex-col-reverse" : ""} justify-around items-center w-full h-full`}
                             >
-                                <div className={`${isWidthMobile ? "" : "h-full px-10"}`}>{content[imageIndex.center].description}</div>
+                                <div className={`${isWidthMobile ? "" : "h-full px-10"}`}>{parsedContent[imageIndex.center].description}</div>
                                 
-                                <img className={`${isWidthMobile ? "h-[465px]" : "h-full pr-7"} min-w-[600px] max-w-[600px]`} src={content[imageIndex.center].image} />
+                                <img className={`${isWidthMobile ? "h-[465px]" : "h-full pr-7"} min-w-[600px] max-w-[600px]`} src={parsedContent[imageIndex.center].image} />
                             </motion.div>                    
                         </AnimatePresence>
                     </div>
@@ -405,7 +409,7 @@ const index: FC<{
         body.style.overflow = "auto"
     }
 
-    const handleModalOpen = (payload: any) => {
+    const handleModalOpen = (payload: Project["payload"]) => {
         if (payload.type === "Site") {
             window.open(payload.ref as string, '_blank')
         } else {

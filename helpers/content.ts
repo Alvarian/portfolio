@@ -1,4 +1,4 @@
-import { Badge, MostrecentPayload, OverallPayload } from "lib/sections/sections.types"
+import { Badge, ContentFromREADME, MostrecentPayload, OverallPayload, Project } from "lib/sections/sections.types"
 
 
 interface Now {
@@ -18,16 +18,6 @@ interface Stats {
   mostRecentPayload: MostrecentPayload
 }
 
-interface Project {
-  id: number,
-  icon: string,
-  title: string,
-  description: string,
-  stacks: Array<string>,
-  repo: string,
-  lastUpdate: string,
-  payload: any
-}
 
 export const getStats = async (makeDifferenceTrue: () => void, cachedData: Stats, redis: any, notifications: Notification, now: Now) => {
   const getUserData = async () => {
@@ -128,7 +118,7 @@ export const getStats = async (makeDifferenceTrue: () => void, cachedData: Stats
   }
 }
 
-export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Array<Project>, now: Now) => {
+export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Project[], now: Now) => {
   const sortAndStringify = (obj: any) => JSON.stringify(obj.sort((a: any, b: any) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0)))
   
   const getAPIjson: any = async (url: string, payloadType: string) => {
@@ -152,7 +142,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
     const readmeContentList = (await getAPIjson(`https://raw.githubusercontent.com/Alvarian/${projectName}/master/README.md`, 'text')).replace(/(\r\n|\n|\r)/gm, " ").split(":octocat:")
 
     const instructions = readmeContentList[0].trim()
-    const hasContent = (readmeContentList[readmeContentList.length-1].slice(
+    const hasContent: [string, string] = (readmeContentList[readmeContentList.length-1].slice(
       readmeContentList[1].indexOf("<!--") + 4,
       readmeContentList[1].lastIndexOf("-->")
     )).trim().split(" | ")
@@ -182,7 +172,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Ar
         lastUpdate: it.pushed_at,
         payload: {
           type: "Service",
-          ref: JSON.parse(content)
+          ref: JSON.parse(content) as ContentFromREADME
         }
       }); break;
       case "Script": projects.push({
