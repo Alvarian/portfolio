@@ -1,17 +1,18 @@
 import { encryptAndPushCode, zipDataIntoStream } from "helpers/projectCryptionHandlers";
 import { createOrUpdate } from "helpers/s3";
 import multer from "multer"
-import nextConnect from 'next-connect';
+import { NextApiRequest, NextApiResponse } from "next";
+import nc from "next-connect";
 
 const upload = multer({ dest: "" })
 
-const apiRoute = nextConnect({
-    onError: (error, req, res: any) => {
-      res.status(501).json({ error: `Sorry something Happened! ${error.message}` });
-    },
-    onNoMatch: (req, res) => {
-      res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
-    },
+const apiRoute = nc<NextApiRequest, NextApiResponse>({
+  onError: (error, req, res) => {
+    res.status(501).json({ error: `Sorry something Happened! ${error.message}` });
+  },
+  onNoMatch: (req, res) => {
+    res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+  },
 });
 
 apiRoute.use(upload.array('files'));
