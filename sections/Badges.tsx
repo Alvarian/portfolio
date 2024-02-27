@@ -180,7 +180,7 @@ const BadgeIcons: React.FC<{
           <div key={index} className="relative flex justify-end items-center h-36 w-36">
             <motion.a 
               target="_blank"
-              className="shadow shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
+              className="shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
               style={{borderStyle: "outset"}}
               href={badge.evidence[0].url}
               onMouseOver={handleBadgeDetails.bind(this, badge)}
@@ -377,7 +377,7 @@ const index: React.FC<{
         >
           <div>
             <h2 className="text-4xl">{badgeDetails.name}</h2>
-            <p className="text-2xl">{badgeDetails.issuedOn}</p>
+            <div className="text-2xl">{badgeDetails.issuedOn}</div>
             <div className="flex justify-around">{renderTags()}</div>
           </div>
         </div>}
@@ -393,13 +393,13 @@ const index: React.FC<{
         >
           {width <= 1500 && width > 760 && <div>
             <h2 className="text-3xl">{badgeDetails.name}</h2>
-            <p className="text-lg">{badgeDetails.issuedOn}</p>
+            <div className="text-lg">{badgeDetails.issuedOn}</div>
             <div className="flex justify-around">{renderTags()}</div>
           </div>}
 
           {width <= 760 && <div>
             <h2 className="text-4xl">{badgeDetails.name}</h2>
-            <p className="text-2xl">{badgeDetails.issuedOn}</p>
+            <div className="text-2xl">{badgeDetails.issuedOn}</div>
             <div className="flex justify-around">{renderTags()}</div>
           </div>}
         </div>

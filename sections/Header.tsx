@@ -59,11 +59,11 @@ const Header: React.FC<{
           variants={defaultVariants.fallUp(1)}
         >Ivan Alvarez</motion.h1>
 
-        <motion.p className={styles.tailwind.content.description}
+        <motion.div className={styles.tailwind.content.description}
           initial="hidden"
           whileInView="visible"
           variants={defaultVariants.fallUp(2)}            
-        >An indie website and software developer. Current project stacks are mostly javascript based and are available in my github. Future project demos together with my completed projects will be portrayed in a dedicated section on this page that will allow visitors to experience my work first hand!</motion.p>
+        >An indie website and software developer. Current project stacks are mostly javascript based and are available in my github. Future project demos together with my completed projects will be portrayed in a dedicated section on this page that will allow visitors to experience my work first hand!</motion.div>
 
         <div className={styles.tailwind.content.buttons.main}>
           <Underline width="100%" />
@@ -73,12 +73,12 @@ const Header: React.FC<{
               initial="hidden"
               whileInView="visible"
               variants={defaultVariants.fallLeft(5)}
-            ><Image width={45} height={45} src="/icons/github.svg" /></motion.a>
+            ><Image alt="" width={45} height={45} src="/icons/github.svg" /></motion.a>
             <motion.a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"
               initial="hidden"
               whileInView="visible"
               variants={defaultVariants.fallLeft(6)}
-            ><Image width={30} height={30} src="/icons/linkedin.svg" /></motion.a>
+            ><Image alt="" width={30} height={30} src="/icons/linkedin.svg" /></motion.a>
           </div>
         </div>
       </div>
@@ -98,7 +98,7 @@ const Header: React.FC<{
   }
 
   return (
-    <header className="m-auto relative h-full relative w-full">
+    <header className="m-auto relative h-full w-full">
       <div className="h-inherit w-inherit">
         <div className="bg-black w-full h-64"></div>
         <div className="bg-gradient-to-b w-full from-black h-full"></div>

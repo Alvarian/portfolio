@@ -137,6 +137,7 @@ const Icon: React.FC<IconInter> = ({
     }
 
     return renderParentIcon(<Image 
+        alt={name}
         src={src}
         height={mappedIconSizes[size].child.img}
         width={mappedIconSizes[size].child.img}

@@ -76,7 +76,7 @@ const Section: React.FC<{
             whileInView="visible"
             variants={defaultVariants.fallUp(++queDuration)}
             key={index}
-          ><Link href={"#"+section.alt}><li><a className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link></motion.div>)
+          ><Link href={"#"+section.alt}><div className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</div></Link></motion.div>)
 
           break
         default:
@@ -85,7 +85,7 @@ const Section: React.FC<{
             whileInView="visible"
             variants={defaultVariants.fallUp(++queDuration)}
             key={index}
-          ><Link href={"#"+section.alt}><li><a className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</a></li></Link></motion.div>)
+          ><Link href={"#"+section.alt}><div className={styles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</div></Link></motion.div>)
 
           break
       }
