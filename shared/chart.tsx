@@ -89,7 +89,7 @@ const Chart: React.FC<{
             const color = languagesListValues.colors[i]
 
             list.push(
-                <li className="text-left m-1" key={title}>
+                <li className="text-left m-1" key={`${title}${i}`}>
                     <span className="w-6" style={{backgroundColor: color}}>[&#8594;]</span> {title}: {Math.round(ratio * 10) / 10}%
                 </li>
             )
