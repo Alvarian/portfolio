@@ -17,7 +17,10 @@ const apiRoute = nc<NextApiRequest, NextApiResponse>({
 
 apiRoute.use(upload.array('files'));
 
-apiRoute.post(async (req: any, res: any) => {
+interface MulterRequest extends NextApiRequest {
+  files: {file: string, originalname: string, mimetype: string, size: number, buffer: string}[];
+}
+apiRoute.post(async (req: MulterRequest, res: NextApiResponse) => {
   const { title, version } = req.body;
   const icon = req.files[0]
   const app = req.files[1]

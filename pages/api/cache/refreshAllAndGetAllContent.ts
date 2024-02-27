@@ -3,9 +3,10 @@ import { getStats, getBadges, getProjects } from "helpers/content"
 import Redis from "ioredis"
 import { formatDate } from "lib/sections/sections.methods"
 import moment from "moment-timezone"
+import { NextApiRequest, NextApiResponse } from "next"
 
 
-export default async (req: any, res: any) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
     const notifications: {
         error: unknown,
         warnings: unknown[]
@@ -23,7 +24,7 @@ export default async (req: any, res: any) => {
             msg: "Missing Redis Credentials"
         }
 
-        const redis: any = await (new Promise((resolve, reject) => {
+        const redis: Redis = await (new Promise((resolve, reject) => {
             const client = new Redis(process.env.NEXT_PUBLIC_REDIS_URL as string)
             client.on("error", function () {
                 reject({
