@@ -1,8 +1,10 @@
 import { AnimatePresence } from "framer-motion";
+import { FC, ReactNode } from "react";
 
 
-const SlideShow: React.FC<{
-    styles: string
+const SlideShow: FC<{
+    styles: string,
+    children: ReactNode
 }> = ({
     children,
     styles

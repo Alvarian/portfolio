@@ -1,16 +1,16 @@
-import React, { useState } from "react"
+import React, { FC, useState, JSX } from "react"
 
 import { motion } from "framer-motion"
-import CountUp from 'react-countup';
+import CountUp, { CountUpProps } from 'react-countup';
 
 import SlideShow from "shared/slideshow";
-import { dataOptions, MostrecentPayload, OverallPayload } from "lib/sections/sections.types";
+import { MostrecentPayload, OverallPayload } from "lib/sections/sections.types";
 import Icon, { IconInter } from "shared/icon"
 import { getFormattedDate } from "lib/sections/sections.methods";
 import Chart from "shared/chart";
 
 
-const MostRecent: React.FC<{
+const MostRecent: FC<{
   payload: MostrecentPayload,
   width: number
 }> = ({ 
@@ -124,7 +124,7 @@ const MostRecent: React.FC<{
   )
 }
 
-const Overall: React.FC<{
+const Overall: FC<{
     payload: OverallPayload,
     isSectionPermitted: boolean,
     width: number
@@ -133,7 +133,8 @@ const Overall: React.FC<{
     isSectionPermitted,
     width
 }) => {
-    const overallMenuData: (mappedPayload: dataOptions) => Array<IconInter> = (mappedPayload: dataOptions) => {
+    // const overallMenuData: (mappedPayload: {Rank: string|number, Completed: JSX.Element}) => Array<IconInter> = (mappedPayload) => {
+    const overallMenuData = (mappedPayload: {Rank: string|number, Completed: JSX.Element}) => {
         return [
             {
                 name: "Profile",
@@ -249,7 +250,7 @@ const Overall: React.FC<{
                     {overallMenuData({
                         Rank: roundThousandsOrGetDefault(leaderBoardScore),
                         Completed: <CountUp duration={4} end={totalCompleted} /> 
-                    }).map((item: IconInter) => (
+                    }).map((item) => (
                         <div className={tailwind.rankIcons} key={item.name}>
                             <span>{item.name}: </span>
 
@@ -259,7 +260,7 @@ const Overall: React.FC<{
                                 kind={item.kind}
                                 src={item.src}
                                 position={item.position}
-                                content={item.content}
+                                content={item.content! as string|JSX.Element}
                                 custom={item.custom}
                             />
                         </div>
@@ -272,7 +273,7 @@ const Overall: React.FC<{
     ) 
 }
 
-const index: React.FC<{
+const index: FC<{
   data: {
     overallStatsPayload: OverallPayload, 
     mostRecentPayload: MostrecentPayload
@@ -298,7 +299,7 @@ const index: React.FC<{
     }
   }
 
-  const orArrowAttributes: dataOptions = (isVisible) ? {
+  const orArrowAttributes = (isVisible) ? {
     position: "right",
     content: "Most Recent Challenge",
     custom: {

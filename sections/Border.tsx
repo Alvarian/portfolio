@@ -48,7 +48,7 @@ const Border: React.FC<{
                 height: "80px",
                 position: "relative",
             } as React.CSSProperties}>
-                {wheel.map((slot: any, index: number) => (
+                {wheel.map((slot, index) => (
                     <motion.div
                         key={index}
                         animate={{

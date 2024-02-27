@@ -14,7 +14,7 @@ const Section: React.FC<{
   width: number,
   setRef: React.RefObject<HTMLElement> | null,
   isSectionPermitted: boolean | null,
-  serverProps: Project[] | Badge[] | { overallStatsPayload: OverallPayload; mostRecentPayload: MostrecentPayload; },
+  serverProps: Project[] | Badge[] | { overallStatsPayload: OverallPayload; mostRecentPayload: MostrecentPayload; } | null,
   keyIcon: string | null,
   alt: string
 }> = ({
