@@ -36,7 +36,7 @@ const Footer: React.FC<{
     return (
       <div className={styles.tailwind.content.nav}>
         <div className={styles.tailwind.content.name}>
-          <Link href="/"><a className="btn btn-ghost normal-case text-5xl">Ivan Alvarez</a></Link>
+          <Link href="/"><div className="btn btn-ghost normal-case text-5xl">Ivan Alvarez</div></Link>
         </div>
 
         <div className="menu flex menu-vertical p-0 w-3/6">{handleRenderLinks("footer", "default")}</div>
@@ -76,13 +76,13 @@ const Footer: React.FC<{
             initial="hidden"
             whileInView="visible"
             variants={defaultVariants.fallLeft(5)}
-          ><Image width={45} height={45} src="/icons/github.svg" /></motion.a>
+          ><Image alt="" width={45} height={45} src="/icons/github.svg" /></motion.a>
           
           <motion.a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"
             initial="hidden"
             whileInView="visible"
             variants={defaultVariants.fallLeft(6)}
-          ><Image width={30} height={30} src="/icons/linkedin.svg" /></motion.a>
+          ><Image alt="" width={30} height={30} src="/icons/linkedin.svg" /></motion.a>
         </div>
       </div>
     )

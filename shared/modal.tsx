@@ -118,7 +118,7 @@ const index: FC<{
               animate="visible"
               exit="exit"
             >
-              <div className='z-10 absolute right-2 top-2 absolute w-32 flex justify-around m-1'>
+              <div className='z-10 right-2 top-2 absolute w-32 flex justify-around m-1'>
                 <label className="border-2 border-white btn btn-sm text-2xl" onClick={makeProjectBoxFullScreen}><FaRegWindowMaximize /></label>
             
                 <label className="border-2 border-white btn btn-sm text-2xl" onClick={handleClose}><VscChromeClose /></label>

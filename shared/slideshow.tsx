@@ -9,7 +9,7 @@ const SlideShow: React.FC<{
 }) => {
     return (
         <div className={styles}>
-            <AnimatePresence exitBeforeEnter>
+            <AnimatePresence >
                 {children}
             </AnimatePresence>
         </div>
