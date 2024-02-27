@@ -71,7 +71,7 @@ export default async (req: any, res: any) => {
         res.statusCode = 400
         res.json({
           setting: "local",
-          err
+          data: {}
         })
     } finally {
         if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {

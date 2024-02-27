@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 React.useLayoutEffect = React.useEffect 
-import type { NextPage } from 'next'
 import Head from 'next/head'
 
 import {
@@ -27,14 +26,14 @@ import Footer from 'sections/Footer'
 import Navbar from 'sections/Navbar'
 import { useResize } from 'hooks/useResize'
 
-import { Content, dataOptions } from 'lib/sections/sections.types'
+import type { Content, Data } from 'lib/sections/sections.types'
 import { localMockData, sectionData } from 'lib/sections/sections.data'
 import { rateLimiters } from 'lib/sections/sections.methods'
 
 
 interface Admissions {
   [key: string]: {
-    position: number,
+    position: number | null,
     isPermitted: boolean | null
   }
 }
@@ -45,19 +44,19 @@ export async function getServerSideProps (ctx: any) {
   return {props: payload}
 }
 
-const Home: NextPage = (props) => {
+function Home(props: Data) {
   const beginning = useRef<HTMLElement>(null)
   const [width] = useResize()
   const [scrollMethodAdmissions, setAdmissions] = useState<Admissions>({})
   const [areEventsLoaded, setAreLoaded] = useState<boolean>(false)
 
-  const hasPropData: dataOptions = props
-  const propData: dataOptions = hasPropData.setting === "local" ? localMockData : props
+  // const hasPropData: dataOptions = props
+  const propData: Data = props.setting === "local" ? localMockData : props
   
   const handleAutoRoutingOnScroll = (list: Admissions) => {
     for (let key in list) {
       if (list[key].isPermitted) {
-        window.scrollTo(0, list[key].position)
+        window.scrollTo(0, list[key].position!)
 
         break
       }
@@ -87,7 +86,7 @@ const Home: NextPage = (props) => {
           break
   
         default:
-          const isSectionPermitted = scrollMethodAdmissions[key].position-600 < currentScrollPos && scrollMethodAdmissions[key].position+500 > currentScrollPos
+          const isSectionPermitted = scrollMethodAdmissions[key].position!-600 < currentScrollPos && scrollMethodAdmissions[key].position!+500 > currentScrollPos
           
           if (isSectionPermitted && !scrollMethodAdmissions[key].isPermitted) {
             scrollMethodAdmissions[key].isPermitted = isSectionPermitted
@@ -106,9 +105,9 @@ const Home: NextPage = (props) => {
   
   useEffect(() => {
     if (!Object.keys(scrollMethodAdmissions).length) {
-      const currentScrollPos = window.pageYOffset
+      const currentScrollPos = window.scrollY
       
-      let admissions: dataOptions = {}
+      let admissions: Admissions = {}
 
       const footer = document.querySelector("#footer") as HTMLElement | null
       admissions['navbar'] = {
@@ -141,10 +140,12 @@ const Home: NextPage = (props) => {
     let sectionList = []
     for (const i in sectionData) {
       const section: Content = sectionData[i]
+      const chosenData = propData['data'][section.alt as keyof Data['data']]
 
       sectionList.push(<Section
         key={i}
-        serverProps={propData['data'][section.alt]}
+        serverProps={chosenData}
+        // serverProps={propData['data'][section.alt]}
         width={width}
         setRef={parseInt(i) === 1 ? beginning : null}
         content={section.content}
