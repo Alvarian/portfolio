@@ -48,7 +48,7 @@ const Navbar: React.FC<{
       animate={navVisible ? 'lift' : 'drop'}
     >
       <div className="navbar-start pl-10">
-        {width > 800 ? 
+        {width > 900 ? 
           <ul className="menu menu-horizontal shadow bg-black">
             {handleRenderLinks("text-xl")}
           </ul>
@@ -70,7 +70,7 @@ const Navbar: React.FC<{
       </div>
 
       <div className="navbar-end">
-        {width > 800 ?
+        {width > 900 ?
           <ul className="menu menu-horizontal shadow bg-black pr-10">
             <li><a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={45} height={45} src="/icons/github.svg" /></a></li>
             

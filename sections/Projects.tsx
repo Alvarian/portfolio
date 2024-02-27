@@ -54,9 +54,9 @@ const ModalBody: FC<{
             if (localGame && !game) {
                 eval(localGame)
     
-                setContent(<div className="h-full w-full p-5" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+                setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
             } else if (game) {
-                setContent(<div className="h-full w-full p-5" ref={(node: HTMLElement | null) => node?.appendChild(game())}></div>)
+                setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(game())}></div>)
             } else {
                 fetch(`/api/projects/getProject?keyName=${capitalizeFirst(title)}%2Fcore`)
                     .then((res: any) => {
@@ -69,14 +69,14 @@ const ModalBody: FC<{
                         eval(script)
     
                         localStorage.setItem(title+"_game", script)
-                        setContent(<div className="h-full w-full p-5" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+                        setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
                     })
                     .catch(err => {
                         console.log(err)
                         const script = content as string
                         eval(script)
                         
-                        setContent(<div className="h-full w-full p-5" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
+                        setContent(<div className="h-full w-full" ref={(node: HTMLElement | null) => node?.appendChild(window.games[capitalizeFirst(title)]())}></div>)
                     })
             }
         }, [])
@@ -91,47 +91,65 @@ const ModalBody: FC<{
             center: 0,
             right: 1
         })
-        const [pagColors, setColors] = useState(getRandomColor(content))
 
         useEffect(() => {
             const wrappedIndex = wrap(0, content.length, page)
 
-            switch (wrappedIndex) {
-                case 0: 
-                    setIndex({
-                        left: content.length-1,
-                        center: 0,
-                        right: 1
-                    })
-                    break
-                case 1: 
-                    setIndex({
-                        left: 0,
-                        center: 1,
-                        right: 2
-                    })
-                    break
-                case content.length-1:
-                    setIndex({
-                        left: wrappedIndex-1,
-                        center: wrappedIndex,
-                        right: 0
-                    })
-                    break
-                default: 
-                    if (wrappedIndex+2 > content.length-1) {
+            if (content.length < 3) {
+                switch (wrappedIndex) {
+                    case 0:
+                        setIndex({
+                            left: -1,
+                            center: 0,
+                            right: 1
+                        })
+                        break
+                    case 1:
+                        setIndex({
+                            left: 0,
+                            center: 1,
+                            right: 2
+                        })
+                        break
+                }
+            } else {
+                switch (wrappedIndex) {
+                    case 0: 
+                        setIndex({
+                            left: content.length-1,
+                            center: 0,
+                            right: 1
+                        })
+                        break
+                    case 1: 
+                        setIndex({
+                            left: 0,
+                            center: 1,
+                            right: 2
+                        })
+                        break
+                    case content.length-1:
                         setIndex({
                             left: wrappedIndex-1,
                             center: wrappedIndex,
-                            right: content.length-1
+                            right: 0
                         })
-                    } else {
-                        setIndex({
-                            left: wrappedIndex-1,
-                            center: wrappedIndex,
-                            right: wrappedIndex+1
-                        })
-                    }
+                        break
+                    default: 
+                        if (wrappedIndex+2 > content.length-1) {
+                            setIndex({
+                                left: wrappedIndex-1,
+                                center: wrappedIndex,
+                                right: content.length-1
+                            })
+                        } else {
+                            setIndex({
+                                left: wrappedIndex-1,
+                                center: wrappedIndex,
+                                right: wrappedIndex+1
+                            })
+                        }
+                }
             }
         }, [page])
 
@@ -164,12 +182,12 @@ const ModalBody: FC<{
         const paginate = (newDirection: number) => {
             setPage([page + newDirection, newDirection])
         }
-
+        console.log(imageIndex)
         return (
             <>
                 {isModalMaxed ? (<div className="flex flex-col items-center justify-around h-full w-full">
                     <div className="flex items-center justify-center relative h-3/4 w-full">
-                        <motion.img 
+                        {content[imageIndex.left] && <motion.img 
                             key={`key_${imageIndex.left}`}
                             layoutId={`layout-${imageIndex.left}`}
                             transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
@@ -181,7 +199,7 @@ const ModalBody: FC<{
                                     setPage([imageIndex.left, +1])
                                 }
                             }}
-                        />
+                        />}
 
                         <main 
                             key={`key_${imageIndex.center}`}
@@ -222,7 +240,7 @@ const ModalBody: FC<{
                             </motion.div>
                         </main>
 
-                        <motion.img 
+                        {content[imageIndex.right] && <motion.img 
                             key={`key_${imageIndex.right}`}
                             layoutId={`layout-${imageIndex.right}`}
                             transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
@@ -234,7 +252,7 @@ const ModalBody: FC<{
                                     setPage([imageIndex.right, +1])
                                 }
                             }}
-                        />
+                        />}
                     </div>
 
                     <div className="flex justify-around w-1/2 z-10">
