@@ -6,18 +6,8 @@ import React, { FC, useEffect, useState } from "react"
 
 import Modal from "shared/modal"
 import Icon from "shared/icon"
+import { Project } from "shared/types"
 
-
-interface Project {
-    id: number,
-    title: string,
-    icon: string,
-    description: string,
-    stacks: Array<string>,
-    repo: string,
-    lastUpdate: string,
-    payload: {type: string, ref: Array<any> | string}
-}
 
 declare global {
     interface Window { games: any; }

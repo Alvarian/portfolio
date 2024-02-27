@@ -1,13 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion"
-import { FC, useEffect, useRef } from "react"
+import { FC, ReactNode, useEffect, useRef } from "react"
 import { FaRegWindowMaximize } from "react-icons/fa"
 import { VscChromeClose } from "react-icons/vsc"
 
 import Chart from "shared/chart"
 
+import { Project } from "./types"
 
 const Backdrop: FC<{
-  children: any, 
+  children: ReactNode, 
   onClick: () => void
 }> = ({ children, onClick }) => {
   return (
@@ -22,11 +23,11 @@ const Backdrop: FC<{
     </motion.div>
   )
 }
-
+// co pilot, I am sorry for the mess I made. I will clean it up soon. I promise.
 const Cover: FC<{
-  stacks: Array<any>,
+  stacks: Project['stacks'],
   isCoverOpen: boolean,
-  toggleCover: any
+  toggleCover: (v: boolean) => void
 }> = ({stacks, isCoverOpen, toggleCover}) => {
   return (
     <motion.div className='bg-black h-full w-full flex items-center justify-around flex-col'
@@ -79,13 +80,14 @@ const dropIn = {
 }
 
 const index: FC<{ 
-    isModalOpen: any,
+    isModalOpen: boolean,
     handleClose: () => void,
-    setMaxed: any,
-    projectData: {[key: string]: any},
+    setMaxed: (v: boolean) => void,
+    projectData: Project,
     isCoverOpen: boolean, 
-    toggleCover: any,
-    isWidthMobile: boolean
+    toggleCover: (v: boolean) => void,
+    isWidthMobile: boolean,
+    children: ReactNode
 }> = ({ handleClose, isModalOpen, setMaxed, projectData, isCoverOpen, toggleCover, isWidthMobile, children }) => {  
     const modalEl = useRef(null)
 
