@@ -38,8 +38,8 @@ interface Admissions {
   }
 }
 
-export async function getServerSideProps (ctx: any) {
-  const payload = await (await fetch("http://"+ctx.req.headers.host+'/api/cache/getAllContentOnly')).json()
+export async function getServerSideProps ({ req }: { req: {headers: {host: string}} } ) {
+  const payload = await (await fetch("http://"+req.headers.host+'/api/cache/getAllContentOnly')).json()
 
   return {props: payload}
 }

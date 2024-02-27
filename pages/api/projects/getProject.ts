@@ -1,10 +1,11 @@
 import { getDecryptedData } from "helpers/projectCryptionHandlers"
 import { getOneAndUnzip } from "helpers/s3"
+import { NextApiRequest, NextApiResponse } from "next";
 
 
-export default async (req: any, res: any) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-        const { keyName } = req.query;
+        const { keyName } = req.query as { keyName: string };
     
         const encryption = await getOneAndUnzip(keyName) as string
     
