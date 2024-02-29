@@ -68,7 +68,7 @@ export const getStats = async (makeDifferenceTrue: () => void, cachedData: Stats
         }
       }
 
-      return languages
+      return Object.entries(languages).map(([k, v]) => ({name: k, value: v}))
     })()
   }
 
