@@ -16,10 +16,10 @@ export interface Content {
 export interface Badge {
   issuedOn: string,
   image: string,
-  evidence: Array<{"url": string}>,
+  evidence: {"url": string}[],
   name: string,
   description: string,
-  tags: Array<string>,
+  tags: string[],
   rotations: {
     horizontal: number,
     vertical: number
@@ -29,7 +29,7 @@ export interface Badge {
 export interface OverallPayload {      
   leaderBoardScore: number,
   totalCompleted: number,
-  languagesTotal: {[key: string]: number}
+  languagesTotal: {name: string, value: number}[]
 }
 
 export interface MostrecentPayload {
@@ -63,7 +63,7 @@ export interface Project {
   title: string,
   icon: string,
   description: string,
-  stacks: Array<string>,
+  stacks: {name: string, value: number}[],
   repo: string,
   lastUpdate: string,
   payload: {type: string, ref: ContentFromREADME}
