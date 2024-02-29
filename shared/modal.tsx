@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion"
+import { Project } from "lib/sections/sections.types"
 import { FC, ReactNode, useEffect, useRef } from "react"
 import { FaRegWindowMaximize } from "react-icons/fa"
 import { VscChromeClose } from "react-icons/vsc"
 
 import Chart from "shared/chart"
 
-import { Project } from "./types"
 
 const Backdrop: FC<{
   children: ReactNode, 
@@ -107,7 +107,7 @@ const index: FC<{
         projectBox.requestFullscreen()
       }
     }
-  
+    
     return (  
       <AnimatePresence>
         {isModalOpen ? (

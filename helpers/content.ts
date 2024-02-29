@@ -33,11 +33,22 @@ export const getStats = async (makeDifferenceTrue: () => void, cachedData: Stats
     
       if (!response.success && !response.data) throw "Challenges data fetch failed"
     
-      return response
+      return response as {data:{id: string, completedAt: string, completedLanguages: string[]}[], totalItems: number}
   }
   
-  const getMostRecentChallengeData = async (recentChallengeId: string) => await (await fetch(`https://www.codewars.com/api/v1/code-challenges/${recentChallengeId}`)).json()
-    
+  const getMostRecentChallengeData = async (recentChallengeId: string) => {
+    const response = await (await fetch(`https://www.codewars.com/api/v1/code-challenges/${recentChallengeId}`)).json()
+  
+    if (!response.success && !response.id) throw {
+      line: 336,
+      file: "pages/index",
+      time: now.minimal,
+      msg: "Challenge Id does not exist"
+    }
+
+    return response as MostrecentPayload
+  }
+
   const challangesData = await getChallengesData()
   const userData = await getUserData()
 
@@ -45,52 +56,34 @@ export const getStats = async (makeDifferenceTrue: () => void, cachedData: Stats
     leaderBoardScore: userData.leaderboardPosition,
     totalCompleted: challangesData.totalItems,
     languagesTotal: (() => {
-      let languages: {[key: string]: number} = {}
-
+      let langaugeRecord: Record<string, number> = {}
       for (let challenge of challangesData.data) {
         for (let lang of challenge.completedLanguages) {
-          if (!languages[lang]) {
-            languages[lang] = 1
+          if (!langaugeRecord[lang]) {
+            langaugeRecord[lang] = 1
           } else {
-            languages[lang]++
+            langaugeRecord[lang]++
           }
         }
       }
 
-      return languages
+      return Object.entries(langaugeRecord).map(([k, v]) => ({name: k, value: v})) as OverallPayload["languagesTotal"]
     })()
   }
 
-  const mostRecentChallengeData: {
-    name: string,
-    totalAttempts: number,
-    totalCompleted: number,
-    url: string,
-    tags: Array<string>,
-    completionDate: string,
-    completedLanguages: Array<string>,
-    solutions: Array<{language: string, solution: string}>
-    id: number,
-    success: boolean
-  } = await getMostRecentChallengeData(challangesData.data[0].id)
-  if (!mostRecentChallengeData.success && !mostRecentChallengeData.id) throw {
-    line: 336,
-    file: "pages/index",
-    time: now.minimal,
-    msg: "Challenge Id does not exist"
-  }
+  const mostRecentChallengeData = await getMostRecentChallengeData(challangesData.data[0].id)
 
-  const mostRecentPayload: Map<string, {title: string, languages: Array<{language: string, solution: string}>} | Array<string> | string | number> = new Map([
-    ["title", mostRecentChallengeData.name],
-    ["attemptedTotal", mostRecentChallengeData.totalAttempts],
-    ["completedTotal", mostRecentChallengeData.totalCompleted],
+  const mostRecentPayload = new Map([
+    ["title", mostRecentChallengeData.title],
+    ["attemptedTotal", mostRecentChallengeData.attemptedTotal],
+    ["completedTotal", mostRecentChallengeData.completedTotal],
     ["url", mostRecentChallengeData.url],
     ["tags", mostRecentChallengeData.tags],
     ["completionDate", challangesData.data[0].completedAt],
     ["languagesUsed", challangesData.data[0].completedLanguages]
-  ])
+  ] as Iterable<readonly [string, string|string[]|number|MostrecentPayload["solutions"]]>)
 
-  const languagesUsed = mostRecentPayload.get("languagesUsed") as Array<string>
+  const languagesUsed = mostRecentPayload.get("languagesUsed") as string[]
   
   const doesCacheMatchWithCodewarsLanguages = languagesUsed.map((langaugeFromCodeWars: string) => {
     return !!cachedData.mostRecentPayload.solutions.languages.find((lAndSFromCache: {[key: string]: string}) => lAndSFromCache.language === langaugeFromCodeWars)
@@ -135,9 +128,14 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Pr
       default: throw "Incorrect payload type"
     }
   }
+  const allPresentableReposFetch = ((await getAPIjson('https://api.github.com/search/repositories?q=user:Alvarian', 'json')).items as {description: string|null, name: string, id: number, homepage: string, pushed_at: string, html_url: string, languages_url: string}[])
+    .filter(({description}) => {
+      if (typeof description === 'string' && description.split("|").length >= 2) {
+        return description.split("|")[2].trim().split(" ")[1].trim() === ":heavy_check_mark:"
+      }
 
-  const projectsResponse = (await (await getAPIjson('https://api.github.com/search/repositories?q=user:Alvarian', 'json')).items).filter((it: {description: string|null}) => it.description?.split("|")[2].trim().split(" ")[1].trim() === ":heavy_check_mark:")
-  
+      return false
+    }) as {description: string, name: string, id: number, homepage: string, pushed_at: string, html_url: string, languages_url: string}[]
   const getContentFromReadMe = async (projectName: string) => {
     const readmeContentList = (await getAPIjson(`https://raw.githubusercontent.com/Alvarian/${projectName}/master/README.md`, 'text')).replace(/(\r\n|\n|\r)/gm, " ").split(":octocat:")
 
@@ -156,18 +154,26 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Pr
     }
   }
 
-  const projects: Array<{[key:string]: any}> = []
-  for (let it of projectsResponse) {
+  const projects: Project[] = []
+  for (let it of allPresentableReposFetch) {
     const projectType = it.description?.split("|")[1].trim().split(" ")[2].trim()
     const {icon, instructions, content} = await getContentFromReadMe(it.name)
     
+    const stacks = Object.entries(await getAPIjson(it.languages_url, 'json') as {[key: string]: number})
+      .map(([key, value]) => {
+        return {
+          name: key,
+          value: value
+        }
+      })
+
     switch (projectType) {
       case "Service": projects.push({
         id: it.id,
         icon,
         title: it.name,
         description: it.description?.split("|")[0].trim(),
-        stacks: await getAPIjson(it.languages_url, 'json'),
+        stacks,
         repo: it.html_url,
         lastUpdate: it.pushed_at,
         payload: {
@@ -180,7 +186,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Pr
         icon,
         title: it.name,
         description: it.description?.split("|")[0].trim(),
-        stacks: await getAPIjson(it.languages_url, 'json'),
+        stacks,
         repo: it.html_url,
         lastUpdate: it.pushed_at,
         payload: {
@@ -193,7 +199,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Pr
         icon,
         title: it.name,
         description: it.description?.split("|")[0].trim(),
-        stacks: await getAPIjson(it.languages_url, 'json'),
+        stacks,
         repo: it.html_url,
         lastUpdate: it.pushed_at,
         payload: {
@@ -204,7 +210,7 @@ export const getProjects = async (makeDifferenceTrue: () => void, cachedData: Pr
     }
   }
   
-  // console.log("projects:", sortAndStringify(projects) === sortAndStringify(cachedData))
+  console.log("projects:", sortAndStringify(projects) === sortAndStringify(cachedData))
   if (sortAndStringify(projects) === sortAndStringify(cachedData)) return cachedData
   makeDifferenceTrue()
   

@@ -419,7 +419,7 @@ const index: FC<{
             setModalOpen(true)
         }
     }
-
+    
     return (
         <div className="m-auto flex flex-row items-center h-[620px]">
             <main className="h-[620px] min-w-[880px] relative mr-[40px]">

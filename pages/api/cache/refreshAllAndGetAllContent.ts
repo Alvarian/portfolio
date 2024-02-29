@@ -52,7 +52,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         })()
         
         let isDifferent: boolean = false
-        const makeDifferenceTrue = () => {if (!isDifferent) {isDifferent=!isDifferent}}
+        const makeDifferenceTrue = () => {if (!isDifferent) {isDifferent=true}}
         const payload = {
             setting: 'external',
             data: {
@@ -72,18 +72,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.statusCode = 400
         res.json({
           setting: "local",
-          data: {}
+          data: err
         })
     } finally {
         if ((notifications.error || notifications.warnings.length) && process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE) {
-          fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(notifications)
-          })
-            .catch((err: unknown) => console.log(err))
+            console.log(notifications)
+            //   fetch(process.env.NEXT_PUBLIC_NOTIFICATION_MAILING_SERVICE, {
+        //     method: "POST",
+        //     headers: {
+        //       'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(notifications)
+        //   })
+        //     .catch((err: unknown) => console.log(err))
         }
     }
 }
