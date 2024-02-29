@@ -59,10 +59,16 @@ export const localMockData = {
       overallStatsPayload: {
         leaderBoardScore: 230000,
         totalCompleted: 32,
-        languagesTotal: {
-          javascript: 10,
-          rust: 5
-        }
+        languagesTotal: [
+          {
+            name: "javascript",
+            value: 10
+          },
+          {
+            name: "rust",
+            value: 5
+          }
+        ]
       },
       mostRecentPayload: {
         // id: 1,
@@ -206,7 +212,16 @@ export const localMockData = {
         icon: "/images/trifecta.png",
         title: "rails",
         description: "Qui ad tempor qui deserunt enim tempor ullamco aliqua cillum elit. Ut laboris pariatur ullamco occaecat officia proident ea. Voluptate veniam quis dolore eu ullamco consequat sit aute ullamco. Eu et nulla ipsum et labore Lorem. Minim duis dolor tempor ex ipsum deserunt tempor id eiusmod quis sint ut duis.",
-        stacks: ["javascript", "rust"],
+        stacks: [
+          {
+            name: "javascript",
+            value: 10
+          },
+          {
+            name: "rust",
+            value: 5
+          }
+        ],
         repo: "https://github.com/Alvarian/mock-trade-wallet",
         lastUpdate: "2021-10-25T20:12:03.473Z",
         payload: {
@@ -219,7 +234,16 @@ export const localMockData = {
         icon: "/images/trifecta.png",
         title: "paris",
         description: "Reprehenderit enim voluptate cupidatat voluptate nulla deserunt eiusmod commodo. Amet veniam adipisicing exercitation ullamco duis aute aliqua eu dolore nisi. Esse anim anim aute in sunt laborum quis. Do Lorem mollit officia pariatur. Et Lorem mollit cupidatat ex laborum quis. Eu sunt dolore cupidatat consequat aute irure sit est.",
-        stacks: ["javascript", "rust"],
+        stacks: [
+          {
+            name: "javascript",
+            value: 10
+          },
+          {
+            name: "rust",
+            value: 5
+          }
+        ],
         repo: "https://github.com/Alvarian/mock-trade-wallet",
         lastUpdate: "2021-10-25T20:12:03.473Z",
         payload: {
@@ -232,7 +256,16 @@ export const localMockData = {
         icon: "/images/trifecta.png",
         title: "everest",
         description: "Nisi incididunt deserunt minim ut ex adipisicing velit excepteur sint pariatur Lorem sit esse. Proident non ut ex nostrud incididunt laborum anim amet cillum labore ut aliqua. Adipisicing ipsum anim amet qui incididunt anim aliqua veniam nisi cupidatat laboris exercitation laboris.",
-        stacks: ["javascript", "rust"],
+        stacks: [
+          {
+            name: "javascript",
+            value: 10
+          },
+          {
+            name: "rust",
+            value: 5
+          }
+        ],
         repo: "https://github.com/Alvarian/mock-trade-wallet",
         lastUpdate: "2021-10-25T20:12:03.473Z",
         payload: {
@@ -262,7 +295,16 @@ export const localMockData = {
         icon: "/images/trifecta.png",
         title: "town",
         description: "Adipisicing labore reprehenderit velit ex exercitation Lorem sint duis id ipsum ut. Anim cillum adipisicing et ad minim incididunt incididunt aute officia laboris incididunt aliquip sit et. Sunt elit mollit fugiat quis eu cupidatat duis magna. Culpa commodo fugiat exercitation ullamco amet minim irure dolore amet est excepteur nulla.",
-        stacks: ["javascript", "rust"],
+        stacks: [
+          {
+            name: "javascript",
+            value: 10
+          },
+          {
+            name: "rust",
+            value: 5
+          }
+        ],
         repo: "https://github.com/Alvarian/mock-trade-wallet",
         lastUpdate: "2021-10-25T20:12:03.473Z",
         payload: {
