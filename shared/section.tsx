@@ -1,11 +1,10 @@
 import Link from 'next/link'
 
-import type { Content, Badge, OverallPayload, MostrecentPayload } from 'lib/sections/sections.types'
+import type { Content, Badge, OverallPayload, MostrecentPayload, Project } from 'lib/sections/sections.types'
 import { sectionData, defaultVariants } from 'lib/sections/sections.data'
 import Underline from "shared/underline"
 
 import { motion } from 'framer-motion'
-import { Project, ServerPropsData, ServerPropsMedia } from './types'
 
 
 const Section: React.FC<{
