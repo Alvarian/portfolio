@@ -47,7 +47,7 @@ const Section: React.FC<{
           link: `text-2xl round-lg m-2 btn btn-ghost normal-case`
         },
         sm: {
-          header: `text-2xl mt-10`,
+          header: `text-xl mt-5`,
           link: `text-sm round-lg btn btn-ghost normal-case`
         }
       }
@@ -93,7 +93,7 @@ const Section: React.FC<{
 
           <Underline width={null} />
 
-          {defaultLinks}
+          <div className={`flex ${width < 800 ? "flex-row": "flex-col"}`}>{defaultLinks}</div>
         </div> : ""}
 
         {outsourcedLinks.length ? <div className={customStyles.tailwind.nav}>
@@ -105,7 +105,7 @@ const Section: React.FC<{
 
           <Underline width={null} />
 
-          {outsourcedLinks}
+          <div className={`flex ${width < 800 ? "flex-row": "flex-col"}`}>{outsourcedLinks}</div>
         </div> : ""}
       </div>
     )
@@ -119,10 +119,10 @@ const Section: React.FC<{
       },
     },
     tailwind: {
-      main: `flex justify-center h-screen w-full items-center relative min-h-[900px] overflow-hidden`,
+      main: `flex justify-center h-screen w-full items-center relative overflow-hidden`,
       background: `bg-no-repeat bg-cover bg-center bg-fixed absolute w-full h-full -z-10`,
       content: `flex justify-center ${content?.isFull ? "h-full w-full" : "h-2/3 w-2/3 rounded-3xl"} items-center`,
-      nav: `flex flex-col items-center `
+      nav: `flex flex-col items-center`
     }
   }
   

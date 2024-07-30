@@ -65,7 +65,7 @@ function Home(props: Data) {
 
   const handlePermissionsOnScroll = () => {
     // find current scroll position
-    const currentScrollPos = window.pageYOffset
+    const currentScrollPos = window.scrollY
 
     for (let key in scrollMethodAdmissions) {
       switch (key) {

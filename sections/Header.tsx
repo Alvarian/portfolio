@@ -21,10 +21,10 @@ const Header: React.FC<{
       tailwind: {
         background: `bg-black bg-no-repeat bg-cover bg-center bg-fixed h-full w-full -z-10 absolute`,
         content: {
-          profile: `w-128 flex flex-col justify-center items-center`,
+          profile: `w-2/3 flex flex-col justify-center items-center`,
           buttons: {
             main: `z-10 flex flex-col justify-center w-full items-center`,
-            links: `hover:invert bg-white flex items-center justify-center h-14 w-14 m-3 rounded-full`
+            links: `hover:invert bg-white flex items-center justify-center h-10 w-10 m-3 rounded-full`
           },
           description: `z-10 normal-case text-base`,
           name: `z-10 normal-case text-4xl p-5`
@@ -34,12 +34,12 @@ const Header: React.FC<{
       tailwind: {
         background: `bg-black bg-no-repeat bg-cover bg-center bg-fixed h-full w-full -z-10 absolute`,
         content: {
-          profile: `w-128 h-5/6 flex flex-col justify-around items-center pt-10`,
+          profile: `w-2/3 h-5/6 flex flex-col pl-[60px] justify-around items-center`,
           buttons: {
             main: `z-10 flex flex-col justify-center w-full items-center pb-8`,
-            links: `hover:invert bg-white flex items-center justify-center h-20 w-20 m-3 rounded-full`
+            links: `hover:invert bg-white flex items-center justify-center h-[80px] w-[80px] m-3 rounded-full`
           },
-          description: `z-10 normal-case text-2xl`,
+          description: `z-10 normal-case text-xl`,
           name: `z-10 normal-case text-5xl p-5`
         }
       }
@@ -63,10 +63,10 @@ const Header: React.FC<{
           initial="hidden"
           whileInView="visible"
           variants={defaultVariants.fallUp(2)}            
-        >An indie website and software developer. Current project stacks are mostly javascript based and are available in my github. Future project demos together with my completed projects will be portrayed in a dedicated section on this page that will allow visitors to experience my work first hand!</motion.div>
+        >An indie website and software developer. Current project stacks are mostly javascript based and are available in my github!</motion.div>
 
         <div className={styles.tailwind.content.buttons.main}>
-          <Underline width="100%" />
+          {/* <Underline width="100%" /> */}
 
           <div className="flex flex-row">
             <motion.a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"
@@ -87,10 +87,10 @@ const Header: React.FC<{
 
   const directory = (reponsiveType: string) => {
     const styles = reponsiveType === "mobile" ? {
-      tailwind: `menu menu-vertical p-0 w-96`,
+      tailwind: `menu menu-vertical p-0`,
       renderLinkSize: 'sm'
     } : {
-      tailwind: `menu menu-vertical p-0 w-96`,
+      tailwind: `menu menu-vertical p-0 w-1/3`,
       renderLinkSize: 'default'
     }
 
@@ -111,7 +111,7 @@ const Header: React.FC<{
           </div>
           :
           <div className="absolute top-0 left-0 h-full w-full flex items-center justify-around">
-            {bio("default", 300)}
+            {bio("default", 200)}
 
             {directory("default")}
           </div>
