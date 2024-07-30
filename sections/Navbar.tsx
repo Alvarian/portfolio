@@ -47,10 +47,10 @@ const Navbar: React.FC<{
       variants={defaultVariants.dropDown(1)}
       animate={navVisible ? 'lift' : 'drop'}
     >
-      <div className="navbar-start pl-10">
-        {width > 900 ? 
+      <div className="navbar-start justify-center">
+        {width > 910 ? 
           <ul className="menu menu-horizontal shadow bg-black">
-            {handleRenderLinks("text-xl")}
+            {handleRenderLinks("text-lg")}
           </ul>
           :
           <div className="dropdown">
@@ -69,15 +69,15 @@ const Navbar: React.FC<{
         <a href="/" className="btn btn-ghost normal-case text-4xl">Ivan Alvarez</a>
       </div>
 
-      <div className="navbar-end">
+      <div className="navbar-end justify-center">
         {width > 900 ?
-          <ul className="menu menu-horizontal shadow bg-black pr-10">
+          <ul className="menu menu-horizontal shadow bg-black min-w-[260px]">
             <li><a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={45} height={45} src="/icons/github.svg" /></a></li>
             
             <li><a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={30} height={30} src="/icons/linkedin.svg" /></a></li>
           </ul>
           :
-          <div className="dropdown dropdown-end pr-10">
+          <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle bg-white hover:invert">
               <Image alt='' width={40} height={40} src="/icons/social-media.svg" />
             </label>
