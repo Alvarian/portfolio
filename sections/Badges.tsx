@@ -6,30 +6,20 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react"
 
 const BadgeCoat: React.FC<{
   isSectionPermitted: boolean,
-  // gifFrames: Array<string>,
   setIfEnded: Dispatch<SetStateAction<boolean>>,
   width: number
 }> = ({
   isSectionPermitted,
-  // gifFrames,
   setIfEnded,
   width
 }) => {
   const [coatPhase, setCoatPhase] = useState<string>("start")
-  // const [coatProperties, setProperties] = useState<{length: number, sources: Array<string>}>({length: 0, sources: []})
   const [frames, incrementFrame] = useState(0)
   let runFrames: NodeJS.Timeout
 
   useEffect(() => { 
     if (isSectionPermitted) {
       if (coatPhase === "start") {
-        // if (!coatProperties.length) {
-        //   setProperties({
-        //     length: gifFrames.length,
-        //     sources: gifFrames
-        //   })
-        // }
-        
         setCoatPhase("run")
       }
 
@@ -67,11 +57,11 @@ const BadgeCoat: React.FC<{
       filter: "grayscale(100%)",
       position: "absolute" as "absolute"
     } : {
-      height: "150%",
+      height: "110%",
       zIndex: "-10",
       top: "-25px",
-      maxWidth: "1640px",
-      minWidth: "1640px",
+      maxWidth: "1000px",
+      minWidth: "1000px",
       filter: "grayscale(100%)",
       position: "absolute" as "absolute"
     }
@@ -92,10 +82,12 @@ const BadgeCoat: React.FC<{
 const BadgeIcons: React.FC<{
     badges: Array<Badge>,
     reset: Badge,
+    width: number,
     handleBadgeDetails: (details: Badge) => void
 }> = ({
     badges,
     reset,
+    width,
     handleBadgeDetails
 }) => {
     const renderBadges: () => Array<Badge> = () => {
@@ -173,9 +165,15 @@ const BadgeIcons: React.FC<{
   
       return templateList
     }    
+
+    const styles = (width > 930) ? {
+      badgesMain: `h-full w-96 grid grid-cols-3 grid-rows-5 absolute`
+    } : {
+      badgesMain: `h-full w-96 grid grid-cols-3 grid-rows-5 absolute`
+    }
     
     return (
-      <div className="h-full w-96 grid grid-cols-3 grid-rows-5">
+      <div className={styles.badgesMain}>
         {renderBadges().map((badge: Badge, index: number) => badge.name ? (
           <div key={index} className="relative flex justify-end items-center h-36 w-36">
             <motion.a 
@@ -211,7 +209,6 @@ const index: React.FC<{
   isSectionPermitted: boolean,
   width: number,
   data: {
-    // gifFrames: Array<string>,
     badges: Array<Badge>
   }
 }> = ({
@@ -220,7 +217,6 @@ const index: React.FC<{
   data
 }) => {
   const { 
-    // gifFrames, 
     badges 
   } = data
   const [isFrameEnded, setIfEnded] = useState(false)
@@ -246,7 +242,7 @@ const index: React.FC<{
         },
         tailwind: {
           main: `h-full w-full flex items-center justify-end`,
-          iconIndicator: `h-full flex justify-center items-center`,
+          iconIndicator: `h-full flex justify-center items-center absolute`,
           badgesMain: `h-full w-full absolute flex justify-end`
         }
       }
@@ -349,7 +345,6 @@ const index: React.FC<{
     <div className={tailwind.main}>
       <BadgeCoat
         isSectionPermitted={isSectionPermitted}
-        // gifFrames={gifFrames}
         setIfEnded={setIfEnded}
         width={width}
       />
@@ -372,7 +367,7 @@ const index: React.FC<{
           }
         }}
       >
-        {width > 1500 && <div className="h-full flex justify-center items-center"
+        {/* {width > 1500 && <div className="h-full flex justify-center items-center"
           style={css.iconIndicator}
         >
           <div>
@@ -380,10 +375,11 @@ const index: React.FC<{
             <div className="text-2xl">{badgeDetails.issuedOn}</div>
             <div className="flex justify-around">{renderTags()}</div>
           </div>
-        </div>}
+        </div>} */}
 
         <BadgeIcons
           badges={badges}
+          width={width}
           handleBadgeDetails={handleBadgeDetails}
           reset={reset}
         />
@@ -391,7 +387,7 @@ const index: React.FC<{
         <div className={tailwind.iconIndicator}
           style={css.iconIndicator}
         >
-          {width <= 1500 && width > 760 && <div>
+          {/* {width <= 1500 && width > 760 && <div>
             <h2 className="text-3xl">{badgeDetails.name}</h2>
             <div className="text-lg">{badgeDetails.issuedOn}</div>
             <div className="flex justify-around">{renderTags()}</div>
@@ -401,7 +397,12 @@ const index: React.FC<{
             <h2 className="text-4xl">{badgeDetails.name}</h2>
             <div className="text-2xl">{badgeDetails.issuedOn}</div>
             <div className="flex justify-around">{renderTags()}</div>
-          </div>}
+          </div>} */}
+          <div>
+            <h2 className="text-4xl">{badgeDetails.name}</h2>
+            <div className="text-2xl">{badgeDetails.issuedOn}</div>
+            <div className="flex justify-around">{renderTags()}</div>
+          </div>
         </div>
       </motion.div>}               
     </div>  

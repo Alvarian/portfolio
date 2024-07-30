@@ -48,7 +48,7 @@ const Navbar: React.FC<{
       animate={navVisible ? 'lift' : 'drop'}
     >
       <div className="navbar-start justify-center">
-        {width > 910 ? 
+        {width > 920 ? 
           <ul className="menu menu-horizontal shadow bg-black">
             {handleRenderLinks("text-lg")}
           </ul>
