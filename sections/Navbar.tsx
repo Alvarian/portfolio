@@ -14,7 +14,7 @@ const Navbar: React.FC<{
   width
 }) => {
   const handleRenderLinks = (textStyles: string) => {
-    return sectionData.map((section, index) => (
+    return sectionData.toSpliced(0,1).map((section, index) => (
       <li key={index}>
         <Link href={"#"+section.alt}>
           <span className={textStyles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</span>
@@ -28,7 +28,7 @@ const Navbar: React.FC<{
       minWidth: '600px'
     },
     tailwind: {
-      main: `navbar bg-black z-40 fixed left-0`,
+      main: `navbar bg-black z-40 fixed left-0 min-h-[100px]`,
       header: `btn btn-ghost normal-case text-4xl`,
       background: `bg-black bg-no-repeat bg-cover bg-center bg-fixed h-full w-full -z-10 absolute`,
       content: {
@@ -36,7 +36,7 @@ const Navbar: React.FC<{
         nav: `navbar h-4/5 w-5/6 flex flex-row justify-around`,
         buttons: {
           main: `flex flex-col justify-center w-full items-center pb-8`,
-          links: `hover:invert bg-white flex items-center justify-center h-14 w-14 m-3 rounded-full`
+          links: `hover:invert bg-white flex items-center justify-center h-14 w-14 rounded-full`
         }
       }
     }
@@ -71,7 +71,7 @@ const Navbar: React.FC<{
 
       <div className="navbar-end justify-center">
         {width > 900 ?
-          <ul className="menu menu-horizontal shadow bg-black min-w-[260px]">
+          <ul className="menu menu-horizontal justify-around shadow min-w-[200px]">
             <li><a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={45} height={45} src="/icons/github.svg" /></a></li>
             
             <li><a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={30} height={30} src="/icons/linkedin.svg" /></a></li>
@@ -82,7 +82,7 @@ const Navbar: React.FC<{
               <Image alt='' width={40} height={40} src="/icons/social-media.svg" />
             </label>
 
-            <ul className="menu menu-compact dropdown-content rounded-box shadow bg-black mt-9 p-3">
+            <ul className="menu menu-compact dropdown-content rounded-box shadow mt-9">
               <li><a rel="noopener noreferrer" href="https://github.com/Alvarian/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={45} height={45} src="/icons/github.svg" /></a></li>
               
               <li><a rel="noopener noreferrer" href="https://www.linkedin.com/in/alvarezivan88/" className={styles.tailwind.content.buttons.links} target="_blank"><Image alt='' width={30} height={30} src="/icons/linkedin.svg" /></a></li>
