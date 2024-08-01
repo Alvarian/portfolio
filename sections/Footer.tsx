@@ -9,7 +9,7 @@ import { motion } from "framer-motion"
 
 
 const Footer: React.FC<{
-  handleRenderLinks: (elementType: string, size: string) => JSX.Element,
+  // handleRenderLinks: (elementType: string, size: string) => JSX.Element,
   width: number
 }> = ({
   handleRenderLinks,
