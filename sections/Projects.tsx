@@ -450,13 +450,13 @@ const index: FC<{
                 </AnimatePresence>
             </main>
 
-            <aside className="flex flex-col flex-wrap w-1/5 overflow-auto mt-0">
+            {width > 900 && <aside className="flex flex-col flex-wrap w-1/5 overflow-auto mt-0">
                 <AnimatePresence>
                     {productIds.map((project: Project) => (
                         <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />
                     ))}
                 </AnimatePresence>
-            </aside>
+            </aside>}
 
             <Modal 
                 handleClose={handleModalClose}
