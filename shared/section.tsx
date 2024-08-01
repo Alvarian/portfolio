@@ -113,7 +113,7 @@ const Section: React.FC<{
 
           <Underline width={null} />
 
-          <div className={`flex ${width < 800 ? "flex-row": "flex-col"}`}>{outsourcedLinks}</div>
+          <div className={styles["menuList"]}>{outsourcedLinks}</div>
         </div> : ""}
       </div>
     )
