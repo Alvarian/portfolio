@@ -146,7 +146,6 @@ const Section: React.FC<{
             width={width} 
             alt={alt}
             isSectionPermitted={isSectionPermitted}
-{/*             handleRenderLinks={handleRenderLinks} */}
           />
         </div>
          : 
