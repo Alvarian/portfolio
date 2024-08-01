@@ -3,7 +3,7 @@ import Link from "next/link"
 
 import Section from 'shared/section'
 import Underline from "shared/underline"
-import { defaultVariants } from 'lib/sections/sections.data'
+import { defaultVariants, sectionData } from 'lib/sections/sections.data'
 
 import { motion } from "framer-motion"
 
