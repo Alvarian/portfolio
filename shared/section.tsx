@@ -33,21 +33,29 @@ const Section: React.FC<{
     const stylesMapping = {
       footer: {
         default: {
-          header: "text-3xl",
-          link: "text-xl round-lg m-2 btn btn-ghost normal-case"
+          header: "text-2xl",
+          menu: "flex flex-row justify-around w-full",
+          menuList: "flex flex-col items-center",
+          link: "text-md round-lg btn btn-ghost normal-case"
         },
         sm: {
-          header: "text-3xl",
-          link: "text-xl round-lg m-2 btn btn-ghost normal-case"
+          header: "text-2xl",
+          menu: "flex flex-row justify-around w-full",
+          menuList: "flex flex-col",
+          link: "text-lg round-lg btn btn-ghost normal-case"
         }
       },
       header: {
         default: {
           header: `text-4xl`,
+          menu: "flex flex-row justify-around w-full",
+          menuList: "flex flex-col items-center",
           link: `text-2xl round-lg m-2 btn btn-ghost normal-case`
         },
         sm: {
           header: `text-xl mt-5`,
+          menu: "flex flex-row justify-around w-full",
+          menuList: "flex flex-row items-center",
           link: `text-sm round-lg btn btn-ghost normal-case`
         }
       }
@@ -83,7 +91,7 @@ const Section: React.FC<{
     }
 
     return (
-      <div className="flex flex-row justify-around w-full">
+      <div className={styles["menu"]}>
         {defaultLinks.length ? <div className={customStyles.tailwind.nav}>
           <motion.h1 className={styles["header"]}
             initial="hidden"
@@ -93,7 +101,7 @@ const Section: React.FC<{
 
           <Underline width={null} />
 
-          <div className={`flex ${width < 800 ? "flex-row": "flex-col"}`}>{defaultLinks}</div>
+          <div className={styles["menuList"]}>{defaultLinks}</div>
         </div> : ""}
 
         {outsourcedLinks.length ? <div className={customStyles.tailwind.nav}>

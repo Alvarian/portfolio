@@ -39,7 +39,7 @@ const Footer: React.FC<{
           <Link href="/"><div className="btn btn-ghost normal-case text-5xl">Ivan Alvarez</div></Link>
         </div>
 
-        <div className="menu flex menu-vertical p-0 w-3/6">{handleRenderLinks("footer", "default")}</div>
+        <div className="menu flex menu-vertical p-0 w-3/6">{handleRenderLinks("footer", width > 900 ? "default" : "sm")}</div>
       </div>
     )
   }
@@ -60,7 +60,7 @@ const Footer: React.FC<{
           main: `bg-black/50 rounded-lg hover:bg-black transition ease-in-out delay-150 duration-300 h-4/5 w-5/6 flex justify-between flex-col items-center`,
           nav: `navbar h-4/5 w-5/6 flex flex-row justify-around`,
           buttons: {
-            main: `flex flex-col justify-center w-full items-center pb-8`,
+            main: `flex flex-col justify-center w-full items-center`,
             links: `hover:invert bg-white flex items-center justify-center h-20 w-20 m-3 rounded-full`
           }
         }

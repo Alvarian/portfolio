@@ -129,7 +129,7 @@ function Home(props: Data) {
       const navbarlessAdmissionsList = {...scrollMethodAdmissions}
       delete navbarlessAdmissionsList.navbar
 
-      window.addEventListener('scroll', rateLimiters.debounce(5000, handleAutoRoutingOnScroll.bind(this, navbarlessAdmissionsList)))
+      // window.addEventListener('scroll', rateLimiters.debounce(5000, handleAutoRoutingOnScroll.bind(this, navbarlessAdmissionsList)))
       window.addEventListener('scroll', rateLimiters.throttle(300, handlePermissionsOnScroll))
       
       setAreLoaded(!areEventsLoaded)

@@ -22,7 +22,7 @@ const ProjectIconImage: FC<{
             src={project.icon}
             alt=""
             onClick={() => onExpand(project)}
-            className="m-[5px] w-[140px] h-[140px] bg-white rounded-xl border-8 cursor-pointer border-indigo-600"
+            className="m-[5px] w-2/5 aspect-square bg-white rounded-xl border-8 cursor-pointer border-indigo-600"
             layoutId={`product-${project.id}`}
         />
     )
@@ -421,8 +421,8 @@ const index: FC<{
     }
     
     return (
-        <div className="m-auto flex flex-row items-center h-[620px]">
-            <main className="h-[620px] min-w-[880px] relative mr-[40px]">
+        <div className="flex flex-row justify-center items-center h-4/5 aspect-video">
+            <main className="h-full w-3/5 relative mr-[40px]">
                 <AnimatePresence>
                     <motion.div
                         layoutId={`product-${projectData.id}`}
@@ -430,27 +430,27 @@ const index: FC<{
                         className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black p-8"
                     >
                         <div>
-                            <h2 className="text-4xl">{formatProjectTitle(projectData.title)}</h2>
+                            <h2 className={width > 900 ? "text-3xl" : "text-xl"}>{formatProjectTitle(projectData.title)}</h2>
 
                             <img
-                                className="h-[400px] m-5"
+                                className="h-3/5"
                                 src={projectData.icon}
                                 alt=""
                             />
 
-                            {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent btn-wide text-2xl" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
+                            {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent text-xl" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
                         </div>
 
-                        <ul className="w-1/3 h-3/4 text-left flex flex-col justify-around items-center">
-                            <li className="w-full text-xl">{projectData.description}</li>
+                        <ul className="w-1/3 h-3/5 text-left flex flex-col justify-around items-center">
+                            <li className={`w-full ${width > 900 ? "text-md" : "text-md"}`}>{projectData.description}</li>
                             <li className="w-full"><a className="btn btn-accent btn-xs" href={projectData.repo}>Repository Source</a></li>
-                            <li className="w-full">Last push on {getFormattedDate(projectData.lastUpdate)}</li>
+                            <li className={`w-full ${width > 900 ? "text-sm" : "text-xs"}`}>Last push on {getFormattedDate(projectData.lastUpdate)}</li>
                         </ul>
                     </motion.div>
                 </AnimatePresence>
             </main>
 
-            <aside className="flex flex-col flex-wrap h-[620px] w-[220px] overflow-auto mt-0">
+            <aside className="flex flex-col flex-wrap w-1/5 overflow-auto mt-0">
                 <AnimatePresence>
                     {productIds.map((project: Project) => (
                         <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />
