@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 
 import KeyIcon from "shared/keyicon"
 import Underline from "shared/underline"
