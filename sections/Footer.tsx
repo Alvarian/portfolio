@@ -4,6 +4,7 @@ import Link from "next/link"
 import Section from 'shared/section'
 import Underline from "shared/underline"
 import { defaultVariants, sectionData } from 'lib/sections/sections.data'
+import type { Content, Badge, OverallPayload, MostrecentPayload, Project } from 'lib/sections/sections.types'
 
 import { motion } from "framer-motion"
 
