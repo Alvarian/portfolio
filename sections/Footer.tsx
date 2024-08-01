@@ -12,7 +12,7 @@ const Footer: React.FC<{
   // handleRenderLinks: (elementType: string, size: string) => JSX.Element,
   width: number
 }> = ({
-  handleRenderLinks,
+  // handleRenderLinks,
   width
 }) => {  
 const handleRenderLinks: (elementType: string, size: string) => JSX.Element = (elementType: string, size: string) => {
