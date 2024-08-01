@@ -4,7 +4,8 @@ import KeyIcon from "shared/keyicon"
 import Underline from "shared/underline"
 
 import { motion } from "framer-motion"
-import { defaultVariants } from "lib/sections/sections.data"
+import { defaultVariants, sectionData } from "lib/sections/sections.data"
+import type { Content, Badge, OverallPayload, MostrecentPayload, Project } from 'lib/sections/sections.types'
 
 
 const Header: React.FC<{
@@ -86,6 +87,106 @@ const Header: React.FC<{
   }
 
   const directory = (reponsiveType: string) => {
+    const handleRenderLinks: (elementType: string, size: string) => JSX.Element = (elementType: string, size: string) => {
+      let outsourcedLinks = []
+      let defaultLinks = []
+      
+      const stylesMapping = {
+        footer: {
+          default: {
+            header: "text-2xl",
+            menu: "flex flex-row justify-around w-full",
+            menuList: "flex flex-col items-center",
+            link: "text-md round-lg btn btn-ghost normal-case"
+          },
+          sm: {
+            header: "text-2xl",
+            menu: "flex flex-row justify-around w-full",
+            menuList: "flex flex-col",
+            link: "text-lg round-lg btn btn-ghost normal-case"
+          }
+        },
+        header: {
+          default: {
+            header: `text-4xl`,
+            menu: "flex flex-row justify-around w-full",
+            menuList: "flex flex-col items-center",
+            link: `text-2xl round-lg m-2 btn btn-ghost normal-case`
+          },
+          sm: {
+            header: `text-xl mt-5`,
+            menu: "flex flex-row justify-around w-full",
+            menuList: "flex flex-row items-center",
+            link: `text-sm round-lg btn btn-ghost normal-case`
+          }
+        }
+      }
+  
+      const customStyles = {
+        tailwind: {
+          nav: `flex flex-col items-center`
+        }
+      }
+  
+      let queDuration = 5;
+      const styleMap = stylesMapping[elementType as keyof typeof stylesMapping]
+      const styles = styleMap[size as keyof typeof styleMap]
+  
+      for (const index in sectionData) {
+        const section: Content = sectionData[index]
+  
+        switch (section.type) {
+          case "outsourced": 
+            outsourcedLinks.push(<motion.div
+              initial="hidden"
+              whileInView="visible"
+              variants={defaultVariants.fallUp(++queDuration)}
+              key={index}
+            ><Link href={"#"+section.alt}><div className={styles["link"]}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</div></Link></motion.div>)
+  
+            break
+          default:
+            defaultLinks.push(<motion.div
+              initial="hidden"
+              whileInView="visible"
+              variants={defaultVariants.fallUp(++queDuration)}
+              key={index}
+            ><Link href={"#"+section.alt}><div className={styles["link"]}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</div></Link></motion.div>)
+  
+            break
+        }
+      }
+  
+      return (
+        <div className={styles["menu"]}>
+          {defaultLinks.length ? <div className={customStyles.tailwind.nav}>
+            <motion.h1 className={styles["header"]}
+              initial="hidden"
+              whileInView="visible"
+              variants={defaultVariants.fallUp(1)}
+            >Sections</motion.h1>
+  
+            <Underline width={null} />
+  
+            <div className={styles["menuList"]}>{defaultLinks}</div>
+          </div> : ""}
+  
+          {outsourcedLinks.length ? <div className={customStyles.tailwind.nav}>
+            <motion.h1 className={styles["header"]}
+              initial="hidden"
+              whileInView="visible"
+              variants={defaultVariants.fallUp(1)}
+            >Outsourced</motion.h1>
+  
+            <Underline width={null} />
+  
+            <div className={styles["menuList"]}>{outsourcedLinks}</div>
+          </div> : ""}
+        </div>
+      )
+    }
+
+    
     const styles = reponsiveType === "mobile" ? {
       tailwind: `menu menu-vertical p-0`,
       renderLinkSize: 'sm'
