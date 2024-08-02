@@ -307,7 +307,7 @@ const ModalBody: FC<{
                             >
                                 <div className={`${isWidthMobile ? "" : "h-full px-10"}`}>{parsedContent[imageIndex.center].description}</div>
                                 
-                                <img className={`${isWidthMobile ? "h-[465px]" : "h-full pr-7"} min-w-[600px] max-w-[600px]`} src={parsedContent[imageIndex.center].image} />
+                                <img className={`${isWidthMobile ? "h-5/7 aspect-video" : "h-full pr-7"}`} src={parsedContent[imageIndex.center].image} />
                             </motion.div>                    
                         </AnimatePresence>
                     </div>
