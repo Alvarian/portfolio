@@ -49,11 +49,11 @@ const BadgeCoat: React.FC<{
 
   const renderCoatPhase = () => {
     const styles = width > 930 ? {
-      height: "150%",
+      height: "125%",
       zIndex: "-10",
-      top: "-25px",
-      maxWidth: "1640px",
-      minWidth: "1640px",
+      top: "-7px",
+      maxWidth: "1400px",
+      minWidth: "1400px",
       filter: "grayscale(100%)",
       position: "absolute" as "absolute"
     } : {
@@ -167,15 +167,17 @@ const BadgeIcons: React.FC<{
     }    
 
     const styles = (width > 930) ? {
-      badgesMain: `h-full w-96 grid grid-cols-3 grid-rows-5 absolute`
+      badgesMain: `top-[8%] left-[53%] h-full w-[450px] grid grid-cols-3 grid-rows-5 absolute`,
+      badge: `relative flex justify-end items-center h-30 w-30`
     } : {
-      badgesMain: `h-full w-96 grid grid-cols-3 grid-rows-5 absolute`
+      badgesMain: `top-0 left-[67%] h-full w-[330px] grid grid-cols-3 grid-rows-5 absolute`,
+      badge: `relative flex justify-end items-center h-24 w-24`
     }
     
     return (
       <div className={styles.badgesMain}>
         {renderBadges().map((badge: Badge, index: number) => badge.name ? (
-          <div key={index} className="relative flex justify-end items-center h-36 w-36">
+          <div key={index} className={styles.badge}>
             <motion.a 
               target="_blank"
               className="shadow-lg border-8 rounded-full bg-black border-indigo-600 p-2"
@@ -221,81 +223,61 @@ const index: React.FC<{
   } = data
   const [isFrameEnded, setIfEnded] = useState(false)
 
-  const { tailwind, css } = (() => { 
-    if (width > 1500) {
-      return {
-        css: {
-          iconIndicator: {
-            width: "530px",
-            color: "#fff",
-            textShadow: `
-              0 0 5px #fff,
-              0 0 10px #fff,
-              0 0 20px #fff,
-              0 0 40px #0ff,
-              0 0 80px #0ff,
-              0 0 90px #0ff,
-              0 0 100px #0ff,
-              0 0 150px #0ff
-            `
-          }
-        },
-        tailwind: {
-          main: `h-full w-full flex items-center justify-end`,
-          iconIndicator: `h-full flex justify-center items-center absolute`,
-          badgesMain: `h-full w-full absolute flex justify-end`
-        }
+  const { tailwind, css } = (width > 900) ? {
+    css: {
+      iconIndicator: {
+        width: "400px",
+        color: "#fff",
+        textShadow: `
+          0 0 5px #fff,
+          0 0 10px #fff,
+          0 0 20px #fff,
+          0 0 40px #0ff,
+          0 0 80px #0ff,
+          0 0 90px #0ff,
+          0 0 100px #0ff,
+          0 0 150px #0ff
+        `
       }
-    } else if (width <= 760) {
-      return {
-        css: {
-          iconIndicator: {
-            width: "530px",
-            color: "#fff",
-            textShadow: `
-              0 0 5px #fff,
-              0 0 10px #fff,
-              0 0 20px #fff,
-              0 0 40px #0ff,
-              0 0 80px #0ff,
-              0 0 90px #0ff,
-              0 0 100px #0ff,
-              0 0 150px #0ff
-            `
-          }
-        },
-        tailwind: {
-          main: `h-full w-full flex items-center justify-end mr-[-680px]`,
-          iconIndicator: `h-full flex justify-center items-center relative top-[240px]`,
-          badgesMain: `h-full w-full absolute flex flex-col-reverse items-center right-[-440px] bottom-[110px]`
-        }
-      }
-    } else {
-      return {
-        css: {
-          iconIndicator: {
-            width: "530px",
-            color: "#fff",
-            textShadow: `
-              0 0 5px #fff,
-              0 0 10px #fff,
-              0 0 20px #fff,
-              0 0 40px #0ff,
-              0 0 80px #0ff,
-              0 0 90px #0ff,
-              0 0 100px #0ff,
-              0 0 150px #0ff
-            `
-          }
-        },
-        tailwind: {
-          main: `h-full w-full flex items-center justify-end`,
-          iconIndicator: `h-full flex justify-center items-center top-[-260px]`,
-          badgesMain: `h-full w-full absolute flex justify-end`
-        }
+    },
+    tailwind: {
+      main: `h-full w-full flex items-center justify-end`,
+      iconIndicator: `h-full flex justify-center items-center absolute right-[1%]`,
+      badgesMain: `h-full w-full absolute flex justify-end`,
+      badgeDetails: {
+        title: `text-3xl`,
+        issuedOn: `text-xl`,
+        tags: `text-md`
       }
     }
-  })()
+  } : {
+    css: {
+      iconIndicator: {
+        width: "200px",
+        color: "#fff",
+        textShadow: `
+          0 0 5px #fff,
+          0 0 10px #fff,
+          0 0 20px #fff,
+          0 0 40px #0ff,
+          0 0 80px #0ff,
+          0 0 90px #0ff,
+          0 0 100px #0ff,
+          0 0 150px #0ff
+        `
+      }
+    },
+    tailwind: {
+      main: `h-full w-full flex items-center justify-end`,
+      iconIndicator: `h-full flex justify-center items-center absolute right-[3%]`,
+      badgesMain: `h-full w-full absolute flex justify-end`,
+      badgeDetails: {
+        title: `text-xl`,
+        issuedOn: `text-lg`,
+        tags: `text-md`
+      }
+    }
+  }
 
   const reset = {
     issuedOn: "",
@@ -367,16 +349,6 @@ const index: React.FC<{
           }
         }}
       >
-        {/* {width > 1500 && <div className="h-full flex justify-center items-center"
-          style={css.iconIndicator}
-        >
-          <div>
-            <h2 className="text-4xl">{badgeDetails.name}</h2>
-            <div className="text-2xl">{badgeDetails.issuedOn}</div>
-            <div className="flex justify-around">{renderTags()}</div>
-          </div>
-        </div>} */}
-
         <BadgeIcons
           badges={badges}
           width={width}
@@ -387,21 +359,10 @@ const index: React.FC<{
         <div className={tailwind.iconIndicator}
           style={css.iconIndicator}
         >
-          {/* {width <= 1500 && width > 760 && <div>
-            <h2 className="text-3xl">{badgeDetails.name}</h2>
-            <div className="text-lg">{badgeDetails.issuedOn}</div>
-            <div className="flex justify-around">{renderTags()}</div>
-          </div>}
-
-          {width <= 760 && <div>
-            <h2 className="text-4xl">{badgeDetails.name}</h2>
-            <div className="text-2xl">{badgeDetails.issuedOn}</div>
-            <div className="flex justify-around">{renderTags()}</div>
-          </div>} */}
           <div>
-            <h2 className="text-4xl">{badgeDetails.name}</h2>
-            <div className="text-2xl">{badgeDetails.issuedOn}</div>
-            <div className="flex justify-around">{renderTags()}</div>
+            <h2 className={tailwind.badgeDetails.title}>{badgeDetails.name}</h2>
+            <div className={tailwind.badgeDetails.issuedOn}>{badgeDetails.issuedOn}</div>
+            <div className={tailwind.badgeDetails.tags}>{renderTags()}</div>
           </div>
         </div>
       </motion.div>}               

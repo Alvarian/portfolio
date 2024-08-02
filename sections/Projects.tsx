@@ -15,14 +15,15 @@ declare global {
 
 const ProjectIconImage: FC<{
     project: Project,
-    onExpand: (project: Project) => void
-}> = ({ project, onExpand }) => {
+    onExpand: (project: Project) => void,
+    isMobile: boolean
+}> = ({ project, onExpand, isMobile }) => {
     return (
         <motion.img
             src={project.icon}
             alt=""
             onClick={() => onExpand(project)}
-            className="m-[5px] w-2/5 aspect-square bg-white rounded-xl border-8 cursor-pointer border-indigo-600"
+            className={`m-[5px] ${isMobile ? "h-full" : "w-2/5"} aspect-square bg-white rounded-xl border-8 cursor-pointer border-indigo-600`}
             layoutId={`product-${project.id}`}
         />
     )
@@ -421,19 +422,19 @@ const index: FC<{
     }
     
     return (
-        <div className="flex flex-row justify-center items-center h-4/5 aspect-video">
-            <main className="h-full w-3/5 relative mr-[40px]">
+        <div className={`flex ${width > 900 ? "flex-row" : "flex-col"} justify-center items-center h-4/5 aspect-[16/9]`}>
+            <main className="h-full w-3/5 relative">
                 <AnimatePresence>
                     <motion.div
                         layoutId={`product-${projectData.id}`}
                         key={projectData.id}
                         className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black p-8"
                     >
-                        <div>
-                            <h2 className={width > 900 ? "text-3xl" : "text-xl"}>{formatProjectTitle(projectData.title)}</h2>
+                        <div className="w-full h-full flex justify-around items-center flex-col">
+                            <h2 className={width > 900 ? "text-3xl" : "text-2xl"}>{formatProjectTitle(projectData.title)}</h2>
 
                             <img
-                                className="h-3/5"
+                                className="w-3/5 aspect-square"
                                 src={projectData.icon}
                                 alt=""
                             />
@@ -450,13 +451,13 @@ const index: FC<{
                 </AnimatePresence>
             </main>
 
-            {width > 900 && <aside className="flex flex-col flex-wrap w-1/5 overflow-auto mt-0">
+            <aside className={`flex ${width > 900 ? "flex-col flex-wrap w-1/5" : "flex-row w-full max-h-[110px] justify-center"} overflow-auto mt-0`}>
                 <AnimatePresence>
                     {productIds.map((project: Project) => (
-                        <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} />
+                        <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} isMobile={width < 900} />
                     ))}
                 </AnimatePresence>
-            </aside>}
+            </aside>
 
             <Modal 
                 handleClose={handleModalClose}
