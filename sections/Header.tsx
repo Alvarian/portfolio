@@ -133,7 +133,7 @@ const Header: React.FC<{
       const styleMap = stylesMapping[elementType as keyof typeof stylesMapping]
       const styles = styleMap[size as keyof typeof styleMap]
   
-      for (const index in sectionData) {
+      for (let index = 1; index < sectionData.length; index++) {
         const section: Content = sectionData[index]
   
         switch (section.type) {

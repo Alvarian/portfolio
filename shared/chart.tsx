@@ -80,7 +80,7 @@ function RenderedDonut({languagesListValues}: {languagesListValues: LanguageValu
     }
     
     return (
-        <div id="ratioGraph" className='h-[300px] w-[300px]'>
+        <div id="ratioGraph" className='h-[200px] w-[200px]'>
             <Doughnut 
                 data={data} 
                 options={{
@@ -98,7 +98,7 @@ function RenderedDonut({languagesListValues}: {languagesListValues: LanguageValu
 function RatioStatsList({languagesListValues}: {languagesListValues: LanguageValue}) {
     const list = []
 
-    for (let i = 0; i < languagesListValues.titles.length; i++) {
+    for (let i = 0; i < 5; i++) {
         const title = languagesListValues.titles[i]
         const ratio = languagesListValues.ratios[i]
         const color = languagesListValues.colors[i]

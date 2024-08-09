@@ -70,9 +70,7 @@ const Icon: React.FC<IconInter> = ({
         },
         center: {
             parent: `relative items-center flex justify-center flex-col`,
-            child: {
-                position: "absolute"
-            }
+            child: "absolute"
         },
         right: {
             parent: `items-center flex justify-center flex-row-reverse`,
@@ -107,7 +105,7 @@ const Icon: React.FC<IconInter> = ({
                         >
                             {img}
                         </motion.a>
-                        {content && <span className={mappedIconSizes.child.content+" "+custom?.content} style={{...mappedIconPositions.child, position: undefined}}>{content}</span>}
+                        {content && <span className={mappedIconSizes.child.content+" "+custom?.content}>{content}</span>}
 
                     </div>
                 )
@@ -123,8 +121,8 @@ const Icon: React.FC<IconInter> = ({
                         onHoverEnd={e => {}}
                     >
                         
-                        <span className={custom?.img} style={{...mappedIconPositions.child, position: undefined}}>{img}</span>
-                        {content && <span className={mappedIconSizes.child.content+" "+custom?.content} style={{...mappedIconPositions.child, position: undefined}}>{content}</span>}
+                        <span className={custom?.img}>{img}</span>
+                        {content && <span className={`${mappedIconSizes.child.content} ${mappedIconPositions.parent} ${custom?.content}`}>{content}</span>}
 
                     </motion.button>
                 )
@@ -132,8 +130,8 @@ const Icon: React.FC<IconInter> = ({
                 return (
                     <div className={"w-full "+mappedIconPositions.parent+" "+custom?.parent} style={mappedIconSizes.parent}>            
 
-                        <span className={custom?.img} style={{...mappedIconPositions.child, position: undefined}}>{img}</span>
-                        {content && <span className={mappedIconSizes.child.content+" "+custom?.content} style={{...mappedIconPositions.child, position: undefined}}>{content}</span>}
+                        <span className={custom?.img}>{img}</span>
+                        {content && <span className={`text-blue-600 font-black ${mappedIconSizes.child.content} ${mappedIconPositions.child} ${custom?.content}`}>{content}</span>}
 
                     </div>
                 )

@@ -203,73 +203,69 @@ const Overall: FC<{
     const { css, tailwind } = width > 900 ? {
         css: {},
         tailwind: {
-            main: `flex flex-col h-full min-h-[624px] min-w-[600px]`,
-            container: `bg-gradient-to-r rounded-lg from-black h-full flex flex-col justify-center pt-10`,
-            header: `p-10 text-left text-4xl font-bold`,
+            container: `bg-gradient-to-r rounded-lg from-black flex flex-col justify-center`,
+            header: `text-3xl font-bold`,
             rankings: `flex justify-around items-center`,
-            rankIcons: `flex items-center justify-center text-3xl`,
-            donutContainer: `bg-gradient-to-r from-amber-200 flex justify-around py-10 text-2xl`,
-            donut: `h-[300px] w-[300px]`
+            rankIcons: `flex items-center justify-center text-xl`,
+            donutContainer: `bg-gradient-to-r from-amber-200 flex justify-around text-2xl`,
+            donut: `h-[200px] w-[200px]`
         }
     } : {
         css: {},
         tailwind: {
-            main: `flex flex-col h-full min-h-[624px] min-w-[600px]`,
-            container: `bg-gradient-to-r rounded-lg from-black h-full flex flex-col justify-center pt-10`,
-            header: `p-10 text-left text-3xl font-bold`,
+            container: `bg-gradient-to-r rounded-lg from-black flex flex-col justify-center`,
+            header: `text-2xl font-bold`,
             rankings: `flex justify-around items-center`,
             rankIcons: `flex items-center justify-center text-lg`,
             donutContainer: `bg-gradient-to-r from-amber-200 flex justify-around py-5 text-md`,
-            donut: `h-[200px] w-[200px]`
+            donut: `h-[150px] w-[150px]`
         }
     }
 
     return (
-        <div className={tailwind.main}>
-            {isSectionPermitted && <motion.div
-                id="overall"
-                className={tailwind.container}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                variants={slider}
-                custom={-1}
-                transition={{
-                    x: {
-                        type: "spring",
-                        stiffness: 800,
-                        damping: 100,
-                        duration: 0.1
-                    },
-                    opacity: { duration: 0.4 }
-                }}
-            >
-                <h2 className={tailwind.header}>Overall Stats (codewars)</h2>
+        isSectionPermitted && <motion.div
+            id="overall"
+            className={`min-w-[500px] h-[380px] ${tailwind.container}`}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            variants={slider}
+            custom={-1}
+            transition={{
+                x: {
+                    type: "spring",
+                    stiffness: 800,
+                    damping: 100,
+                    duration: 0.1
+                },
+                opacity: { duration: 0.4 }
+            }}
+        >
+            <h2 className={tailwind.header}>Overall Stats (codewars)</h2>
 
-                <div className={tailwind.rankings}>
-                    {overallMenuData({
-                        Rank: roundThousandsOrGetDefault(leaderBoardScore),
-                        Completed: <CountUp duration={4} end={totalCompleted} /> 
-                    }).map((item) => (
-                        <div className={tailwind.rankIcons} key={item.name}>
-                            <span>{item.name}: </span>
+            <div className={tailwind.rankings}>
+                {overallMenuData({
+                    Rank: roundThousandsOrGetDefault(leaderBoardScore),
+                    Completed: <CountUp duration={4} end={totalCompleted} /> 
+                }).map((item) => (
+                    <div className={tailwind.rankIcons} key={item.name}>
+                        <span>{item.name}: </span>
 
-                            <Icon 
-                                name={item.name}
-                                size={item.size}
-                                kind={item.kind}
-                                src={item.src}
-                                position={item.position}
-                                content={item.content! as string|JSX.Element}
-                                custom={item.custom}
-                            />
-                        </div>
-                    ))}
-                </div>
+                        <Icon 
+                            name={item.name}
+                            size={item.size}
+                            kind={item.kind}
+                            src={item.src}
+                            position={item.position}
+                            content={item.content! as string|JSX.Element}
+                            custom={item.custom}
+                        />
+                    </div>
+                ))}
+            </div>
 
-                <Chart languagesTotal={languagesTotal} bgStyle={"bg-gradient-to-r from-amber-200 py-10 text-2xl"} />
-            </motion.div>}
-        </div>
+            <Chart languagesTotal={languagesTotal} bgStyle={"bg-gradient-to-r from-amber-200 py-4 text-xl"} />
+        </motion.div>
     ) 
 }
 
@@ -295,7 +291,7 @@ const index: FC<{
   
   const styles = {
     tailwind: {
-      main: `w-full h-full`
+      main: `w-full mt-16`
     }
   }
 
@@ -303,7 +299,7 @@ const index: FC<{
     position: "right",
     content: "Most Recent Challenge",
     custom: {
-      parent: "m-7",
+      parent: "mt-6",
       img: "rotate-90",
       content: "text-2xl text-center bg-gradient-to-l from-yellow-300 h-12 p-3"
     }
@@ -311,7 +307,7 @@ const index: FC<{
     position: "left",
     content: "Overall Challenges",
     custom: {
-      parent: "m-7",
+      parent: "mt-3",
       img: "-rotate-90",
       content: "text-2xl text-center bg-gradient-to-r from-yellow-300 p-3 h-12"
     }

@@ -14,7 +14,7 @@ const Navbar: React.FC<{
   width
 }) => {
   const handleRenderLinks = (textStyles: string) => {
-    return sectionData.map((section, index) => (
+    return  sectionData.flatMap((section, index) => section.alt !== "about" && (
       <li key={index}>
         <Link href={"#"+section.alt}>
           <span className={textStyles}>{section.alt.charAt(0).toUpperCase() + section.alt.slice(1)}</span>
