@@ -20,17 +20,6 @@ export const sectionData: Content[] = [
     bgImageName: "img_class-min.jpg"
   },
   {
-    alt: "stats",
-    // content: null,
-    content: {
-      body: Stats,
-      isFull: false
-    },
-    type: "default",
-    keyIcon: "",
-    bgImageName: "img_bridge3-min.jpg"
-  },
-  {
     alt: "knowledge",
     content: {
       body: Badges,
@@ -49,6 +38,17 @@ export const sectionData: Content[] = [
     type: "default",
     keyIcon: "",
     bgImageName: "img_highest-min.jpg"
+  },
+  {
+    alt: "stats",
+    // content: null,
+    content: {
+      body: Stats,
+      isFull: false
+    },
+    type: "default",
+    keyIcon: "",
+    bgImageName: "img_bridge3-min.jpg"
   }
 ]
 

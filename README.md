@@ -49,7 +49,7 @@ NEXT_PUBLIC_BADGR_USER=
 When done with setups run:
 
 ```
-cp templateEnv.txt .env
+cp .env.example .env
 
 npm install
 ```

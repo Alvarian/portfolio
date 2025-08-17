@@ -3,6 +3,7 @@ import { Project } from "lib/sections/sections.types"
 import { FC, ReactNode, useEffect, useRef } from "react"
 import { FaRegWindowMaximize } from "react-icons/fa"
 import { VscChromeClose } from "react-icons/vsc"
+import { createPortal } from "react-dom"
 
 import Chart from "shared/chart"
 
@@ -11,17 +12,18 @@ const Backdrop: FC<{
   children: ReactNode, 
   onClick: () => void
 }> = ({ children, onClick }) => {
-  return (
+  return createPortal(
     <motion.div
       onClick={onClick}
-      className="backdrop-blur top-0 left-0 absolute h-screen w-screen flex flex-col items-center justify-center"
+      className="backdrop-blur top-0 left-0 fixed h-screen w-screen flex flex-col items-center justify-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       {children}
-    </motion.div>
-  )
+    </motion.div>,
+    document.getElementById("overlay") as HTMLElement
+  )   
 }
 // co pilot, I am sorry for the mess I made. I will clean it up soon. I promise.
 const Cover: FC<{
@@ -113,7 +115,7 @@ const index: FC<{
         {isModalOpen ? (
           <Backdrop onClick={handleClose}>        
             <motion.div
-              className={`flex flex-col items-center justify-around ${isWidthMobile ? "w-[620px] h-5/6 mt-16" : "h-[80%] min-h-[700px] min-w-[900px] w-3/4 mt-20"} bg-slate-900 rounded-xl`}
+              className={`flex flex-col items-center justify-around ${isWidthMobile ? "w-[620px] h-4/6 mt-16" : "h-[80%] min-h-[500px] min-w-[900px] w-3/4 mt-20"} bg-slate-900 rounded-xl`}
               onClick={(e) => e.stopPropagation()}  
               variants={dropIn}
               initial="hidden"

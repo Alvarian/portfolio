@@ -197,6 +197,8 @@ function Home(props: Data) {
         <Navbar navVisible={scrollMethodAdmissions['navbar']?.isPermitted || false} width={width} />
 
         {handleSectionRendering()}
+
+        <div id="overlay"></div>
       </main>
 
       <Footer width={width} />
