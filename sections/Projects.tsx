@@ -422,63 +422,61 @@ const index: FC<{
     }
     
     return (
-        <>
-            <div className={`flex ${width > 900 ? "flex-row" : "flex-col"} justify-center items-center h-4/5 aspect-[16/9]`}>
-                <main className="h-full w-3/5 relative">
-                    <AnimatePresence>
-                        <motion.div
-                            layoutId={`product-${projectData.id}`}
-                            key={projectData.id}
-                            className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black p-8"
-                        >
-                            <div className="w-full h-full flex justify-around items-center flex-col">
-                                <h2 className={width > 900 ? "text-3xl" : "text-2xl"}>{formatProjectTitle(projectData.title)}</h2>
+        <div className={`flex ${width > 900 ? "flex-row" : "flex-col"} justify-center items-center h-4/5 aspect-[16/9]`}>
+            <main className="h-full w-3/5 relative">
+                <AnimatePresence>
+                    <motion.div
+                        layoutId={`product-${projectData.id}`}
+                        key={projectData.id}
+                        className="object-cover h-full w-full absolute top-0 left-0 flex justify-around items-center rounded-2xl bg-black/50 hover:bg-black p-8"
+                    >
+                        <div className="w-full h-full flex justify-around items-center flex-col">
+                            <h2 className={width > 900 ? "text-3xl" : "text-2xl"}>{formatProjectTitle(projectData.title)}</h2>
 
-                                <img
-                                    className="w-3/5 aspect-square"
-                                    src={projectData.icon}
-                                    alt=""
-                                />
+                            <img
+                                className="w-3/5 aspect-square"
+                                src={projectData.icon}
+                                alt=""
+                            />
 
-                                {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent text-xl" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
-                            </div>
+                            {formatProjectTitle(projectData.title) === "Portfolio" ? "" : <button className="btn btn-accent text-xl" onClick={() => handleModalOpen(projectData.payload)}>OPEN PROJECT</button>}
+                        </div>
 
-                            <ul className="w-1/3 h-3/5 text-left flex flex-col justify-around items-center">
-                                <li className={`w-full ${width > 900 ? "text-md" : "text-md"}`}>{projectData.description}</li>
-                                <li className="w-full"><a className="btn btn-accent btn-xs" href={projectData.repo}>Repository Source</a></li>
-                                <li className={`w-full ${width > 900 ? "text-sm" : "text-xs"}`}>Last push on {getFormattedDate(projectData.lastUpdate)}</li>
-                            </ul>
-                        </motion.div>
-                    </AnimatePresence>
-                </main>
+                        <ul className="w-1/3 h-3/5 text-left flex flex-col justify-around items-center">
+                            <li className={`w-full ${width > 900 ? "text-md" : "text-md"}`}>{projectData.description}</li>
+                            <li className="w-full"><a className="btn btn-accent btn-xs" href={projectData.repo}>Repository Source</a></li>
+                            <li className={`w-full ${width > 900 ? "text-sm" : "text-xs"}`}>Last push on {getFormattedDate(projectData.lastUpdate)}</li>
+                        </ul>
+                    </motion.div>
+                </AnimatePresence>
+            </main>
 
-                <aside className={`flex ${width > 900 ? "flex-col flex-wrap w-1/5" : "flex-row w-full max-h-[110px] justify-center"} overflow-auto mt-0`}>
-                    <AnimatePresence>
-                        {productIds.map((project: Project) => (
-                            <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} isMobile={width < 900} />
-                        ))}
-                    </AnimatePresence>
-                </aside>
+            <aside className={`flex ${width > 900 ? "flex-col flex-wrap w-1/5" : "flex-row w-full max-h-[110px] justify-center"} overflow-auto mt-0`}>
+                <AnimatePresence>
+                    {productIds.map((project: Project) => (
+                        <ProjectIconImage project={project} key={project.id} onExpand={setAsPrimary} isMobile={width < 900} />
+                    ))}
+                </AnimatePresence>
+            </aside>
 
-                <Modal 
-                    handleClose={handleModalClose}
-                    isModalOpen={isModalOpen}
-                    setMaxed={setMaxed}
-                    projectData={projectData}
-                    isCoverOpen={isCoverOpen}
-                    toggleCover={toggleCover}
+            <Modal 
+                handleClose={handleModalClose}
+                isModalOpen={isModalOpen}
+                setMaxed={setMaxed}
+                projectData={projectData}
+                isCoverOpen={isCoverOpen}
+                toggleCover={toggleCover}
+                isWidthMobile={width < 900}
+            >
+                <ModalBody 
+                    title={projectData.title}
+                    type={projectData.payload.type}
+                    content={projectData.payload.ref}
                     isWidthMobile={width < 900}
-                >
-                    <ModalBody 
-                        title={projectData.title}
-                        type={projectData.payload.type}
-                        content={projectData.payload.ref}
-                        isWidthMobile={width < 900}
-                        isModalMaxed={isModalMaxed}
-                    />
-                </Modal>
-            </div>
-        </>
+                    isModalMaxed={isModalMaxed}
+                />
+            </Modal>
+        </div>
     )
 }
 

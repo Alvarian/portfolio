@@ -10,12 +10,12 @@ import Chart from "shared/chart"
 
 const Backdrop: FC<{
   children: ReactNode, 
-  onClick: () => void
+  onClick: () => void,
 }> = ({ children, onClick }) => {
   return createPortal(
     <motion.div
       onClick={onClick}
-      className="backdrop-blur top-0 left-0 fixed h-screen w-screen flex flex-col items-center justify-center"
+      className={`backdrop-blur top-0 left-0 fixed h-full w-full flex flex-col items-center justify-center`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
