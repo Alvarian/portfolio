@@ -235,7 +235,7 @@ const ModalBody: FC<{
                             </motion.div>
                         </main>
 
-                        {content[imageIndex.right] && <motion.img 
+                        {content[imageIndex.right] && (<motion.img 
                             key={`key_${imageIndex.right}`}
                             layoutId={`layout-${imageIndex.right}`}
                             transition={{ type: "spring", stiffness: 350, damping: 25, duration: 5 }}
@@ -247,7 +247,7 @@ const ModalBody: FC<{
                                     setPage([imageIndex.right, +1])
                                 }
                             }}
-                        />}
+                        />)}
                     </div>
 
                     <div className="flex justify-around w-1/2 z-10">

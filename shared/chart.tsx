@@ -98,7 +98,7 @@ function RenderedDonut({languagesListValues}: {languagesListValues: LanguageValu
 function RatioStatsList({languagesListValues}: {languagesListValues: LanguageValue}) {
     const list = []
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < languagesListValues.titles.length; i++) {
         const title = languagesListValues.titles[i]
         const ratio = languagesListValues.ratios[i]
         const color = languagesListValues.colors[i]
